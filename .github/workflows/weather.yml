@@ -1,0 +1,21 @@
+name: Saturday Weather Report
+
+on:
+  schedule:
+    - cron: '0 4 * * 6'
+  workflow_dispatch:
+
+jobs:
+  send_report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip install requests
+      - name: Run weather bot
+        env:
+          VK_TOKEN: ${{ secrets.VK_TOKEN }}
+          VK_CHAT_IDS: ${{ secrets.VK_CHAT_IDS }}
+        run: python bot.py
