@@ -1,0 +1,23 @@
+name: NRMS Sync
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install pandas requests
+      - name: Run Sync
+        env:
+          NRMS_USERNAME: ${{ secrets.NRMS_USERNAME }}
+          NRMS_PASSWORD: ${{ secrets.NRMS_PASSWORD }}
+          SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
+        run: python worker.py
