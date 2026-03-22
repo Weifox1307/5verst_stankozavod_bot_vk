@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5 вёрст Кстово</title>
+    <title>5 вёрст в парке Станкозавода | Нижний Новгород</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
         :root { --primary: #2B326D; --accent: #E6564C; --bg: #f5f5f5; }
@@ -68,7 +68,7 @@
         <button class="btn-qr" onclick="openModal('modal_roles')">📖 Описание ролей</button>
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
-        <button class="btn-qr" onclick="window.open('https://vk.com/5verstkstovoyubileyniy')">🌐 Наши соцсети</button>
+        <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
         <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.0</div>
     </div>
     <div class="close-modal">Закрыть</div>
@@ -125,10 +125,10 @@
 
 <div id="modal_about" class="modal" onclick="closeModal('modal_about')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="border:none;">5 вёрст Кстово</h2>
+        <h2 style="border:none;">5 вёрст в парке Станкозавода</h2>
         <div style="font-size:14px; line-height:1.5; color:#555;">
-            Бесплатные еженедельные старты в парке Юбилейный каждую субботу в 09:00.<br><br>
-            Разработано для сообщества "5 вёрст в парке Юбилейный Кстово".
+            Бесплатные еженедельные старты в парке Станкозавода каждую субботу в 09:00.<br><br>
+            Разработано для сообщества "5 вёрст в парке Станкозавода | Нижний Новгород".
         </div>
     </div>
     <div class="close-modal">Назад</div>
@@ -202,8 +202,8 @@
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9yJluY_CPUGe6c5XV2A7bWqgc6x2CxwQV1wFtPCAgurAA1qbW235obG96K3Z5U57Meg/exec'; // ИСПРАВИТЬ!!!
-    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/'; // ИСПРАВИТЬ!!!
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzes23NmxBlVV_aHGIc1EUTB6IG2t2mBYTpk31zzFmCeY4IoRLx7Lh7W2xg-3brmz0RXw/exec'; // ИСПРАВИТЬ!!!
+    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/'; // ИСПРАВИТЬ!!!
 
     let selectedVolunteer = null; let vkUser = null;
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
