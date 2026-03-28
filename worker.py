@@ -76,13 +76,14 @@ def run_sync():
         if new_data.empty:
             return print("Новых записей в таблице не найдено.")
 
-        # Фильтр 2: УМНАЯ ГРАНИЦА ВРЕМЕНИ (Москва)
-        # Превращаем колонку timestamp в формат даты. 
-        # Параметр utc=True и смещение помогут корректно сравнить время.
-        new_data.iloc[:, 5] = pd.to_datetime(new_data.iloc[:, 5]).dt.tz_localize('UTC').dt.tz_convert(timezone(timedelta(hours=3)))
+        # --- ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ---
+        msk_tz = timezone(timedelta(hours=3))
+        # Считаем, что время в CSV — это время по Москве (UTC+3)
+        new_data.iloc[:, 5] = pd.to_datetime(new_data.iloc[:, 5]).dt.tz_localize(msk_tz, ambiguous='infer')
         
         # Оставляем только те записи, которые сделаны ПОСЛЕ 11:00 последней субботы МСК
         new_data = new_data[new_data.iloc[:, 5] > boundary_time]
+        # ---------------------------------
 
     except Exception as e:
         print(f"Ошибка при обработке таблицы: {e}")
