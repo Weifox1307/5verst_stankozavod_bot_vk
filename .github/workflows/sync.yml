@@ -1,0 +1,27 @@
+name: NRMS Sync
+
+on:
+  schedule:
+    # Вторник и Четверг в 09:00 UTC (это 12:00 по МСК)
+    - cron: '0 9 * * 2,4'
+    # Суббота в 06:40 UTC (это 09:40 по МСК) - финальная проверка перед стартом
+    - cron: '40 6 * * 6'
+  workflow_dispatch: # Кнопка для ручного запуска, если нужно срочно
+
+jobs:
+  sync_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install pandas requests
+      - name: Run Sync
+        env:
+          NRMS_USERNAME: ${{ secrets.NRMS_USERNAME }}
+          NRMS_PASSWORD: ${{ secrets.NRMS_PASSWORD }}
+          SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
+        run: python worker.py
