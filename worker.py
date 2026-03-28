@@ -1,33 +1,41 @@
 import os, requests, datetime
 import pandas as pd
-from datetime import timedelta
+from datetime import timedelta, timezone
 
-# Данные для Станкозавода
+# --- НАСТРОЙКИ ---
 NRMS_USER = os.getenv("NRMS_USERNAME")
 NRMS_PASS = os.getenv("NRMS_PASSWORD")
 SHEET_URL = os.getenv("SHEET_CSV_URL")
-EVENT_ID = 10061 # Для Кстово поменяй на 10079
+EVENT_ID = 10061  # Для Кстово замени на 10079
+
+def get_moscow_now():
+    """Возвращает текущее время в Москве (UTC+3)"""
+    return datetime.datetime.now(timezone(timedelta(hours=3)))
 
 def get_target_date():
-    """Считает дату ближайшей БУДУЩЕЙ субботы"""
-    now = datetime.datetime.now()
-    # 5 - это суббота. Считаем сколько дней до нее
+    """Считает дату ближайшей БУДУЩЕЙ субботы по МСК"""
+    now = get_moscow_now()
+    # 5 - это суббота
     days_ahead = (5 - now.weekday() + 7) % 7
-    # Если сегодня суббота и время > 11:00, целевая дата — СЛЕДУЮЩАЯ неделя
+    
+    # Если сегодня суббота и время по Москве >= 11:00, целевая дата — СЛЕДУЮЩАЯ неделя
     if days_ahead == 0 and now.hour >= 11:
         days_ahead = 7
+        
     target = now + timedelta(days=days_ahead)
     return target.strftime("%d.%m.%Y")
 
 def get_sync_boundary():
-    """Находит время окончания последнего старта (суббота 11:00)"""
-    now = datetime.datetime.now()
-    # Сколько дней назад была суббота (5)
+    """Находит время окончания последнего старта (суббота 11:00 по МСК)"""
+    now = get_moscow_now()
+    # Сколько дней назад была суббота
     days_since_sat = (now.weekday() - 5) % 7
     last_sat = now - timedelta(days=days_since_sat)
+    
+    # Устанавливаем границу на 11:00 утра по Москве
     boundary = last_sat.replace(hour=11, minute=0, second=0, microsecond=0)
     
-    # Если сейчас утро субботы (до 11:00), то граница — ПРОШЛАЯ суббота
+    # Если сейчас утро субботы (до 11:00), то граница — это ПРОШЛАЯ суббота 11:00
     if now.weekday() == 5 and now.hour < 11:
         boundary -= timedelta(days=7)
         
@@ -40,17 +48,19 @@ def get_token():
     return r.json()['result']['token']
 
 def run_sync():
+    now_msk = get_moscow_now()
     target_date = get_target_date()
     boundary_time = get_sync_boundary()
     
-    print(f"--- СИНХРОНИЗАЦИЯ СТАНКОЗАВОД ---")
+    print(f"--- СИНХРОНИЗАЦИЯ (EVENT {EVENT_ID}) ---")
+    print(f"Текущее время МСК: {now_msk.strftime('%d.%m %H:%M')}")
     print(f"Целевая суббота: {target_date}")
-    print(f"Игнорируем всё, что записано до: {boundary_time.strftime('%d.%m %H:%M')}")
+    print(f"Точка отсечения старых записей: {boundary_time.strftime('%d.%m %H:%M')}")
     
     try:
         token = get_token()
     except Exception as e:
-        print(f"Ошибка логина: {e}")
+        print(f"Ошибка логина на NRMS: {e}")
         return
 
     headers = {"Authorization": f"Bearer {token}"}
@@ -64,11 +74,14 @@ def run_sync():
         new_data = df[df.iloc[:, 4] == 'new'].copy()
         
         if new_data.empty:
-            return print("Новых записей не найдено.")
+            return print("Новых записей в таблице не найдено.")
 
-        # Фильтр 2: УМНАЯ ГРАНИЦА ВРЕМЕНИ
-        # Оставляем только те записи, которые сделаны ПОСЛЕ 11:00 последней субботы
-        new_data.iloc[:, 5] = pd.to_datetime(new_data.iloc[:, 5])
+        # Фильтр 2: УМНАЯ ГРАНИЦА ВРЕМЕНИ (Москва)
+        # Превращаем колонку timestamp в формат даты. 
+        # Параметр utc=True и смещение помогут корректно сравнить время.
+        new_data.iloc[:, 5] = pd.to_datetime(new_data.iloc[:, 5]).dt.tz_localize('UTC').dt.tz_convert(timezone(timedelta(hours=3)))
+        
+        # Оставляем только те записи, которые сделаны ПОСЛЕ 11:00 последней субботы МСК
         new_data = new_data[new_data.iloc[:, 5] > boundary_time]
 
     except Exception as e:
@@ -76,9 +89,9 @@ def run_sync():
         return
     
     if new_data.empty: 
-        return print("Все новые записи в таблице относятся к прошлому старту. Пропускаем.")
+        return print("Все новые записи относятся к уже прошедшему старту. Игнорируем.")
 
-    # 2. Получаем текущий список с сайта
+    # 2. Получаем текущий список с сайта, чтобы не плодить дубли
     r_curr = requests.post("https://nrms.5verst.ru/api/v1/event/volunteer/list", 
                           json={"event_id": EVENT_ID, "event_date": target_date}, headers=headers)
     
@@ -97,7 +110,7 @@ def run_sync():
             added_count += 1
 
     if added_count == 0:
-        return print("Все свежие волонтеры уже на сайте.")
+        return print("Все свежие волонтеры уже есть на сайте.")
 
     # 4. Сохраняем на сайт
     payload = {
@@ -110,7 +123,7 @@ def run_sync():
     res = requests.post("https://nrms.5verst.ru/api/v1/volunteer/event/save", json=payload, headers=headers)
     
     if res.status_code == 200:
-        print(f"УСПЕХ: Добавлено {added_count} новых волонтеров на 04.04.2026")
+        print(f"УСПЕХ: Синхронизировано человек: {added_count}")
     else:
         print(f"ОШИБКА NRMS: {res.text}")
 
