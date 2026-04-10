@@ -25,7 +25,6 @@
         button#submit_btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 12px rgba(230, 86, 76, 0.2); }
         button:disabled { background: #b0b0b0; box-shadow: none; }
 
-        /* СПИСОК ВОЛОНТЕРОВ И КНОПКА УДАЛЕНИЯ */
         .vol-card { background: white; padding: 10px 15px; border-radius: 12px; border: 1px solid #ebedef; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .vol-info-group { display: flex; flex-direction: column; gap: 4px; }
         .vol-role-badge { background: #f0f2ff; color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; width: fit-content; }
@@ -205,7 +204,7 @@
 <script>
     vkBridge.send("VKWebAppInit");
     // ЗАМЕНИТЕ НА ВАШИ ССЫЛКИ ПЕРЕД ДЕПЛОЕМ!
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzf-NhmJOPoIThq7vrON2D5Sx4jz4mqtVIJoD6ODwMvhbpId1-KweClBKoVLii6uclBmg/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_yL54o1BtYWXDL0fdfN_aX-yu1KjAT455UpXFBAtc5KfE5eNpUZKmaKa7SllZBlGf/exec'; 
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
 
     let selectedVolunteer = null; let vkUser = null;
@@ -375,7 +374,6 @@
                 const div = document.createElement('div');
                 div.className = 'vol-card';
                 
-                // Проверяем, является ли запись текущего пользователя
                 const isMine = vkUser && item.vk_id == vkUser.id;
                 const deleteBtn = isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}')">Отмена</button>` : '';
 
