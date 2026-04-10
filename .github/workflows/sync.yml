@@ -2,11 +2,9 @@ name: NRMS Sync
 
 on:
   schedule:
-    # Вторник и Четверг в 12:00 по МСК (09:00 UTC)
-    - cron: '0 9 * * 2,4'
-    # Суббота в 06:00 по МСК (03:00 UTC) - финальная проверка перед стартом
+    # Суббота в 06:00 по МСК (03:00 UTC)
     - cron: '0 3 * * 6'
-  workflow_dispatch: # Кнопка для ручного запуска
+  workflow_dispatch: 
 
 jobs:
   sync_job:
