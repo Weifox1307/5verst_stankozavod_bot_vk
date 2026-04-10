@@ -6,7 +6,7 @@ from datetime import timedelta, timezone
 NRMS_USER = os.getenv("NRMS_USERNAME")
 NRMS_PASS = os.getenv("NRMS_PASSWORD")
 SHEET_URL = os.getenv("SHEET_CSV_URL")
-EVENT_ID = 10061  # Для Кстово замени на 10079
+EVENT_ID = 10061  # Станкозавод
 
 def get_moscow_now():
     """Возвращает текущее время в Москве (UTC+3)"""
@@ -70,61 +70,54 @@ def run_sync():
         df = pd.read_csv(SHEET_URL)
         df.columns = df.columns.str.strip()
         
-        # Фильтр 1: Только статус 'new'
-        new_data = df[df.iloc[:, 4] == 'new'].copy()
+        # Нам нужны все записи, которые актуальны на эту неделю.
+        # Мы не фильтруем только 'new', чтобы корректно работало "зеркало".
+        # Но проверяем время записи.
         
-        if new_data.empty:
-            return print("Новых записей в таблице не найдено.")
-
-        # --- ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ---
         msk_tz = timezone(timedelta(hours=3))
-        # Считаем, что время в CSV — это время по Москве (UTC+3)
-        new_data.iloc[:, 5] = pd.to_datetime(new_data.iloc[:, 5]).dt.tz_localize(msk_tz, ambiguous='infer')
+        # Считаем, что время в CSV (колонка 5) — это время по Москве
+        df.iloc[:, 5] = pd.to_datetime(df.iloc[:, 5]).dt.tz_localize(msk_tz, ambiguous='infer')
         
         # Оставляем только те записи, которые сделаны ПОСЛЕ 11:00 последней субботы МСК
-        new_data = new_data[new_data.iloc[:, 5] > boundary_time]
-        # ---------------------------------
+        # Это и есть наш актуальный список волонтеров на ближайший старт.
+        active_vols_df = df[df.iloc[:, 5] > boundary_time].copy()
 
     except Exception as e:
         print(f"Ошибка при обработке таблицы: {e}")
         return
     
-    if new_data.empty: 
-        return print("Все новые записи относятся к уже прошедшему старту. Игнорируем.")
+    if active_vols_df.empty: 
+        # Если в таблице пусто, мы должны очистить список на сайте (отправить пустой список)
+        # Но обычно лучше вывести предупреждение.
+        print("В таблице нет актуальных записей на эту неделю.")
+        volunteers_payload = []
+    else:
+        # Формируем список волонтеров из того, что сейчас есть в таблице
+        volunteers_payload = []
+        for _, row in active_vols_df.iterrows():
+            volunteers_payload.append({
+                "verst_id": int(row.iloc[0]), # verst_id
+                "role_id": int(row.iloc[1])   # role_id
+            })
 
-    # 2. Получаем текущий список с сайта, чтобы не плодить дубли
-    r_curr = requests.post("https://nrms.5verst.ru/api/v1/event/volunteer/list", 
-                          json={"event_id": EVENT_ID, "event_date": target_date}, headers=headers)
+    # 2. Сохраняем на сайт
+    # ВАЖНО: Мы не получаем список с сайта и не сравниваем его.
+    # Мы просто отправляем то, что в таблице. Сайт заменит старый список новым.
+    # Если в таблице человека удалили — его не будет в payload, и он удалится с сайта.
     
-    volunteers = []
-    if r_curr.status_code == 200:
-        existing = r_curr.json().get('result', {}).get('volunteer_list', [])
-        volunteers = [{"verst_id": v['verst_id'], "role_id": v['role_id']} for v in existing]
-
-    # 3. Добавляем новых участников
-    added_count = 0
-    for _, row in new_data.iterrows():
-        vid = int(row.iloc[0]) # verst_id
-        rid = int(row.iloc[1]) # role_id
-        if not any(v['verst_id'] == vid and v['role_id'] == rid for v in volunteers):
-            volunteers.append({"verst_id": vid, "role_id": rid})
-            added_count += 1
-
-    if added_count == 0:
-        return print("Все свежие волонтеры уже есть на сайте.")
-
-    # 4. Сохраняем на сайт
     payload = {
         "event_id": EVENT_ID,
         "date": target_date,
         "upload_status_id": 1,
-        "volunteers": volunteers
+        "volunteers": volunteers_payload
     }
     
-    res = requests.post("https://nrms.5verst.ru/api/v1/volunteer/event/save", json=payload, headers=headers)
+    res = requests.post("https://nrms.5verst.ru/api/v1/volunteer/event/save", 
+                         json=payload, 
+                         headers=headers)
     
     if res.status_code == 200:
-        print(f"УСПЕХ: Синхронизировано человек: {added_count}")
+        print(f"УСПЕХ: Данные на сайте обновлены. Всего волонтеров: {len(volunteers_payload)}")
     else:
         print(f"ОШИБКА NRMS: {res.text}")
 
