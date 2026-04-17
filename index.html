@@ -219,7 +219,7 @@
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2T8hr2guV2eaMBRsT-Wdz2BG5GBAP2sItkj50GKPTOXa5dZD20dQg309QGSr4r1_MbA/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6s-_9OXU2Sw53PG37T_jlvQ5s8FrsQaBicJb23HF8iUI_g1JeLB5bxEyitel_DRKjVg/exec'; 
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
 
     let selectedVolunteer = null; let selectedFriend = null; let vkUser = null; let chatMembers = []; let currentMode = 'self';
@@ -249,27 +249,30 @@
     }
     init();
 
-    // Загрузка участников чата ТОЛЬКО при клике на поле
+    // Загрузка участников чата (ИСПРАВЛЕННАЯ)
     async function getParticipants() {
         const resBox = document.getElementById('friend_results');
-        resBox.innerHTML = '<div class="result-item">Загрузка участников чата...</div>';
+        resBox.innerHTML = '<div class="result-item">Загрузка...</div>';
         resBox.style.display = 'block';
         
         try {
+            // Пытаемся взять из чата
             const data = await vkBridge.send("VKWebAppGetChatParticipants", {"count": 200});
             chatMembers = data.profiles || [];
             renderChatMembers();
         } catch (err) {
-            // Если чат недоступен (например зашли не из чата), предлагаем друзей
+            console.log("Чат недоступен, пробуем друзей");
             try {
+                // Если не из чата зашли - берем друзей (так сработает на ноуте)
                 const f = await vkBridge.send("VKWebAppGetFriends");
                 chatMembers = f.users || [];
                 renderChatMembers();
             } catch(e) {
-                resBox.innerHTML = '<div class="result-item">Ошибка доступа к списку.</div>';
+                resBox.innerHTML = '<div class="result-item">Не удалось загрузить список. Попробуйте ввести имя.</div>';
             }
         }
     }
+
 
     function renderChatMembers() {
         const resBox = document.getElementById('friend_results');
@@ -356,35 +359,36 @@
         const btn = document.getElementById('submit_btn');
         btn.innerText = "Запись..."; btn.disabled = true;
         const payload = { 
-            verst_id: selectedVolunteer.id, 
-            role_id: document.getElementById('role_id').value, 
-            role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text, 
-            full_name: selectedVolunteer.full_name, 
-            vk_id: vkUser.id, 
-            target_vk_id: currentMode === 'self' ? vkUser.id : selectedFriend.id,
-            vk_name: currentMode === 'self' ? (vkUser.first_name + " " + vkUser.last_name) : (selectedFriend.first_name + " " + selectedFriend.last_name), 
-            comment: document.getElementById('role_comment').value, 
-            silent: document.getElementById('silent_mode').checked 
-        };
+    verst_id: selectedVolunteer.id, 
+    role_id: document.getElementById('role_id').value, 
+    role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text, 
+    full_name: selectedVolunteer.full_name, 
+    vk_id: vkUser.id, // твой ID
+    target_vk_id: currentMode === 'self' ? vkUser.id : selectedFriend.id, // ID друга
+    target_vk_name: currentMode === 'self' ? (vkUser.first_name + " " + vkUser.last_name) : (selectedFriend.first_name + " " + selectedFriend.last_name), // ИМЯ ДРУГА
+    comment: document.getElementById('role_comment').value, 
+    silent: document.getElementById('silent_mode').checked 
+};
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         alert("Успешно записано!"); location.reload();
     }
 
+    // Отрисовка очереди (ИСПРАВЛЕННАЯ - Кнопка Отмена)
     async function loadQueue() {
         const container = document.getElementById('queue_container');
-        container.innerHTML = '<div style="text-align:center;padding:20px;">Загрузка...</div>';
         try {
             const res = await fetch(SCRIPT_URL);
             const data = await res.json();
             
             if(data.length === 0) { 
-                container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Список пуст</div>'; 
+                container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Пока никто не записался</div>'; 
                 return; 
             }
 
             let html = '';
             data.reverse().forEach(item => {
-                const isMine = vkUser && item.owner_vk_id == vkUser.id;
+                // Кнопка отмены видна если: я автор записи ИЛИ я тот, кого записали
+                const isMine = vkUser && (item.owner_vk_id == vkUser.id || item.target_vk_id == vkUser.id);
                 const editBtn = isMine ? `<button class="btn-edit" onclick="editMyComment('${item.role_id}', '${item.comment || ''}')">📝</button>` : '';
                 const delBtn = isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}')">Отмена</button>` : '';
                 
@@ -402,13 +406,14 @@
     }
 
     async function deleteMyRole(roleId, roleName, personName) {
-        if (!confirm(`Отменить запись "${personName}"?`)) return;
+        if (!confirm(`Отменить запись "${personName}" на роль "${roleName}"?`)) return;
+        // Передаем свой VK_ID серверу, он проверит права на удаление
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
             body: JSON.stringify({ 
                 action: "delete", 
-                owner_vk_id: vkUser.id, 
+                vk_id: vkUser.id, 
                 role_id: roleId,
                 person_name: personName,
                 role_name: roleName
