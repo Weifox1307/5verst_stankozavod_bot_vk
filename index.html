@@ -21,10 +21,11 @@
         .btn-qr { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
 
         label { font-size: 11px; color: #999; margin-left: 4px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; margin-top: 10px; }
-        
-        /* Исправление: не растягиваем чекбоксы */
         input:not([type="checkbox"]), select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
         
+        /* Исправление галочки */
+        input[type="checkbox"] { width: 22px !important; height: 22px !important; -webkit-appearance: checkbox !important; appearance: checkbox !important; cursor: pointer; margin: 0; }
+
         button#submit_btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 12px rgba(230, 86, 76, 0.2); }
         button:disabled { background: #b0b0b0; box-shadow: none; }
 
@@ -51,29 +52,23 @@
         .stats-row { display: flex; gap: 6px; flex-wrap: wrap; width: fit-content; }
         .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #fff; display: flex; align-items: center; gap: 4px; width: auto; }
 
-        .run10 { background: #fecc3f; color: #333; } .run25 { background: #f29104; } .run50 { background: #e6464c; } .run100, .run250, .run500 { background: #8c1f28; }
-        .vol10 { background: #c9b4d8; color: #333; } .vol25 { background: #9d82aa; } .vol50 { background: #6c5391; } .vol100, .vol250, .vol500 { background: #422d58; }
-        .badge img { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(100%); }
-        .run10 img, .vol10 img { filter: brightness(0) saturate(100%); }
-
+        .run10 { background: #fecc3f; color: #333; } .run50 { background: #e6464c; } .vol10 { background: #c9b4d8; color: #333; }
         .role-detail-img { width: 100%; height: auto; min-height: 150px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee; object-fit: cover; background: #fafafa; display: block; }
-        .qr-code-img { width: 220px; height: 220px; margin: 10px auto; display: block; background: #fff; }
-
-        .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
+        
         #search_results, #rate_results, #friend_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .result-item { padding: 12px; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; font-size: 14px; }
 
-        /* Переключатель Я/Друг */
         .toggle-group { display: flex; background: #eee; padding: 4px; border-radius: 12px; margin-bottom: 15px; margin-top: 10px; }
         .toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; background: transparent; color: #666; transition: 0.3s; }
         .toggle-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
     </style>
 </head>
 <body>
 
 <div class="fab-help" onclick="openModal('modal_help')">?</div>
 
-<!-- ВСЕ ТВОИ МОДАЛКИ БЕЗ ИЗМЕНЕНИЙ -->
 <div id="modal_help" class="modal" onclick="closeModal('modal_help')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 style="border:none; text-align:center; margin-bottom: 15px;">Глоссарий</h2>
@@ -81,43 +76,31 @@
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
         <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.3</div>
+        <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.4</div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
 
 <div id="modal_guide" class="modal" onclick="closeModal('modal_guide')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="border:none;">Как пользоваться?</h2>
-        <div style="font-size:14px; text-align:left; line-height:1.5;">
-            1. 🔍 <b>Поиск</b>: Введи фамилию или ID 5 вёрст в окне записи.<br><br>
-            2. ✅ <b>Выбор</b>: Выбери свою роль из списка.<br><br>
-            3. 👥 <b>Друг</b>: Если записываешь друга, выбери его из списка чата во втором поле.<br><br>
-            4. 📝 <b>Инфо</b>: Для Маршалов можно указать точку прямо в приложении.
-        </div>
+        <h2>Как пользоваться?</h2>
+        <div style="text-align:left; font-size:14px; line-height:1.5;">1. Найди участника через поиск.<br>2. Для друга - выбери его из списка чата.<br>3. Укажи точку или доп. инфо (для маршалов).</div>
     </div>
     <div class="close-modal">Назад</div>
 </div>
 
 <div id="modal_about" class="modal" onclick="closeModal('modal_about')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="border:none;">5 вёрст Станкозавод</h2>
-        <div style="font-size:14px; line-height:1.5;">Приложение для записи волонтеров на старты в парке Станкозавода. Разработано для сообщества 5 вёрст.</div>
+        <h2>О нас</h2>
+        <p>Сообщество волонтеров 5 вёрст в парке Станкозавода.</p>
     </div>
     <div class="close-modal">Назад</div>
 </div>
 
 <div id="modal_roles" class="modal" onclick="closeModal('modal_roles')">
-    <div class="modal-content" onclick="event.stopPropagation()" style="max-width:350px;">
-        <h2 style="border:none;">Ключевые роли</h2>
-        <div class="role-grid">
-            <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Главный человек на старте. Координирует волонтеров.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_1.jpg"><span>Организатор</span></div>
-            <div class="role-item-btn" onclick="showRoleDetail(2, 'Секундомер', 'Нажимает кнопку СТАРТ и фиксирует время финишеров.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_2.jpg"><span>Секундомер</span></div>
-            <div class="role-item-btn" onclick="showRoleDetail(11, 'Сканер', 'Сканирует личный штрих-код участника.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_11.jpg"><span>Сканер</span></div>
-            <div class="role-item-btn" onclick="showRoleDetail(13, 'Карточки', 'Выдает карточку с номером позиции.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_13.jpg"><span>Карточки</span></div>
-            <div class="role-item-btn" onclick="showRoleDetail(7, 'Маршал', 'Стоит на поворотах и указывает путь.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_7.jpg"><span>Маршал</span></div>
-            <div class="role-item-btn" onclick="showRoleDetail(19, 'Замыкающий', 'Идет последним, чтобы никто не остался на трассе один.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_19.jpg"><span>Замыкающий</span></div>
-        </div>
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2>Роли</h2>
+        <div style="text-align:left; font-size:13px; max-height:300px; overflow-y:auto;">Организатор, Секундомер, Маршал и др.</div>
     </div>
     <div class="close-modal">Назад</div>
 </div>
@@ -126,35 +109,31 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <img id="role_img" class="role-detail-img" src="">
         <h2 id="role_title"></h2>
-        <div id="role_desc" style="font-size:14px; line-height:1.5; color:#555;"></div>
+        <div id="role_desc"></div>
     </div>
     <div class="close-modal">Назад</div>
 </div>
 
 <div id="qr_modal" class="modal" onclick="closeQR()">
     <div class="modal-content">
-        <h3>Личная карточка</h3>
+        <h3>Твой QR-код</h3>
         <div id="qr_img_box"></div>
-        <p id="qr_id_text" style="font-weight:900; font-size:26px; color:var(--accent);"></p>
-        <span id="qr_name_text"></span>
+        <p id="qr_id_text" style="font-weight:900; font-size:24px; color:var(--accent);"></p>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
 
-<!-- Модалка подтверждения (с исправленной галочкой) -->
 <div id="confirm_modal" class="modal">
     <div class="modal-content">
-        <h3>Подтвердите запись</h3>
+        <h3 id="modal_title">Подтверждение</h3>
         <p id="conf_text" style="font-size:14px; text-align:left; white-space:pre-line; line-height:1.4;"></p>
-        
-        <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; background:#f9fafb; padding:10px; border-radius:12px;">
-            <input type="checkbox" id="silent_mode" style="width:20px; height:20px; cursor:pointer; margin:0;">
-            <label for="silent_mode" style="margin:0; text-transform:none; color:#333; cursor:pointer; font-size:13px; font-weight:bold;">НЕ ПИНГОВАТЬ ЧАТ ВК</label>
+        <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; background:#f5f5f5; padding:12px; border-radius:12px;">
+            <input type="checkbox" id="silent_mode">
+            <label for="silent_mode" style="margin:0; text-transform:none; font-weight:bold; color:#333; cursor:pointer;">НЕ ПИНГОВАТЬ В ЧАТЕ</label>
         </div>
-
         <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="closeModal('confirm_modal')" style="flex:1; padding:12px; border-radius:10px; border:1px solid #ccc; background:#fff; font-weight:bold;">ОТМЕНА</button>
-            <button onclick="sendData()" style="flex:1; padding:12px; border:none; background:var(--accent); color:white; font-weight:bold; border-radius:10px;">ОК</button>
+            <button onclick="closeModal('confirm_modal')" style="flex:1; padding:12px; border-radius:10px; border:1px solid #ccc; font-weight:bold;">ОТМЕНА</button>
+            <button id="btn_final_ok" style="flex:1; padding:12px; background:var(--accent); color:white; border:none; border-radius:10px; font-weight:bold;">ОК</button>
         </div>
     </div>
 </div>
@@ -175,23 +154,23 @@
             <button id="mode_friend" class="toggle-btn" onclick="setMode('friend')">ДРУГА</button>
         </div>
 
-        <label>1. Участник 5 вёрст (NRMS):</label>
+        <label>1. Участник 5 вёрст (для базы):</label>
         <div style="position:relative">
-            <input type="text" id="verst_search" placeholder="Введите фамилию или ID..." autocomplete="off">
+            <input type="text" id="verst_search" placeholder="Фамилия или ID..." autocomplete="off">
             <div id="search_results"></div>
         </div>
 
         <div id="friend_vk_block" style="display:none">
             <label>2. Участник чата ВК (для ссылки):</label>
             <div style="position:relative">
-                <input type="text" id="friend_search" placeholder="Начните вводить имя друга..." autocomplete="off">
+                <input type="text" id="friend_search" placeholder="Поиск участника чата..." autocomplete="off">
                 <div id="friend_results"></div>
             </div>
         </div>
 
         <label>3. Позиция волонтера:</label>
         <select id="role_id" onchange="onRoleChange()">
-            <option value="" disabled selected>Выберите роль из списка</option>
+            <option value="" disabled selected>Выберите роль</option>
             <optgroup label="Основные позиции">
                 <option value="1">Организатор</option><option value="2">Секундомер</option><option value="5">Фотограф</option><option value="7">Маршал</option><option value="8">Подготовка мероприятия</option><option value="11">Сканирование штрих-кодов</option><option value="13">Раздача карточек позиций</option><option value="19">Замыкающий</option>
             </optgroup>
@@ -201,11 +180,11 @@
         </select>
 
         <div id="comment_block" style="display:none">
-            <label id="comment_label">Доп. информация (точка / еда / инвентарь):</label>
-            <input type="text" id="role_comment" placeholder="Напр: сзади ФОКа / Вкусняшки / Пятюни">
+            <label>Доп. информация (точка / еда / инвентарь):</label>
+            <input type="text" id="role_comment" placeholder="Что принесете или где встанете?">
         </div>
 
-        <button id="submit_btn" onclick="preSubmit()" disabled>Выберите человека</button>
+        <button id="submit_btn" onclick="preSubmit('record')" disabled>Выберите человека</button>
     </div>
     <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px; text-transform:uppercase;">Уже в списке:</div>
     <div id="queue_container" style="padding:10px 15px;"></div>
@@ -213,26 +192,16 @@
 
 <div id="section_rate" style="display:none">
     <div class="card">
-        <h2>Поиск участника</h2>
-        <div style="position:relative">
-            <input type="text" id="rate_search" placeholder="Фамилия или ID..." autocomplete="off">
-            <div id="rate_results"></div>
-        </div>
-    </div>
-    <div class="card">
-        <h2>Клубный рейтинг участников</h2>
-        <div id="rating_list">Загрузка рейтинга...</div>
+        <h2>Рейтинг волонтеров</h2>
+        <div id="rating_list">Загрузка...</div>
     </div>
 </div>
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXt-zirciuAEN38Bt3Jn9tb68JdbuiKFUEKFN_qUdRXtnTGyW8LlspM3EKNjOvICrxGA/exec'; 
-    const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJPWMphEPNLQWZYn4jQRN5eL-J02k2lPHcFgs9za8b6q1JBgi8_yZBeKB32D5kNxxIXQ/exec'; 
 
     let selectedVolunteer = null; let selectedFriend = null; let vkUser = null; let chatMembers = []; let currentMode = 'self';
-    const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
-    const volIcon = "🧡 ";
 
     async function init() {
         try {
@@ -243,24 +212,22 @@
                 selectedVolunteer = { id: data.verst_id, full_name: data.full_name };
                 document.getElementById('verst_search').value = data.full_name;
                 document.getElementById('welcome_back').style.display = 'block';
-                document.getElementById('welcome_back').innerHTML = `👋 <b>${vkUser.first_name}</b>, твои данные подставлены!<br><button class="btn-qr" style="width:auto; padding:8px 15px;" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
+                document.getElementById('welcome_back').innerHTML = `👋 <b>${vkUser.first_name}</b>! <button class="btn-qr" style="display:inline; width:auto; padding:4px 8px; margin-left:10px;" onclick="showQR('${data.verst_id}', '${data.full_name}')">QR</button>`;
                 validateForm();
             }
             const dRes = await fetch(SCRIPT_URL + "?get_date=1");
             const dData = await dRes.json();
             document.getElementById('event_date').innerText = dData.date;
             
-            // Пытаемся получить людей из чата
+            // Грузим участников
             try {
                 const chat = await vkBridge.send("VKWebAppGetChatParticipants", {"count": 250});
                 chatMembers = chat.profiles || [];
             } catch (e) {
-                // Если не получилось (например на ноуте), пробуем взять друзей
                 const friends = await vkBridge.send("VKWebAppGetFriends");
                 chatMembers = friends.users || [];
             }
-            
-            await loadQueue();
+            loadQueue();
         } catch (e) { console.error(e); }
     }
     init();
@@ -275,12 +242,10 @@
 
     function onRoleChange() {
         const role = document.getElementById('role_id').value;
-        const needsComment = ["7", "8", "9"].includes(role);
-        document.getElementById('comment_block').style.display = needsComment ? 'block' : 'none';
+        document.getElementById('comment_block').style.display = ["7", "8", "9"].includes(role) ? 'block' : 'none';
         validateForm();
     }
 
-    // Поиск друга в чате
     document.getElementById('friend_search').addEventListener('input', (e) => {
         const q = e.target.value.toLowerCase();
         const resBox = document.getElementById('friend_results');
@@ -288,65 +253,56 @@
         const filtered = chatMembers.filter(m => (m.first_name + " " + m.last_name).toLowerCase().includes(q));
         resBox.innerHTML = ''; resBox.style.display = filtered.length ? 'block' : 'none';
         filtered.forEach(m => {
-            const div = document.createElement('div');
-            div.className = 'result-item'; div.innerText = `${m.first_name} ${m.last_name}`;
+            const div = document.createElement('div'); div.className = 'result-item'; div.innerText = `${m.first_name} ${m.last_name}`;
             div.onclick = () => {
-                selectedFriend = m;
-                document.getElementById('friend_search').value = `${m.first_name} ${m.last_name}`;
+                selectedFriend = m; document.getElementById('friend_search').value = `${m.first_name} ${m.last_name}`;
                 resBox.style.display = 'none'; validateForm();
             };
             resBox.appendChild(div);
         });
     });
 
-    async function searchHandler(query, resultBox, isRecord) {
+    document.getElementById('verst_search').addEventListener('input', async (e) => {
+        const query = e.target.value;
+        const resultBox = document.getElementById('search_results');
         if (query.length < 3) { resultBox.style.display = 'none'; return; }
         resultBox.innerHTML = '<div style="padding:15px">Ищем...</div>';
         resultBox.style.display = 'block';
-        try {
-            const res = await fetch(`${SCRIPT_URL}?search=${encodeURIComponent(query)}`);
-            const data = await res.json();
-            resultBox.innerHTML = '';
-            (data.result?.data || []).forEach(v => {
-                const div = document.createElement('div');
-                div.className = 'result-item'; div.innerHTML = `<b>${v.full_name}</b><br><small>ID: ${v.id}</small>`;
-                div.onclick = async () => {
-                    if (isRecord) {
-                        selectedVolunteer = v; document.getElementById('verst_search').value = v.full_name;
-                        resultBox.style.display = 'none'; validateForm();
-                    } else {
-                        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "sync_only", vk_id: vkUser.id, verst_id: v.id, full_name: v.full_name }) });
-                        alert("Карта привязана!"); location.reload();
-                    }
-                };
-                resultBox.appendChild(div);
-            });
-        } catch (e) { resultBox.innerHTML = 'Ошибка'; }
-    }
-
-    document.getElementById('verst_search').addEventListener('input', (e) => {
-        clearTimeout(window.searchTimeout);
-        window.searchTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('search_results'), true), 500);
-    });
-
-    document.getElementById('rate_search').addEventListener('input', (e) => {
-        clearTimeout(window.rateTimeout);
-        window.rateTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('rate_results'), false), 500);
+        const res = await fetch(`${SCRIPT_URL}?search=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        resultBox.innerHTML = '';
+        (data.result?.data || []).forEach(v => {
+            const div = document.createElement('div'); div.className = 'result-item'; div.innerHTML = `<b>${v.full_name}</b><br><small>ID: ${v.id}</small>`;
+            div.onclick = () => {
+                selectedVolunteer = v; document.getElementById('verst_search').value = v.full_name;
+                resultBox.style.display = 'none'; validateForm();
+            };
+            resultBox.appendChild(div);
+        });
     });
 
     function validateForm() {
-        const btn = document.getElementById('submit_btn');
         const rVal = document.getElementById('role_id').value;
-        const isFriendOk = (currentMode === 'self') || (currentMode === 'friend' && selectedFriend);
-        btn.disabled = !(selectedVolunteer && rVal && isFriendOk);
-        btn.innerText = btn.disabled ? "Заполните поля" : "Записаться";
+        const friendOk = (currentMode === 'self') || (currentMode === 'friend' && selectedFriend);
+        document.getElementById('submit_btn').disabled = !(selectedVolunteer && rVal && friendOk);
+        document.getElementById('submit_btn').innerText = document.getElementById('submit_btn').disabled ? "Заполните все поля" : "ЗАПИСАТЬСЯ";
     }
 
-    function preSubmit() {
-        const roleName = document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text;
-        const comment = document.getElementById('role_comment').value;
-        const who = currentMode === 'self' ? 'Себя' : `${selectedFriend.first_name} ${selectedFriend.last_name}`;
-        document.getElementById('conf_text').innerText = `Кого: ${who}\nВ системе: ${selectedVolunteer.full_name}\nРоль: ${roleName}\nИнфо: ${comment || '—'}`;
+    let currentActionData = null;
+    function preSubmit(action, extra) {
+        currentActionData = { action: action, extra: extra };
+        document.getElementById('silent_mode').checked = false;
+        if (action === 'record') {
+            const roleName = document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text;
+            const who = currentMode === 'self' ? 'Себя' : `${selectedFriend.first_name} ${selectedFriend.last_name}`;
+            document.getElementById('modal_title').innerText = "Подтвердите запись";
+            document.getElementById('conf_text').innerText = `Кого: ${who}\nСистема: ${selectedVolunteer.full_name}\nРоль: ${roleName}\nИнфо: ${document.getElementById('role_comment').value || '—'}`;
+            document.getElementById('btn_final_ok').onclick = sendData;
+        } else {
+            document.getElementById('modal_title').innerText = "Отмена записи";
+            document.getElementById('conf_text').innerText = `Вы действительно хотите отменить запись на роль "${extra.roleName}"?`;
+            document.getElementById('btn_final_ok').onclick = confirmDelete;
+        }
         openModal('confirm_modal');
     }
 
@@ -354,71 +310,51 @@
         closeModal('confirm_modal');
         const btn = document.getElementById('submit_btn');
         btn.innerText = "Запись..."; btn.disabled = true;
-        const payload = { 
-            verst_id: selectedVolunteer.id, 
-            role_id: document.getElementById('role_id').value, 
-            role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text, 
-            full_name: selectedVolunteer.full_name, 
-            vk_id: vkUser.id, 
-            target_vk_id: currentMode === 'self' ? vkUser.id : selectedFriend.id,
-            vk_name: vkUser.first_name + " " + vkUser.last_name, 
-            comment: document.getElementById('role_comment').value, 
-            silent: document.getElementById('silent_mode').checked 
-        };
+        const payload = { verst_id: selectedVolunteer.id, role_id: document.getElementById('role_id').value, role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text, full_name: selectedVolunteer.full_name, vk_id: vkUser.id, target_vk_id: currentMode === 'self' ? vkUser.id : selectedFriend.id, vk_name: vkUser.first_name + " " + vkUser.last_name, comment: document.getElementById('role_comment').value, silent: document.getElementById('silent_mode').checked };
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("Записано!"); location.reload();
+        location.reload();
+    }
+
+    async function confirmDelete() {
+        closeModal('confirm_modal');
+        const payload = { action: "delete", vk_id: vkUser.id, role_id: currentActionData.extra.roleId, silent: document.getElementById('silent_mode').checked };
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        location.reload();
     }
 
     async function loadQueue() {
-        try {
-            const res = await fetch(SCRIPT_URL);
-            const data = await res.json();
-            const container = document.getElementById('queue_container');
-            container.innerHTML = '';
-            if(data.length === 0) { container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Пока пусто</div>'; return; }
-            data.reverse().forEach(item => {
-                const div = document.createElement('div'); div.className = 'vol-card';
-                const isMine = vkUser && item.vk_id == vkUser.id;
-                
-                const editBtn = isMine ? `<button class="btn-edit" onclick="editMyComment('${item.role_id}', '${item.role_name}', '${item.comment || ''}')">📝</button>` : '';
-                const delBtn = isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}')">Отмена</button>` : '';
-                
-                div.innerHTML = `<div class="vol-info-group"><span class="vol-name-txt">${item.full_name}</span><span class="vol-role-badge">${item.role_name} ${item.comment ? '('+item.comment+')' : ''}</span></div>${editBtn}${delBtn}`;
-                container.appendChild(div);
-            });
-        } catch(e) {}
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+        const container = document.getElementById('queue_container');
+        container.innerHTML = '';
+        data.reverse().forEach(item => {
+            const div = document.createElement('div'); div.className = 'vol-card';
+            const isMine = vkUser && item.vk_id == vkUser.id;
+            const editBtn = isMine ? `<button class="btn-edit" onclick="editMyComment('${item.role_id}', '${item.comment || ''}')">📝</button>` : '';
+            const delBtn = isMine ? `<button class="btn-delete" onclick="preSubmit('delete', {roleId:'${item.role_id}', roleName:'${item.role_name}'})">Отмена</button>` : '';
+            div.innerHTML = `<div class="vol-info-group"><span class="vol-name-txt">${item.full_name}</span><span class="vol-role-badge">${item.role_name} ${item.comment ? '('+item.comment+')' : ''}</span></div>${editBtn}${delBtn}`;
+            container.appendChild(div);
+        });
     }
 
-    function editMyComment(id, name, oldComment) {
+    function editMyComment(id, oldComment) {
         document.getElementById('role_id').value = id;
         onRoleChange();
         document.getElementById('role_comment').value = oldComment;
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    async function deleteMyRole(roleId, roleName) {
-        if (!confirm(`Вы уверены, что хотите отменить запись на "${roleName}"?`)) return;
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "delete", vk_id: vkUser.id, role_id: roleId }) });
-        location.reload();
-    }
-
     async function loadRating() {
         const container = document.getElementById('rating_list');
-        container.innerHTML = '<div style="padding:20px; text-align:center; color:#999;">Загрузка...</div>';
-        try {
-            const res = await fetch(`${SCRIPT_URL}?get_rating=1`);
-            const data = await res.json();
-            data.sort((a,b) => ((b.runs||0) + (b.vols||0)) - ((a.runs||0) + (a.vols||0)));
-            container.innerHTML = '';
-            data.forEach((u, i) => {
-                const item = document.createElement('div'); item.className = 'rating-item';
-                const rB = u.run_club ? `<span class="badge ${u.run_club}">${runIcon} ${u.run_club.replace('run','')}</span>` : '';
-                const vB = u.vol_club ? `<span class="badge ${u.vol_club}">${volIcon} ${u.vol_club.replace('vol','')}</span>` : '';
-                const badges = (rB || vB) ? `<div class="stats-row">${rB} ${vB}</div>` : '<div style="font-size:10px; color:#999;">Участник Станкозавода</div>';
-                item.innerHTML = `<div class="rank">${i+1}</div><div class="user-info"><div class="user-name">${u.name}</div>${badges}</div>`;
-                container.appendChild(item);
-            });
-        } catch (e) { container.innerHTML = 'Ошибка'; }
+        const res = await fetch(`${SCRIPT_URL}?get_rating=1`);
+        const data = await res.json();
+        data.sort((a,b) => ((b.vols||0) + (b.runs||0)) - ((a.vols||0) + (a.runs||0)));
+        container.innerHTML = '';
+        data.forEach((u, i) => {
+            const item = document.createElement('div'); item.className = 'rating-item';
+            item.innerHTML = `<div class="rank">${i+1}</div><div class="user-info"><div class="user-name">${u.name}</div></div>`;
+            container.appendChild(item);
+        });
     }
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -426,22 +362,21 @@
     function switchTab(t) {
         document.getElementById('section_rec').style.display = t === 'rec' ? 'block' : 'none';
         document.getElementById('section_rate').style.display = t === 'rate' ? 'block' : 'none';
-        document.getElementById('tab_rec').classList.toggle('active', t === 'rec');
-        document.getElementById('tab_rate').classList.toggle('active', t === 'rate');
         if (t === 'rate') loadRating();
     }
     function showRoleDetail(id, title, desc) {
-        const img = document.getElementById('role_img'); img.src = `${GITHUB_IMG_BASE}role_${id}.jpg`;
-        document.getElementById('role_title').innerText = title; document.getElementById('role_desc').innerText = desc;
+        document.getElementById('role_img').src = `https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_${id}.jpg`;
+        document.getElementById('role_title').innerText = title;
+        document.getElementById('role_desc').innerText = desc;
         openModal('modal_role_detail');
     }
     function showQR(id, name) {
         const qrBox = document.getElementById('qr_img_box');
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=A${id}`;
-        qrBox.innerHTML = 'Генерация...'; document.getElementById('qr_id_text').innerText = `A${id}`;
+        qrBox.innerHTML = '';
+        document.getElementById('qr_id_text').innerText = `A${id}`;
         openModal('qr_modal');
-        const img = new Image(); img.onload = () => { qrBox.innerHTML = ''; img.className = 'qr-code-img'; img.style.width = '200px'; img.style.height = '200px'; qrBox.appendChild(img); };
-        img.src = qrUrl;
+        const img = new Image(); img.onload = () => { qrBox.appendChild(img); img.style.width="200px"; };
+        img.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=A${id}`;
     }
     function closeQR() { closeModal('qr_modal'); }
 </script>
