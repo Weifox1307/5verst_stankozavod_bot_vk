@@ -8,88 +8,99 @@
     <style>
         :root { --primary: #2B326D; --accent: #E6564C; --bg: #f5f5f5; }
         body { font-family: -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif; padding: 0; background: var(--bg); color: #333; margin: 0; padding-bottom: 80px; }
-
         .tabs { display: flex; background: var(--primary); position: sticky; top: 0; z-index: 1000; padding: 5px; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .tab { flex: 1; text-align: center; padding: 12px; font-weight: bold; color: #fff; opacity: 0.6; cursor: pointer; border-radius: 8px; font-size: 14px; }
         .tab.active { opacity: 1; background: rgba(255,255,255,0.15); }
-
         .card { background: white; padding: 16px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 15px; border: 1px solid #eef0f2; }
         h2 { color: var(--primary); font-size: 18px; margin: 0 0 12px 0; border-bottom: 2px solid #f0f2ff; padding-bottom: 8px; }
         .date-badge { color: var(--accent); }
-
         .welcome-msg { background: #f0f2ff; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 15px; color: var(--primary); display: none; border: 1px solid #dce1e6; line-height: 1.6; }
         .btn-qr { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
-
         label { font-size: 11px; color: #999; margin-left: 4px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
-        
+       
         /* Стили для комментария и опций */
         .comment-box { display: none; margin-bottom: 15px; padding: 10px; background: #fff9f9; border-radius: 10px; border: 1px dashed var(--accent); }
-        .silent-box { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            margin: 15px 0; 
-            font-size: 14px; 
-            color: #555; 
+        .silent-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #555;
             cursor: pointer;
             padding: 10px;
             background: #f9fafb;
             border-radius: 10px;
             border: 1px solid #ebedef;
         }
-        /* Увеличиваем саму галочку для пальца */
-        .silent-box input[type="checkbox"] { 
-            width: 22px; 
-            height: 22px; 
-            margin: 0; 
+        .silent-box input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin: 0;
             cursor: pointer;
             flex-shrink: 0;
-            -webkit-appearance: checkbox; /* Принудительный показ на iOS/Android */
+            -webkit-appearance: checkbox;
         }
-
         button#submit_btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 12px rgba(230, 86, 76, 0.2); }
         button:disabled { background: #b0b0b0; box-shadow: none; }
-
         .vol-card { background: white; padding: 10px 15px; border-radius: 12px; border: 1px solid #ebedef; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .vol-info-group { display: flex; flex-direction: column; gap: 4px; }
         .vol-role-badge { background: #f0f2ff; color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; width: fit-content; }
         .vol-name-txt { font-weight: 600; font-size: 14px; color: #333; }
         .vol-comment-txt { font-size: 12px; color: #E6564C; font-style: italic; }
         .btn-delete { background: #feebeb; color: #E6564C; border: 1px solid #ffdada; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; }
-
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; padding: 20px; box-sizing: border-box; }
         .modal-content { background: #ffffff !important; padding: 25px; border-radius: 24px; width: 100%; max-width: 320px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); color: #333; text-align: center; }
         .close-modal { margin-top: 20px; color: white; font-weight: bold; cursor: pointer; text-decoration: underline; font-size: 15px; }
-
         .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .role-item-btn { background: #f8f9fa; border: 1px solid #eef0f2; padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; }
         .role-item-btn img { width: 50px; height: 50px; margin-bottom: 8px; border-radius: 10px; object-fit: cover; }
         .role-item-btn span { font-size: 11px; font-weight: bold; color: var(--primary); display: block; line-height: 1.2; }
-
         .rating-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f0f2f5; }
         .rank { width: 35px; font-weight: 900; color: var(--primary); font-size: 16px; opacity: 0.4; flex-shrink: 0; }
         .user-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .user-name { font-weight: 700; font-size: 15px; color: #333; line-height: 1.2; }
         .stats-row { display: flex; gap: 6px; flex-wrap: wrap; width: fit-content; }
         .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #fff; display: flex; align-items: center; gap: 4px; width: auto; }
-
         .run10 { background: #fecc3f; color: #333; } .run25 { background: #f29104; } .run50 { background: #e6464c; } .run100, .run250, .run500 { background: #8c1f28; }
         .vol10 { background: #c9b4d8; color: #333; } .vol25 { background: #9d82aa; } .vol50 { background: #6c5391; } .vol100, .vol250, .vol500 { background: #422d58; }
         .badge img { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(100%); }
         .run10 img, .vol10 img { filter: brightness(0) saturate(100%); }
-
         .role-detail-img { width: 100%; height: auto; min-height: 150px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee; object-fit: cover; background: #fafafa; display: block; }
         .qr-code-img { width: 220px; height: 220px; margin: 10px auto; display: block; background: #fff; }
-
         .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
-        #search_results, #rate_results, #friend_vk_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); top: 52px; }
+        #search_results, #rate_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); top: 52px; }
+        
+        /* Новый стиль для выбранного друга */
+        .selected-friend {
+            background: #f0f2ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #dce1e6;
+        }
+        .selected-friend img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .change-friend-btn {
+            background: #ebedef;
+            color: #2B326D;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-
 <div class="fab-help" onclick="openModal('modal_help')">?</div>
-
 <div id="modal_help" class="modal" onclick="closeModal('modal_help')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 style="border:none; text-align:center; margin-bottom: 15px;">Глоссарий</h2>
@@ -101,7 +112,6 @@
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
-
 <div id="modal_roles" class="modal" onclick="closeModal('modal_roles')">
     <div class="modal-content" onclick="event.stopPropagation()" style="max-width:350px;">
         <h2 style="border:none;">Ключевые роли</h2>
@@ -128,7 +138,6 @@
     </div>
     <div class="close-modal">Назад</div>
 </div>
-
 <div id="modal_role_detail" class="modal" onclick="closeModal('modal_role_detail')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <img id="role_img" class="role-detail-img" src="">
@@ -137,7 +146,6 @@
     </div>
     <div class="close-modal">Назад</div>
 </div>
-
 <div id="modal_guide" class="modal" onclick="closeModal('modal_guide')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 style="border:none;">Как пользоваться?</h2>
@@ -150,7 +158,6 @@
     </div>
     <div class="close-modal">Назад</div>
 </div>
-
 <div id="modal_about" class="modal" onclick="closeModal('modal_about')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 style="border:none;">5 вёрст в парке Станкозавода</h2>
@@ -161,7 +168,6 @@
     </div>
     <div class="close-modal">Назад</div>
 </div>
-
 <div id="qr_modal" class="modal" onclick="closeQR()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 style="color:var(--primary); margin:0 0 15px 0;">Личная карточка</h3>
@@ -173,36 +179,38 @@
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
-
 <div class="tabs">
     <div id="tab_rec" class="tab active" onclick="switchTab('rec')">ЗАПИСЬ</div>
     <div id="tab_rate" class="tab" onclick="switchTab('rate')">РЕЙТИНГ</div>
 </div>
-
 <div id="section_rec">
     <div class="card">
         <h2>Запись на <span id="event_date" class="date-badge">...</span></h2>
         <div id="welcome_back" class="welcome-msg"></div>
-
         <label>1. Кто пойдет волонтерить (5 вёрст):</label>
         <div style="position:relative">
             <input type="text" id="verst_search" placeholder="Фамилия или ID 5 вёрст..." autocomplete="off">
             <div id="search_results"></div>
         </div>
-
         <label>2. Чей профиль VK привязать (для ссылки):</label>
         <select id="vk_id_mode" onchange="toggleFriendVk()">
             <option value="me">Мой профиль (как автора)</option>
             <option value="friend">Другой человек (выбрать из ВК)</option>
         </select>
-        
-        <div id="friend_vk_container" style="display:none; position:relative;">
-            <input type="text" id="friend_vk_search" placeholder="Начните вводить имя друга..." autocomplete="off">
-            <div id="friend_vk_results"></div>
+       
+        <div id="friend_vk_container" style="display:none;">
+            <div id="selected_friend_display" style="display:none;" class="selected-friend">
+                <img id="selected_friend_photo" src="">
+                <div style="flex:1;">
+                    <div id="selected_friend_name" style="font-weight:600;"></div>
+                    <div id="selected_friend_id" style="font-size:12px; color:#666;"></div>
+                </div>
+                <button class="change-friend-btn" onclick="selectAnotherFriend()">Выбрать другого</button>
+            </div>
+            <button id="choose_friend_btn" class="btn-qr" onclick="selectFriendFromVK()" style="margin-top:8px;">Выбрать друга из ВК</button>
             <input type="hidden" id="selected_vk_id">
             <input type="hidden" id="selected_vk_name">
         </div>
-
         <label>3. Позиция волонтера:</label>
         <select id="role_id" onchange="handleRoleChange()">
             <option value="" disabled selected>Выберите роль из списка</option>
@@ -220,22 +228,18 @@
                 <option value="3">Сортировка карточек</option><option value="4">Обработка результатов</option><option value="6">Связи с общественностью</option><option value="9">Хранение и доставка оборудования</option><option value="10">Разное</option><option value="12">Завершение мероприятия</option><option value="14">Проверка карточек позиций</option><option value="15">Инструктаж новых участников</option><option value="16">Организация финиша</option><option value="17">Ведущий велосипед</option><option value="18">Помощь в раздаче карточек позиций</option><option value="20">Координация волонтёров</option><option value="23">Составление отчёта</option><option value="28">Пейсмейкер</option><option value="30">Лидер для слабовидящих</option><option value="31">Проведение разминки</option><option value="32">Сурдопереводчик</option><option value="33">Координатор парковки</option><option value="34">Проверка трассы</option><option value="35">Разметка трассы</option><option value="36">Ведущий мероприятия</option><option value="37">Проведение предстартового брифинга</option><option value="38">Видеограф</option>
             </optgroup>
         </select>
-
         <div id="comment_container" class="comment-box">
             <label id="comment_label">Уточнение (необязательно):</label>
             <input type="text" id="role_comment" placeholder="Напр: точка 2 или что принесете">
         </div>
-
         <label class="silent-box">
             <input type="checkbox" id="silent_mode"> Не пинговать чат (тихая запись)
         </label>
-
         <button id="submit_btn" onclick="sendData()" disabled>Выполните шаги выше</button>
     </div>
     <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px; text-transform:uppercase;">Уже в списке:</div>
     <div id="queue_container" style="padding:10px 15px;"></div>
 </div>
-
 <div id="section_rate" style="display:none">
     <div class="card">
         <h2>Поиск участника</h2>
@@ -250,15 +254,13 @@
         <div id="rating_list">Загрузка рейтинга...</div>
     </div>
 </div>
-
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-zdstFpWqHZ7AF3jFDcn-E23PBYCHZ9zRmRZ5BB1R12J4YN8pI6qUTcJwLODcWhK8DQ/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYiEqMZz3Anmj4wZEBbl_ruh1kHXOI9hl1dRz9uOdOpHa6wccrMhxB-qLDGk1wGckcsw/exec';
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
-
-    let selectedVolunteer = null; 
+    let selectedVolunteer = null;
     let vkUser = null;
-    let friendsCache = [];
+    let currentSelectedFriend = null;
 
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
     const volIcon = "🧡 ";
@@ -323,79 +325,61 @@
     }
     init();
 
-    // Переключение режима записи друга
     function toggleFriendVk() {
         const mode = document.getElementById('vk_id_mode').value;
         const container = document.getElementById('friend_vk_container');
         if (mode === 'friend') {
             container.style.display = 'block';
-            loadFriends();
+            if (!currentSelectedFriend) {
+                document.getElementById('choose_friend_btn').style.display = 'block';
+                document.getElementById('selected_friend_display').style.display = 'none';
+            }
         } else {
             container.style.display = 'none';
             document.getElementById('selected_vk_id').value = "";
+            currentSelectedFriend = null;
         }
         validateForm();
     }
 
-    // Загрузка друзей для поиска
-    async function loadFriends() {
-        if (friendsCache.length > 0) return;
+    async function selectFriendFromVK() {
         try {
             const data = await vkBridge.send("VKWebAppGetFriends", { multi: false });
-            friendsCache = data.users;
-        } catch (e) { console.error("Ошибка загрузки друзей", e); }
+            if (data.users && data.users.length > 0) {
+                const friend = data.users[0];
+                currentSelectedFriend = friend;
+                document.getElementById('selected_vk_id').value = friend.id;
+                document.getElementById('selected_vk_name').value = friend.first_name + " " + friend.last_name;
+
+                document.getElementById('selected_friend_photo').src = friend.photo_100 || 'https://vk.com/images/camera_100.png';
+                document.getElementById('selected_friend_name').innerText = friend.first_name + " " + friend.last_name;
+                document.getElementById('selected_friend_id').innerText = "ID: " + friend.id;
+
+                document.getElementById('selected_friend_display').style.display = 'flex';
+                document.getElementById('choose_friend_btn').style.display = 'none';
+
+                validateForm();
+            }
+        } catch (e) {
+            alert("Не удалось открыть список друзей. Попробуйте ещё раз.");
+            console.error(e);
+        }
     }
 
-    // Поиск друга: заменяем обработчик на более мощный
-    document.getElementById('friend_vk_search').addEventListener('input', function(e) {
-        const query = this.value.toLowerCase().trim();
-        const results = document.getElementById('friend_vk_results');
-        
-        if (query.length < 2) { 
-            results.style.display = 'none'; 
-            return; 
-        }
-        
-        // Фильтруем локальный кеш друзей
-        const filtered = friendsCache.filter(f => {
-            const fullName = (f.first_name + " " + f.last_name).toLowerCase();
-            return fullName.includes(query);
-        }).slice(0, 10);
+    function selectAnotherFriend() {
+        currentSelectedFriend = null;
+        document.getElementById('selected_friend_display').style.display = 'none';
+        document.getElementById('choose_friend_btn').style.display = 'block';
+        document.getElementById('selected_vk_id').value = "";
+        document.getElementById('selected_vk_name').value = "";
+        validateForm();
+    }
 
-        if (filtered.length > 0) {
-            results.innerHTML = '';
-            filtered.forEach(f => {
-                const div = document.createElement('div');
-                div.style = "padding:12px; border-bottom:1px solid #f0f2f5; cursor:pointer; display:flex; align-items:center; gap:12px; background:white;";
-                div.innerHTML = `<img src="${f.photo_100}" style="width:35px; height:35px; border-radius:50%"> 
-                                 <span style="font-size:14px; color:#000;">${f.first_name} ${f.last_name}</span>`;
-                
-                // Используем touchend для мобилок и click для ПК
-                const selectFriend = (event) => {
-                    event.preventDefault();
-                    document.getElementById('selected_vk_id').value = f.id;
-                    document.getElementById('selected_vk_name').value = f.first_name + " " + f.last_name;
-                    document.getElementById('friend_vk_search').value = f.first_name + " " + f.last_name;
-                    results.style.display = 'none';
-                    validateForm();
-                };
-                
-                div.addEventListener('click', selectFriend);
-                results.appendChild(div);
-            });
-            results.style.display = 'block';
-        } else {
-            results.style.display = 'none';
-        }
-    });
-
-    // Логика появления поля уточнения
     function handleRoleChange() {
         const roleId = document.getElementById('role_id').value;
         const commentBox = document.getElementById('comment_container');
         const label = document.getElementById('comment_label');
-        
-        // Позиции: Подготовка(8), Склад(9), Маршал(7)
+       
         if (["7", "8", "9"].includes(roleId)) {
             commentBox.style.display = 'block';
             if (roleId == "7") label.innerText = "Какая точка (напр: точка 2)?";
@@ -428,7 +412,7 @@
                         validateForm();
                     } else {
                         resultBox.innerHTML = '<div style="padding:15px">Сохраняем...</div>';
-                        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "sync_only", vk_id: vkUser.id, verst_id: v.id, full_name: v.full_name }) });
+                        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "sync_only", vk_id: vkUser.id, verst_id: v.id, full_name: v.full_name }) });
                         alert("Карта сохранена!"); location.reload();
                     }
                 };
@@ -452,12 +436,12 @@
         const role = document.getElementById('role_id').value;
         const mode = document.getElementById('vk_id_mode').value;
         const friendId = document.getElementById('selected_vk_id').value;
-        
+       
         const isUserSelected = selectedVolunteer !== null;
         const isVkSelected = (mode === 'me') || (mode === 'friend' && friendId);
-        
+       
         btn.disabled = !(isUserSelected && isVkSelected && role);
-        
+       
         if (!isUserSelected) btn.innerText = "1. Выбери человека";
         else if (!isVkSelected) btn.innerText = "2. Выбери профиль ВК";
         else if (!role) btn.innerText = "3. Выбери роль";
@@ -466,28 +450,40 @@
 
     async function sendData() {
         const btn = document.getElementById('submit_btn');
-        btn.innerText = "Записываем..."; btn.disabled = true;
-
+        btn.innerText = "Записываем..."; 
+        btn.disabled = true;
+        
         const mode = document.getElementById('vk_id_mode').value;
         const targetVkId = mode === 'me' ? vkUser.id : document.getElementById('selected_vk_id').value;
         const targetVkName = mode === 'me' ? (vkUser.first_name + " " + vkUser.last_name) : document.getElementById('selected_vk_name').value;
 
-        const payload = { 
-            verst_id: selectedVolunteer.id, 
-            role_id: document.getElementById('role_id').value, 
-            role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text, 
-            full_name: selectedVolunteer.full_name, 
-            
+        const payload = {
+            verst_id: selectedVolunteer.id,
+            role_id: document.getElementById('role_id').value,
+            role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text,
+            full_name: selectedVolunteer.full_name,
+           
             author_vk_id: vkUser.id,
-            target_vk_id: targetVkId, 
+            target_vk_id: targetVkId,
             target_vk_name: targetVkName,
-            
+           
             comment: document.getElementById('role_comment').value,
             silent: document.getElementById('silent_mode').checked
         };
 
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("Записано!"); location.reload();
+        try {
+            await fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                body: JSON.stringify(payload) 
+            });
+            alert("Записано!");
+            location.reload();
+        } catch (e) {
+            alert("Ошибка при записи. Попробуйте ещё раз.");
+            console.error(e);
+            btn.innerText = "Записаться";
+            btn.disabled = false;
+        }
     }
 
     async function loadRating() {
@@ -513,10 +509,9 @@
     async function deleteMyRole(roleId, roleName, fullName) {
         const confirmDelete = confirm(`Вы уверены, что хотите отменить запись "${fullName}" на роль "${roleName}"?`);
         if (!confirmDelete) return;
-
         try {
             const payload = { action: "delete", vk_id: vkUser.id, role_id: roleId, person_name: fullName, role_name: roleName };
-            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
             alert("Запись удалена!");
             location.reload();
         } catch (e) {
@@ -537,12 +532,9 @@
             data.reverse().forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'vol-card';
-
-                // Удалять может автор записи
                 const isMine = vkUser && (item.author_vk_id == vkUser.id || item.vk_id == vkUser.id);
                 const deleteBtn = isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}')">Отмена</button>` : '';
                 const commentHtml = item.comment ? `<span class="vol-comment-txt">(${item.comment})</span>` : '';
-
                 div.innerHTML = `
                     <div class="vol-info-group">
                         <span class="vol-name-txt">${item.full_name} ${commentHtml}</span>
