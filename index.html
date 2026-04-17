@@ -8,7 +8,7 @@
     <style>
         :root { --primary: #2B326D; --accent: #E6564C; --bg: #f5f5f5; }
         body { font-family: -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif; padding: 0; background: var(--bg); color: #333; margin: 0; padding-bottom: 80px; }
-        
+
         .tabs { display: flex; background: var(--primary); position: sticky; top: 0; z-index: 1000; padding: 5px; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .tab { flex: 1; text-align: center; padding: 12px; font-weight: bold; color: #fff; opacity: 0.6; cursor: pointer; border-radius: 8px; font-size: 14px; }
         .tab.active { opacity: 1; background: rgba(255,255,255,0.15); }
@@ -16,20 +16,21 @@
         .card { background: white; padding: 16px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 15px; border: 1px solid #eef0f2; }
         h2 { color: var(--primary); font-size: 18px; margin: 0 0 12px 0; border-bottom: 2px solid #f0f2ff; padding-bottom: 8px; }
         .date-badge { color: var(--accent); }
-        
+
         .welcome-msg { background: #f0f2ff; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 15px; color: var(--primary); display: none; border: 1px solid #dce1e6; line-height: 1.6; }
         .btn-qr { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
-        
+
         label { font-size: 11px; color: #999; margin-left: 4px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; margin-top: 10px; }
         input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
         button#submit_btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 12px rgba(230, 86, 76, 0.2); }
         button:disabled { background: #b0b0b0; box-shadow: none; }
 
         .vol-card { background: white; padding: 10px 15px; border-radius: 12px; border: 1px solid #ebedef; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .vol-info-group { display: flex; flex-direction: column; gap: 4px; }
+        .vol-info-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
         .vol-role-badge { background: #f0f2ff; color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; width: fit-content; }
         .vol-name-txt { font-weight: 600; font-size: 14px; color: #333; }
-        .btn-delete { background: #feebeb; color: #E6564C; border: 1px solid #ffdada; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-delete { background: #feebeb; color: #E6564C; border: 1px solid #ffdada; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; margin-left: 5px; }
+        .btn-edit { background: #f0f2ff; color: var(--primary); border: 1px solid #dce1e6; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; padding: 20px; box-sizing: border-box; }
         .modal-content { background: #ffffff !important; padding: 25px; border-radius: 24px; width: 100%; max-width: 320px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); color: #333; text-align: center; }
@@ -40,22 +41,13 @@
         .role-item-btn img { width: 50px; height: 50px; margin-bottom: 8px; border-radius: 10px; object-fit: cover; }
         .role-item-btn span { font-size: 11px; font-weight: bold; color: var(--primary); display: block; line-height: 1.2; }
 
-        /* Переключатель Я/Друг */
-        .toggle-group { display: flex; background: #eee; padding: 4px; border-radius: 12px; margin-bottom: 15px; }
-        .toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; background: transparent; color: #666; transition: 0.3s; }
-        .toggle-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-
-        #search_results, #friend_results, #rate_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .result-item { padding: 12px; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; }
-        .result-item:last-child { border-bottom: none; }
-
         .rating-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f0f2f5; }
         .rank { width: 35px; font-weight: 900; color: var(--primary); font-size: 16px; opacity: 0.4; flex-shrink: 0; }
         .user-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .user-name { font-weight: 700; font-size: 15px; color: #333; line-height: 1.2; }
         .stats-row { display: flex; gap: 6px; flex-wrap: wrap; width: fit-content; }
         .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #fff; display: flex; align-items: center; gap: 4px; width: auto; }
-        
+
         .run10 { background: #fecc3f; color: #333; } .run25 { background: #f29104; } .run50 { background: #e6464c; } .run100, .run250, .run500 { background: #8c1f28; }
         .vol10 { background: #c9b4d8; color: #333; } .vol25 { background: #9d82aa; } .vol50 { background: #6c5391; } .vol100, .vol250, .vol500 { background: #422d58; }
         .badge img { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(100%); }
@@ -65,6 +57,13 @@
         .qr-code-img { width: 220px; height: 220px; margin: 10px auto; display: block; background: #fff; }
 
         .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
+        #search_results, #rate_results, #friend_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .result-item { padding: 12px; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; }
+
+        /* Переключатель Я/Друг */
+        .toggle-group { display: flex; background: #eee; padding: 4px; border-radius: 12px; margin-bottom: 15px; margin-top: 10px; }
+        .toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; background: transparent; color: #666; transition: 0.3s; }
+        .toggle-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -87,22 +86,22 @@
     <div class="modal-content" onclick="event.stopPropagation()" style="max-width:350px;">
         <h2 style="border:none;">Ключевые роли</h2>
         <div class="role-grid">
-            <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Главный человек на старте. Координирует волонтеров, проводит брифинг и следит за безопасностью.')">
+            <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Главный человек на старте. Координирует волонтеров.')">
                 <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_1.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Организатор</span>
             </div>
-            <div class="role-item-btn" onclick="showRoleDetail(2, 'Секундомер', 'Нажимает кнопку СТАРТ и фиксирует время каждого финишера.')">
+            <div class="role-item-btn" onclick="showRoleDetail(2, 'Секундомер', 'Фиксирует время каждого финишера.')">
                 <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_2.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Секундомер</span>
             </div>
-            <div class="role-item-btn" onclick="showRoleDetail(11, 'Сканер', 'Сканирует личный штрих-код участника и карточку позиции после финиша.')">
+            <div class="role-item-btn" onclick="showRoleDetail(11, 'Сканер', 'Сканирует штрих-код участника.')">
                 <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_11.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Сканер</span>
             </div>
-            <div class="role-item-btn" onclick="showRoleDetail(13, 'Карточки', 'Выдает карточку с номером позиции каждому финишеру.')">
+            <div class="role-item-btn" onclick="showRoleDetail(13, 'Карточки', 'Выдает карточку с номером позиции.')">
                 <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_13.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Карточки</span>
             </div>
-            <div class="role-item-btn" onclick="showRoleDetail(7, 'Маршал', 'Стоит на поворотах, указывает путь и подбадривает участников.')">
+            <div class="role-item-btn" onclick="showRoleDetail(7, 'Маршал', 'Стоит на поворотах и указывает путь.')">
                 <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_7.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Маршал</span>
             </div>
-            <div class="role-item-btn" onclick="showRoleDetail(19, 'Замыкающий', 'Идет последним, чтобы никто не остался на трассе один.')">
+            <div class="role-item-btn" onclick="showRoleDetail(19, 'Замыкающий', 'Идет последним, чтобы никто не остался один.')">
                 <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_19.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Замыкающий</span>
             </div>
         </div>
@@ -113,18 +112,34 @@
 <div id="modal_role_detail" class="modal" onclick="closeModal('modal_role_detail')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <img id="role_img" class="role-detail-img" src="">
-        <h2 id="role_title" style="color:var(--primary); margin:0 0 10px 0; border:none;"></h2>
-        <div id="role_desc" style="font-size:14px; line-height:1.5; color:#555;"></div>
+        <h2 id="role_title"></h2>
+        <div id="role_desc"></div>
     </div>
     <div class="close-modal">Назад</div>
 </div>
 
-<div id="qr_modal" class="modal" onclick="closeModal('qr_modal')">
+<div id="modal_guide" class="modal" onclick="closeModal('modal_guide')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 style="color:var(--primary); margin:0 0 15px 0;">Личная карточка</h3>
+        <h2>Как пользоваться?</h2>
+        <div style="font-size:14px; text-align:left;">1. Поиск: Фамилия или ID.<br>2. Роль: Выбор из списка.<br>3. Друг: Запись участника из чата.</div>
+    </div>
+    <div class="close-modal">Назад</div>
+</div>
+
+<div id="modal_about" class="modal" onclick="closeModal('modal_about')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2>О нас</h2>
+        <div style="font-size:14px;">Дружеские старты 5 вёрст в парке Станкозавода.</div>
+    </div>
+    <div class="close-modal">Назад</div>
+</div>
+
+<div id="qr_modal" class="modal" onclick="closeQR()">
+    <div class="modal-content">
+        <h3>Личная карточка</h3>
         <div id="qr_img_box"></div>
-        <p id="qr_id_text" style="color:var(--accent); margin:15px 0 0 0; font-weight:900; font-size:26px;"></p>
-        <span id="qr_name_text" style="color:#666; font-size:14px; display:block; margin-top:8px; font-weight:500;"></span>
+        <p id="qr_id_text" style="font-weight:900; font-size:26px; color:var(--accent);"></p>
+        <span id="qr_name_text"></span>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -132,14 +147,14 @@
 <!-- Модалка подтверждения -->
 <div id="confirm_modal" class="modal">
     <div class="modal-content">
-        <h3 id="conf_title">Подтвердите запись</h3>
-        <p id="conf_text" style="font-size:14px; text-align:left; white-space:pre-line; line-height:1.4;"></p>
-        <label style="margin-top:15px; display:flex; align-items:center; gap:8px; text-transform: none; font-size:13px; color:#333;">
-            <input type="checkbox" id="silent_mode" style="width:18px; height:18px; margin:0;"> Не пинговать чат ВК
-        </label>
+        <h3>Подтвердите запись</h3>
+        <p id="conf_text" style="font-size:14px; text-align:left; white-space:pre-line;"></p>
+        <div style="margin-top:15px; text-align:left;">
+            <input type="checkbox" id="silent_mode"> <label for="silent_mode" style="display:inline; text-transform:none;">Не пинговать чат ВК</label>
+        </div>
         <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="closeModal('confirm_modal')" style="flex:1; padding:12px; border-radius:10px; border:1px solid #ccc; background:#fff;">Отмена</button>
-            <button onclick="sendData()" style="flex:1; padding:12px; border:none; background:var(--accent); color:white; font-weight:bold; border-radius:10px;">ОК</button>
+            <button onclick="closeModal('confirm_modal')" style="flex:1; padding:10px; border-radius:10px;">Отмена</button>
+            <button onclick="sendData()" style="flex:1; padding:10px; background:var(--accent); color:white; border:none; border-radius:10px;">ОК</button>
         </div>
     </div>
 </div>
@@ -157,12 +172,12 @@
         <label>Кого записываем?</label>
         <div class="toggle-group">
             <button id="mode_self" class="toggle-btn active" onclick="setMode('self')">СЕБЯ</button>
-            <button id="mode_friend" class="toggle-btn" onclick="setMode('friend')">ДРУГА ИЗ ЧАТА</button>
+            <button id="mode_friend" class="toggle-btn" onclick="setMode('friend')">ДРУГА</button>
         </div>
 
-        <label>1. Участник 5 вёрст (для NRMS):</label>
+        <label>1. Участник 5 вёрст:</label>
         <div style="position:relative">
-            <input type="text" id="verst_search" placeholder="Введите фамилию или ID..." autocomplete="off">
+            <input type="text" id="verst_search" placeholder="Фамилия или ID..." autocomplete="off">
             <div id="search_results"></div>
         </div>
 
@@ -173,33 +188,33 @@
                 <div id="friend_results"></div>
             </div>
         </div>
-        
-        <label>Позиция волонтера:</label>
-<select id="role_id" onchange="validateForm()">
-    <option value="" disabled selected>Выберите роль из списка</option>
-    <optgroup label="Основные позиции">
-        <option value="1">Организатор</option>
-        <option value="2">Секундомер</option>
-        <option value="5">Фотограф</option>
-        <option value="7">Маршал</option>
-        <option value="8">Подготовка мероприятия</option>
-        <option value="11">Сканирование штрих-кодов</option>
-        <option value="13">Раздача карточек позиций</option>
-        <option value="19">Замыкающий</option>
-    </optgroup>
-    <optgroup label="Дополнительные позиции">
-        <option value="3">Сортировка карточек</option><option value="4">Обработка результатов</option><option value="6">Связи с общественностью</option><option value="9">Хранение и доставка оборудования</option><option value="10">Разное</option><option value="12">Завершение мероприятия</option><option value="14">Проверка карточек позиций</option><option value="15">Инструктаж новых участников</option><option value="16">Организация финиша</option><option value="17">Ведущий велосипед</option><option value="18">Помощь в раздаче карточек позиций</option><option value="20">Координация волонтёров</option><option value="23">Составление отчёта</option><option value="28">Пейсмейкер</option><option value="30">Лидер для слабовидящих</option><option value="31">Проведение разминки</option><option value="32">Сурдопереводчик</option><option value="33">Координатор парковки</option><option value="34">Проверка трассы</option><option value="35">Разметка трассы</option><option value="36">Ведущий мероприятия</option><option value="37">Проведение предстартового брифинга</option><option value="38">Видеограф</option>
-    </optgroup>
-</select>
+
+        <label>3. Позиция волонтера:</label>
+        <select id="role_id" onchange="onRoleChange()">
+            <option value="" disabled selected>Выберите роль из списка</option>
+            <optgroup label="Основные позиции">
+                <option value="1">Организатор</option>
+                <option value="2">Секундомер</option>
+                <option value="5">Фотограф</option>
+                <option value="7">Маршал</option>
+                <option value="8">Подготовка мероприятия</option>
+                <option value="11">Сканирование штрих-кодов</option>
+                <option value="13">Раздача карточек позиций</option>
+                <option value="19">Замыкающий</option>
+            </optgroup>
+            <optgroup label="Дополнительные позиции">
+                <option value="3">Сортировка карточек</option><option value="4">Обработка результатов</option><option value="6">Связи с общественностью</option><option value="9">Хранение и доставка оборудования</option><option value="10">Разное</option><option value="12">Завершение мероприятия</option><option value="14">Проверка карточек позиций</option><option value="15">Инструктаж новых участников</option><option value="16">Организация финиша</option><option value="17">Ведущий велосипед</option><option value="18">Помощь в раздаче карточек позиций</option><option value="20">Координация волонтёров</option><option value="23">Составление отчёта</option><option value="28">Пейсмейкер</option><option value="30">Лидер для слабовидящих</option><option value="31">Проведение разминки</option><option value="32">Сурдопереводчик</option><option value="33">Координатор парковки</option><option value="34">Проверка трассы</option><option value="35">Разметка трассы</option><option value="36">Ведущий мероприятия</option><option value="37">Проведение предстартового брифинга</option><option value="38">Видеограф</option>
+            </optgroup>
+        </select>
 
         <div id="comment_block" style="display:none">
-            <label id="comment_label">Уточнение (точка / еда / инвентарь):</label>
-            <input type="text" id="role_comment" placeholder="Напр: Маршал сзади ФОКа / Вкусняшки / Стаканчики">
+            <label id="comment_label">Инфо (точка / еда / инвентарь):</label>
+            <input type="text" id="role_comment" placeholder="Что принесете или где встанете?">
         </div>
 
         <button id="submit_btn" onclick="preSubmit()" disabled>Выберите человека</button>
     </div>
-    <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px; text-transform:uppercase;">Уже в списке:</div>
+    <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px;">УЖЕ В СПИСКЕ:</div>
     <div id="queue_container" style="padding:10px 15px;"></div>
 </div>
 
@@ -212,52 +227,42 @@
         </div>
     </div>
     <div class="card">
-        <h2>Клубный рейтинг участников</h2>
-        <div id="rating_list">Загрузка рейтинга...</div>
+        <h2>Клубный рейтинг</h2>
+        <div id="rating_list">Загрузка...</div>
     </div>
 </div>
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVq3JK_QjCPQ0HZiRo0HjrOe3KeN_Lu84YjfNP1Tl10BhywbxmLO8_lPIKEeNIXMvv_g/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzh_m4tUagvfWw4lOY7ZJuWZzAeodF6EtjSLuJDGyZyIXG5yKKQ8YlurCp0W1Hu5aYycQ/exec'; 
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
 
-    let selectedVolunteer = null; // Данные из 5 вёрст
-    let selectedFriend = null;    // Данные участника чата
-    let vkUser = null;            // Текущий пользователь
-    let chatMembers = [];         // Список участников чата
-    let currentMode = 'self';     // Режим: self или friend
-
+    let selectedVolunteer = null; let selectedFriend = null; let vkUser = null; let chatMembers = []; let currentMode = 'self';
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
     const volIcon = "🧡 ";
 
     async function init() {
         try {
             vkUser = await vkBridge.send("VKWebAppGetUserInfo");
-            
-            // Проверка привязки профиля
             const res = await fetch(`${SCRIPT_URL}?check_vk_id=${vkUser.id}`);
             const data = await res.json();
             if (data.found) {
                 selectedVolunteer = { id: data.verst_id, full_name: data.full_name };
                 document.getElementById('verst_search').value = data.full_name;
-                const welcome = document.getElementById('welcome_back');
-                welcome.style.display = 'block';
-                welcome.innerHTML = `👋 <b>${vkUser.first_name}</b>, твои данные подставлены!<br><button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
+                document.getElementById('welcome_back').style.display = 'block';
+                document.getElementById('welcome_back').innerHTML = `👋 <b>${vkUser.first_name}</b>, твои данные подставлены!<br><button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
                 validateForm();
             }
-
-            // Получение даты
             const dRes = await fetch(SCRIPT_URL + "?get_date=1");
             const dData = await dRes.json();
             document.getElementById('event_date').innerText = dData.date;
             
-            // Загрузка списка участников чата
+            // Получаем участников чата
             try {
                 const chat = await vkBridge.send("VKWebAppGetChatParticipants", {"count": 250});
                 chatMembers = chat.profiles || [];
-            } catch (e) { console.log("Приложение запущено не из чата"); }
-
+            } catch (e) { console.log("Открыто не из чата"); }
+            
             await loadQueue();
         } catch (e) { console.error(e); }
     }
@@ -273,47 +278,31 @@
 
     function onRoleChange() {
         const role = document.getElementById('role_id').value;
-        // Маршал (7), Подготовка (8), Хранение (9)
-        const needsComment = ["7", "8", "9"].includes(role);
-        document.getElementById('comment_block').style.display = needsComment ? 'block' : 'none';
+        document.getElementById('comment_block').style.display = ["7", "8", "9"].includes(role) ? 'block' : 'none';
         validateForm();
     }
 
-    // Поиск друга в чате
+    // Поиск друга
     document.getElementById('friend_search').addEventListener('input', (e) => {
         const q = e.target.value.toLowerCase();
         const resBox = document.getElementById('friend_results');
         if (q.length < 2) { resBox.style.display = 'none'; return; }
-        
-        const filtered = chatMembers.filter(m => 
-            (m.first_name + " " + m.last_name).toLowerCase().includes(q)
-        );
-
-        resBox.innerHTML = '';
-        resBox.style.display = filtered.length ? 'block' : 'none';
+        const filtered = chatMembers.filter(m => (m.first_name + " " + m.last_name).toLowerCase().includes(q));
+        resBox.innerHTML = ''; resBox.style.display = filtered.length ? 'block' : 'none';
         filtered.forEach(m => {
-            const div = document.createElement('div');
-            div.className = 'result-item';
-            div.innerText = `${m.first_name} ${m.last_name}`;
+            const div = document.createElement('div'); div.className = 'result-item'; div.innerText = `${m.first_name} ${m.last_name}`;
             div.onclick = () => {
-                selectedFriend = m;
-                document.getElementById('friend_search').value = `${m.first_name} ${m.last_name}`;
-                resBox.style.display = 'none';
-                validateForm();
+                selectedFriend = m; document.getElementById('friend_search').value = `${m.first_name} ${m.last_name}`;
+                resBox.style.display = 'none'; validateForm();
             };
             resBox.appendChild(div);
         });
     });
 
-    // Поиск 5 вёрст
-    document.getElementById('verst_search').addEventListener('input', (e) => {
-        clearTimeout(window.searchTimeout);
-        window.searchTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('search_results'), true), 500);
-    });
-
+    // Поиск 5 верст
     async function searchHandler(query, resultBox, isRecord) {
         if (query.length < 3) { resultBox.style.display = 'none'; return; }
-        resultBox.innerHTML = '<div style="padding:15px">Ищем в базе...</div>';
+        resultBox.innerHTML = '<div style="padding:15px">Ищем...</div>';
         resultBox.style.display = 'block';
         try {
             const res = await fetch(`${SCRIPT_URL}?search=${encodeURIComponent(query)}`);
@@ -321,31 +310,36 @@
             resultBox.innerHTML = '';
             (data.result?.data || []).forEach(v => {
                 const div = document.createElement('div');
-                div.className = 'result-item';
-                div.innerHTML = `<b>${v.full_name}</b><br><small>ID: ${v.id}</small>`;
+                div.className = 'result-item'; div.innerHTML = `<b>${v.full_name}</b><br><small>ID: ${v.id}</small>`;
                 div.onclick = async () => {
                     if (isRecord) {
-                        selectedVolunteer = v;
-                        document.getElementById('verst_search').value = v.full_name;
-                        resultBox.style.display = 'none';
-                        validateForm();
+                        selectedVolunteer = v; document.getElementById('verst_search').value = v.full_name;
+                        resultBox.style.display = 'none'; validateForm();
                     } else {
-                        resultBox.innerHTML = '<div style="padding:15px">Сохраняем...</div>';
                         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "sync_only", vk_id: vkUser.id, verst_id: v.id, full_name: v.full_name }) });
                         alert("Профиль привязан!"); location.reload();
                     }
                 };
                 resultBox.appendChild(div);
             });
-        } catch (e) { resultBox.innerHTML = 'Ошибка поиска'; }
+        } catch (e) { resultBox.innerHTML = 'Ошибка'; }
     }
+
+    document.getElementById('verst_search').addEventListener('input', (e) => {
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('search_results'), true), 500);
+    });
+
+    document.getElementById('rate_search').addEventListener('input', (e) => {
+        clearTimeout(window.rateTimeout);
+        window.rateTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('rate_results'), false), 500);
+    });
 
     function validateForm() {
         const btn = document.getElementById('submit_btn');
         const rVal = document.getElementById('role_id').value;
-        const isFriendOk = (currentMode === 'self') || (currentMode === 'friend' && selectedFriend);
-        
-        btn.disabled = !(selectedVolunteer && rVal && isFriendOk);
+        const friendOk = (currentMode === 'self') || (currentMode === 'friend' && selectedFriend);
+        btn.disabled = !(selectedVolunteer && rVal && friendOk);
         btn.innerText = btn.disabled ? "Заполните поля" : "Записаться";
     }
 
@@ -353,21 +347,14 @@
         const roleName = document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text;
         const comment = document.getElementById('role_comment').value;
         const who = currentMode === 'self' ? 'Себя' : `${selectedFriend.first_name} ${selectedFriend.last_name}`;
-        
-        document.getElementById('conf_text').innerText = 
-            `Кого: ${who}\n` +
-            `В системе: ${selectedVolunteer.full_name}\n` +
-            `Роль: ${roleName}\n` +
-            `Инфо: ${comment || '—'}`;
-        
+        document.getElementById('conf_text').innerText = `Кого: ${who}\nВ системе: ${selectedVolunteer.full_name}\nРоль: ${roleName}\nИнфо: ${comment || '—'}`;
         openModal('confirm_modal');
     }
 
     async function sendData() {
         closeModal('confirm_modal');
         const btn = document.getElementById('submit_btn');
-        btn.innerText = "Записываем..."; btn.disabled = true;
-
+        btn.innerText = "Запись..."; btn.disabled = true;
         const payload = { 
             verst_id: selectedVolunteer.id, 
             role_id: document.getElementById('role_id').value, 
@@ -375,40 +362,40 @@
             full_name: selectedVolunteer.full_name, 
             vk_id: vkUser.id, 
             target_vk_id: currentMode === 'self' ? vkUser.id : selectedFriend.id,
-            vk_name: vkUser.first_name + " " + vkUser.last_name,
-            comment: document.getElementById('role_comment').value,
-            silent: document.getElementById('silent_mode').checked
+            vk_name: vkUser.first_name + " " + vkUser.last_name, 
+            comment: document.getElementById('role_comment').value, 
+            silent: document.getElementById('silent_mode').checked 
         };
-
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("Успешно записано!"); 
-        location.reload();
+        alert("Записано!"); location.reload();
     }
 
     async function loadQueue() {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-        const container = document.getElementById('queue_container');
-        container.innerHTML = '';
-        if(data.length === 0) {
-            container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">Пока никто не записался</div>';
-            return;
-        }
-        data.reverse().forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'vol-card';
-            const isMine = vkUser && item.vk_id == vkUser.id;
-            const delBtn = isMine ? `<button class="btn-delete" onclick="deleteEntry('${item.role_id}')">Отмена</button>` : '';
-            
-            div.innerHTML = `
-                <div class="vol-info-group">
-                    <span class="vol-name-txt">${item.full_name}</span>
-                    <span class="vol-role-badge">${item.role_name} ${item.comment ? '('+item.comment+')' : ''}</span>
-                </div>
-                ${delBtn}
-            `;
-            container.appendChild(div);
-        });
+        try {
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
+            const container = document.getElementById('queue_container');
+            container.innerHTML = '';
+            if(data.length === 0) { container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Пока пусто</div>'; return; }
+            data.reverse().forEach(item => {
+                const div = document.createElement('div'); div.className = 'vol-card';
+                const isMine = vkUser && item.vk_id == vkUser.id;
+                
+                // Кнопка редактирования для своих
+                const editBtn = isMine ? `<button class="btn-edit" onclick="editMyComment('${item.role_id}', '${item.role_name}', '${item.comment || ''}')">📝</button>` : '';
+                const delBtn = isMine ? `<button class="btn-delete" onclick="deleteEntry('${item.role_id}')">Отмена</button>` : '';
+                
+                div.innerHTML = `<div class="vol-info-group"><span class="vol-name-txt">${item.full_name}</span><span class="vol-role-badge">${item.role_name} ${item.comment ? '('+item.comment+')' : ''}</span></div>${editBtn}${delBtn}`;
+                container.appendChild(div);
+            });
+        } catch(e) {}
+    }
+
+    function editMyComment(id, name, oldComment) {
+        document.getElementById('role_id').value = id;
+        onRoleChange();
+        document.getElementById('role_comment').value = oldComment;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     async function deleteEntry(roleId) {
@@ -417,7 +404,26 @@
         location.reload();
     }
 
-    // --- ФУНКЦИИ ИНТЕРФЕЙСА ---
+    async function loadRating() {
+        const container = document.getElementById('rating_list');
+        container.innerHTML = 'Загрузка...';
+        try {
+            const res = await fetch(`${SCRIPT_URL}?get_rating=1`);
+            const data = await res.json();
+            data.sort((a,b) => ((b.runs||0) + (b.vols||0)) - ((a.runs||0) + (a.vols||0)));
+            container.innerHTML = '';
+            data.forEach((u, i) => {
+                const item = document.createElement('div'); item.className = 'rating-item';
+                const rB = u.run_club ? `<span class="badge ${u.run_club}">${runIcon} ${u.run_club.replace('run','')}</span>` : '';
+                const vB = u.vol_club ? `<span class="badge ${u.vol_club}">${volIcon} ${u.vol_club.replace('vol','')}</span>` : '';
+                item.innerHTML = `<div class="rank">${i+1}</div><div class="user-info"><div class="user-name">${u.name}</div><div class="stats-row">${rB} ${vB}</div></div>`;
+                container.appendChild(item);
+            });
+        } catch (e) { container.innerHTML = 'Ошибка'; }
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function switchTab(t) {
         document.getElementById('section_rec').style.display = t === 'rec' ? 'block' : 'none';
         document.getElementById('section_rate').style.display = t === 'rate' ? 'block' : 'none';
@@ -425,29 +431,20 @@
         document.getElementById('tab_rate').classList.toggle('active', t === 'rate');
         if (t === 'rate') loadRating();
     }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    
     function showRoleDetail(id, title, desc) {
-        const img = document.getElementById('role_img');
-        img.src = `${GITHUB_IMG_BASE}role_${id}.jpg`;
-        document.getElementById('role_title').innerText = title;
-        document.getElementById('role_desc').innerText = desc;
+        const img = document.getElementById('role_img'); img.src = `${GITHUB_IMG_BASE}role_${id}.jpg`;
+        document.getElementById('role_title').innerText = title; document.getElementById('role_desc').innerText = desc;
         openModal('modal_role_detail');
     }
-
     function showQR(id, name) {
         const qrBox = document.getElementById('qr_img_box');
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=A${id}`;
-        qrBox.innerHTML = '<div style="padding:40px; color:#999;">Генерация QR...</div>';
-        document.getElementById('qr_id_text').innerText = `A${id}`;
-        document.getElementById('qr_name_text').innerText = name.toUpperCase();
+        qrBox.innerHTML = 'Генерация...'; document.getElementById('qr_id_text').innerText = `A${id}`;
         openModal('qr_modal');
-        const img = new Image();
-        img.onload = () => { qrBox.innerHTML = ''; img.className = 'qr-code-img'; img.style.width = '200px'; img.style.height = '200px'; qrBox.appendChild(img); };
+        const img = new Image(); img.onload = () => { qrBox.innerHTML = ''; img.className = 'qr-code-img'; img.style.width = '200px'; img.style.height = '200px'; qrBox.appendChild(img); };
         img.src = qrUrl;
     }
+    function closeQR() { closeModal('qr_modal'); }
 </script>
 </body>
 </html>
