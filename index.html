@@ -21,14 +21,18 @@
         .btn-qr { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
 
         label { font-size: 11px; color: #999; margin-left: 4px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; margin-top: 10px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
+        
+        /* Исправленный стиль инпутов, чтобы чекбоксы не ломались */
+        input:not([type="checkbox"]), select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
+        
         button#submit_btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 12px rgba(230, 86, 76, 0.2); }
         button:disabled { background: #b0b0b0; box-shadow: none; }
 
         .vol-card { background: white; padding: 10px 15px; border-radius: 12px; border: 1px solid #ebedef; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .vol-info-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .vol-info-group { display: flex; flex-direction: column; gap: 4px; flex: 1; text-align: left; }
         .vol-role-badge { background: #f0f2ff; color: var(--primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; width: fit-content; }
         .vol-name-txt { font-weight: 600; font-size: 14px; color: #333; }
+        
         .btn-delete { background: #feebeb; color: #E6564C; border: 1px solid #ffdada; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; margin-left: 5px; }
         .btn-edit { background: #f0f2ff; color: var(--primary); border: 1px solid #dce1e6; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
@@ -43,27 +47,22 @@
 
         .rating-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f0f2f5; }
         .rank { width: 35px; font-weight: 900; color: var(--primary); font-size: 16px; opacity: 0.4; flex-shrink: 0; }
-        .user-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .user-info { flex: 1; display: flex; flex-direction: column; gap: 4px; text-align: left; }
         .user-name { font-weight: 700; font-size: 15px; color: #333; line-height: 1.2; }
         .stats-row { display: flex; gap: 6px; flex-wrap: wrap; width: fit-content; }
         .badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #fff; display: flex; align-items: center; gap: 4px; width: auto; }
 
-        .run10 { background: #fecc3f; color: #333; } .run25 { background: #f29104; } .run50 { background: #e6464c; } .run100, .run250, .run500 { background: #8c1f28; }
-        .vol10 { background: #c9b4d8; color: #333; } .vol25 { background: #9d82aa; } .vol50 { background: #6c5391; } .vol100, .vol250, .vol500 { background: #422d58; }
-        .badge img { width: 12px; height: 12px; filter: brightness(0) saturate(100%) invert(100%); }
-        .run10 img, .vol10 img { filter: brightness(0) saturate(100%); }
-
+        .run10 { background: #fecc3f; color: #333; } .run50 { background: #e6464c; } .vol10 { background: #c9b4d8; color: #333; }
         .role-detail-img { width: 100%; height: auto; min-height: 150px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee; object-fit: cover; background: #fafafa; display: block; }
-        .qr-code-img { width: 220px; height: 220px; margin: 10px auto; display: block; background: #fff; }
-
-        .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
+        
         #search_results, #rate_results, #friend_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .result-item { padding: 12px; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; }
+        .result-item { padding: 12px; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; font-size: 14px; }
 
-        /* Переключатель Я/Друг */
         .toggle-group { display: flex; background: #eee; padding: 4px; border-radius: 12px; margin-bottom: 15px; margin-top: 10px; }
         .toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; background: transparent; color: #666; transition: 0.3s; }
         .toggle-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
     </style>
 </head>
 <body>
@@ -82,28 +81,35 @@
     <div class="close-modal">Закрыть</div>
 </div>
 
+<div id="modal_guide" class="modal" onclick="closeModal('modal_guide')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="border:none;">Как пользоваться?</h2>
+        <div style="font-size:14px; text-align:left; line-height:1.5;">
+            1. 🔍 <b>Поиск</b>: Введи фамилию для базы 5 вёрст.<br><br>
+            2. 👥 <b>Друг</b>: Если записываешь не себя, выбери участника из чата, чтобы ссылка в списке была верной.<br><br>
+            3. 📝 <b>Инфо</b>: Для маршалов и подготовки можно добавить уточнение (где стоите или что принесете).<br><br>
+            4. 🔕 <b>Тихий режим</b>: Поставь галочку "Не пинговать", если просто правишь опечатку.
+        </div>
+    </div>
+    <div class="close-modal">Назад</div>
+</div>
+
+<div id="modal_about" class="modal" onclick="closeModal('modal_about')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="border:none;">5 вёрст в парке Станкозавода</h2>
+        <div style="font-size:14px; line-height:1.5;">Приложение создано для автоматизации записи волонтеров на еженедельные старты 5 вёрст в парке Станкозавода | Нижний Новгород.</div>
+    </div>
+    <div class="close-modal">Назад</div>
+</div>
+
 <div id="modal_roles" class="modal" onclick="closeModal('modal_roles')">
     <div class="modal-content" onclick="event.stopPropagation()" style="max-width:350px;">
         <h2 style="border:none;">Ключевые роли</h2>
         <div class="role-grid">
-            <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Главный человек на старте. Координирует волонтеров.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_1.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Организатор</span>
-            </div>
-            <div class="role-item-btn" onclick="showRoleDetail(2, 'Секундомер', 'Фиксирует время каждого финишера.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_2.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Секундомер</span>
-            </div>
-            <div class="role-item-btn" onclick="showRoleDetail(11, 'Сканер', 'Сканирует штрих-код участника.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_11.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Сканер</span>
-            </div>
-            <div class="role-item-btn" onclick="showRoleDetail(13, 'Карточки', 'Выдает карточку с номером позиции.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_13.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Карточки</span>
-            </div>
-            <div class="role-item-btn" onclick="showRoleDetail(7, 'Маршал', 'Стоит на поворотах и указывает путь.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_7.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Маршал</span>
-            </div>
-            <div class="role-item-btn" onclick="showRoleDetail(19, 'Замыкающий', 'Идет последним, чтобы никто не остался один.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_19.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Замыкающий</span>
-            </div>
+            <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Координирует волонтеров.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_1.jpg"><span>Организатор</span></div>
+            <div class="role-item-btn" onclick="showRoleDetail(2, 'Секундомер', 'Фиксирует время финишеров.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_2.jpg"><span>Секундомер</span></div>
+            <div class="role-item-btn" onclick="showRoleDetail(7, 'Маршал', 'Указывает путь на трассе.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_7.jpg"><span>Маршал</span></div>
+            <div class="role-item-btn" onclick="showRoleDetail(19, 'Замыкающий', 'Идет последним.')"><img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_19.jpg"><span>Замыкающий</span></div>
         </div>
     </div>
     <div class="close-modal">Назад</div>
@@ -113,48 +119,34 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <img id="role_img" class="role-detail-img" src="">
         <h2 id="role_title"></h2>
-        <div id="role_desc"></div>
+        <div id="role_desc" style="font-size:14px; color:#666;"></div>
     </div>
     <div class="close-modal">Назад</div>
 </div>
 
-<div id="modal_guide" class="modal" onclick="closeModal('modal_guide')">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <h2>Как пользоваться?</h2>
-        <div style="font-size:14px; text-align:left;">1. Поиск: Фамилия или ID.<br>2. Роль: Выбор из списка.<br>3. Друг: Запись участника из чата.</div>
-    </div>
-    <div class="close-modal">Назад</div>
-</div>
-
-<div id="modal_about" class="modal" onclick="closeModal('modal_about')">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <h2>О нас</h2>
-        <div style="font-size:14px;">Дружеские старты 5 вёрст в парке Станкозавода.</div>
-    </div>
-    <div class="close-modal">Назад</div>
-</div>
-
-<div id="qr_modal" class="modal" onclick="closeQR()">
+<div id="qr_modal" class="modal" onclick="closeModal('qr_modal')">
     <div class="modal-content">
         <h3>Личная карточка</h3>
         <div id="qr_img_box"></div>
         <p id="qr_id_text" style="font-weight:900; font-size:26px; color:var(--accent);"></p>
-        <span id="qr_name_text"></span>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
 
-<!-- Модалка подтверждения -->
+<!-- Модалка подтверждения (Исправленная) -->
 <div id="confirm_modal" class="modal">
     <div class="modal-content">
         <h3>Подтвердите запись</h3>
-        <p id="conf_text" style="font-size:14px; text-align:left; white-space:pre-line;"></p>
-        <div style="margin-top:15px; text-align:left;">
-            <input type="checkbox" id="silent_mode"> <label for="silent_mode" style="display:inline; text-transform:none;">Не пинговать чат ВК</label>
+        <p id="conf_text" style="font-size:14px; text-align:left; white-space:pre-line; line-height:1.4;"></p>
+        
+        <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; background:#f9fafb; padding:10px; border-radius:12px;">
+            <input type="checkbox" id="silent_mode" style="width:20px; height:20px; cursor:pointer; margin:0;">
+            <label for="silent_mode" style="margin:0; text-transform:none; color:#333; cursor:pointer;">Не пинговать чат ВК</label>
         </div>
+
         <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="closeModal('confirm_modal')" style="flex:1; padding:10px; border-radius:10px;">Отмена</button>
-            <button onclick="sendData()" style="flex:1; padding:10px; background:var(--accent); color:white; border:none; border-radius:10px;">ОК</button>
+            <button onclick="closeModal('confirm_modal')" style="flex:1; padding:12px; border-radius:10px; border:1px solid #ccc; background:#fff;">Отмена</button>
+            <button onclick="sendData()" style="flex:1; padding:12px; border:none; background:var(--accent); color:white; font-weight:bold; border-radius:10px;">ОК</button>
         </div>
     </div>
 </div>
@@ -175,16 +167,16 @@
             <button id="mode_friend" class="toggle-btn" onclick="setMode('friend')">ДРУГА</button>
         </div>
 
-        <label>Участник 5 вёрст:</label>
+        <label>Участник 5 вёрст (для NRMS):</label>
         <div style="position:relative">
             <input type="text" id="verst_search" placeholder="Фамилия или ID..." autocomplete="off">
             <div id="search_results"></div>
         </div>
 
         <div id="friend_vk_block" style="display:none">
-            <label>Участник чата ВК:</label>
+            <label>Участник чата ВК (для ссылки):</label>
             <div style="position:relative">
-                <input type="text" id="friend_search" placeholder="Начните вводить имя..." autocomplete="off">
+                <input type="text" id="friend_search" placeholder="Поиск по именам в чате..." autocomplete="off">
                 <div id="friend_results"></div>
             </div>
         </div>
@@ -209,25 +201,18 @@
 
         <div id="comment_block" style="display:none">
             <label id="comment_label">Инфо (точка / еда / инвентарь):</label>
-            <input type="text" id="role_comment" placeholder="Что принесете или где встанете?">
+            <input type="text" id="role_comment" placeholder="Уточните детали здесь">
         </div>
 
         <button id="submit_btn" onclick="preSubmit()" disabled>Выберите человека</button>
     </div>
-    <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px;">УЖЕ В СПИСКЕ:</div>
+    <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px; text-transform:uppercase;">Уже в списке:</div>
     <div id="queue_container" style="padding:10px 15px;"></div>
 </div>
 
 <div id="section_rate" style="display:none">
     <div class="card">
-        <h2>Поиск участника</h2>
-        <div style="position:relative">
-            <input type="text" id="rate_search" placeholder="Фамилия или ID..." autocomplete="off">
-            <div id="rate_results"></div>
-        </div>
-    </div>
-    <div class="card">
-        <h2>Клубный рейтинг</h2>
+        <h2>Рейтинг участников</h2>
         <div id="rating_list">Загрузка...</div>
     </div>
 </div>
@@ -238,8 +223,6 @@
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
 
     let selectedVolunteer = null; let selectedFriend = null; let vkUser = null; let chatMembers = []; let currentMode = 'self';
-    const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
-    const volIcon = "🧡 ";
 
     async function init() {
         try {
@@ -250,18 +233,24 @@
                 selectedVolunteer = { id: data.verst_id, full_name: data.full_name };
                 document.getElementById('verst_search').value = data.full_name;
                 document.getElementById('welcome_back').style.display = 'block';
-                document.getElementById('welcome_back').innerHTML = `👋 <b>${vkUser.first_name}</b>, твои данные подставлены!<br><button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
+                document.getElementById('welcome_back').innerHTML = `👋 <b>${vkUser.first_name}</b>, привет! <button class="btn-qr" style="display:inline; width:auto; padding:5px 10px; margin-left:10px;" onclick="showQR('${data.verst_id}', '${data.full_name}')">QR</button>`;
                 validateForm();
             }
             const dRes = await fetch(SCRIPT_URL + "?get_date=1");
             const dData = await dRes.json();
             document.getElementById('event_date').innerText = dData.date;
             
-            // Получаем участников чата
+            // Загрузка участников чата (с попыткой исправления для Desktop)
             try {
                 const chat = await vkBridge.send("VKWebAppGetChatParticipants", {"count": 250});
                 chatMembers = chat.profiles || [];
-            } catch (e) { console.log("Открыто не из чата"); }
+                console.log("Участники загружены:", chatMembers.length);
+            } catch (e) { 
+                console.log("Ошибка загрузки участников чата:", e);
+                // Fallback: пробуем загрузить друзей, если чат недоступен
+                const friends = await vkBridge.send("VKWebAppGetFriends");
+                chatMembers = friends.users || [];
+            }
             
             await loadQueue();
         } catch (e) { console.error(e); }
@@ -278,11 +267,12 @@
 
     function onRoleChange() {
         const role = document.getElementById('role_id').value;
+        // Маршал (7), Подготовка (8), Хранение (9)
         document.getElementById('comment_block').style.display = ["7", "8", "9"].includes(role) ? 'block' : 'none';
         validateForm();
     }
 
-    // Поиск друга
+    // Поиск друга в чате
     document.getElementById('friend_search').addEventListener('input', (e) => {
         const q = e.target.value.toLowerCase();
         const resBox = document.getElementById('friend_results');
@@ -299,7 +289,6 @@
         });
     });
 
-    // Поиск 5 верст
     async function searchHandler(query, resultBox, isRecord) {
         if (query.length < 3) { resultBox.style.display = 'none'; return; }
         resultBox.innerHTML = '<div style="padding:15px">Ищем...</div>';
@@ -315,9 +304,6 @@
                     if (isRecord) {
                         selectedVolunteer = v; document.getElementById('verst_search').value = v.full_name;
                         resultBox.style.display = 'none'; validateForm();
-                    } else {
-                        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "sync_only", vk_id: vkUser.id, verst_id: v.id, full_name: v.full_name }) });
-                        alert("Профиль привязан!"); location.reload();
                     }
                 };
                 resultBox.appendChild(div);
@@ -330,16 +316,11 @@
         window.searchTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('search_results'), true), 500);
     });
 
-    document.getElementById('rate_search').addEventListener('input', (e) => {
-        clearTimeout(window.rateTimeout);
-        window.rateTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('rate_results'), false), 500);
-    });
-
     function validateForm() {
         const btn = document.getElementById('submit_btn');
         const rVal = document.getElementById('role_id').value;
-        const friendOk = (currentMode === 'self') || (currentMode === 'friend' && selectedFriend);
-        btn.disabled = !(selectedVolunteer && rVal && friendOk);
+        const isFriendOk = (currentMode === 'self') || (currentMode === 'friend' && selectedFriend);
+        btn.disabled = !(selectedVolunteer && rVal && isFriendOk);
         btn.innerText = btn.disabled ? "Заполните поля" : "Записаться";
     }
 
@@ -371,24 +352,18 @@
     }
 
     async function loadQueue() {
-        try {
-            const res = await fetch(SCRIPT_URL);
-            const data = await res.json();
-            const container = document.getElementById('queue_container');
-            container.innerHTML = '';
-            if(data.length === 0) { container.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">Пока пусто</div>'; return; }
-            data.reverse().forEach(item => {
-                const div = document.createElement('div'); div.className = 'vol-card';
-                const isMine = vkUser && item.vk_id == vkUser.id;
-                
-                // Кнопка редактирования для своих
-                const editBtn = isMine ? `<button class="btn-edit" onclick="editMyComment('${item.role_id}', '${item.role_name}', '${item.comment || ''}')">📝</button>` : '';
-                const delBtn = isMine ? `<button class="btn-delete" onclick="deleteEntry('${item.role_id}')">Отмена</button>` : '';
-                
-                div.innerHTML = `<div class="vol-info-group"><span class="vol-name-txt">${item.full_name}</span><span class="vol-role-badge">${item.role_name} ${item.comment ? '('+item.comment+')' : ''}</span></div>${editBtn}${delBtn}`;
-                container.appendChild(div);
-            });
-        } catch(e) {}
+        const res = await fetch(SCRIPT_URL);
+        const data = await res.json();
+        const container = document.getElementById('queue_container');
+        container.innerHTML = '';
+        data.reverse().forEach(item => {
+            const div = document.createElement('div'); div.className = 'vol-card';
+            const isMine = vkUser && item.vk_id == vkUser.id;
+            const editBtn = isMine ? `<button class="btn-edit" onclick="editMyComment('${item.role_id}', '${item.role_name}', '${item.comment || ''}')">📝</button>` : '';
+            const delBtn = isMine ? `<button class="btn-delete" onclick="deleteEntry('${item.role_id}')">Отмена</button>` : '';
+            div.innerHTML = `<div class="vol-info-group"><span class="vol-name-txt">${item.full_name}</span><span class="vol-role-badge">${item.role_name} ${item.comment ? '('+item.comment+')' : ''}</span></div>${editBtn}${delBtn}`;
+            container.appendChild(div);
+        });
     }
 
     function editMyComment(id, name, oldComment) {
@@ -414,12 +389,10 @@
             container.innerHTML = '';
             data.forEach((u, i) => {
                 const item = document.createElement('div'); item.className = 'rating-item';
-                const rB = u.run_club ? `<span class="badge ${u.run_club}">${runIcon} ${u.run_club.replace('run','')}</span>` : '';
-                const vB = u.vol_club ? `<span class="badge ${u.vol_club}">${volIcon} ${u.vol_club.replace('vol','')}</span>` : '';
-                item.innerHTML = `<div class="rank">${i+1}</div><div class="user-info"><div class="user-name">${u.name}</div><div class="stats-row">${rB} ${vB}</div></div>`;
+                item.innerHTML = `<div class="rank">${i+1}</div><div class="user-info"><div class="user-name">${u.name}</div></div>`;
                 container.appendChild(item);
             });
-        } catch (e) { container.innerHTML = 'Ошибка'; }
+        } catch (e) { container.innerHTML = 'Ошибка рейтинга'; }
     }
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -444,7 +417,6 @@
         const img = new Image(); img.onload = () => { qrBox.innerHTML = ''; img.className = 'qr-code-img'; img.style.width = '200px'; img.style.height = '200px'; qrBox.appendChild(img); };
         img.src = qrUrl;
     }
-    function closeQR() { closeModal('qr_modal'); }
 </script>
 </body>
 </html>
