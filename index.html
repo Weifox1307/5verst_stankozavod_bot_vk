@@ -25,8 +25,28 @@
         
         /* Стили для комментария и опций */
         .comment-box { display: none; margin-bottom: 15px; padding: 10px; background: #fff9f9; border-radius: 10px; border: 1px dashed var(--accent); }
-        .silent-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 13px; color: #666; cursor: pointer; }
-        .silent-box input { width: auto; margin: 0; }
+        .silent-box { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin: 15px 0; 
+            font-size: 14px; 
+            color: #555; 
+            cursor: pointer;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border: 1px solid #ebedef;
+        }
+        /* Увеличиваем саму галочку для пальца */
+        .silent-box input[type="checkbox"] { 
+            width: 22px; 
+            height: 22px; 
+            margin: 0; 
+            cursor: pointer;
+            flex-shrink: 0;
+            -webkit-appearance: checkbox; /* Принудительный показ на iOS/Android */
+        }
 
         button#submit_btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 12px rgba(230, 86, 76, 0.2); }
         button:disabled { background: #b0b0b0; box-shadow: none; }
@@ -233,7 +253,7 @@
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbl8_lweFttNjmr3H_ejyiuvPrPvjaIM0Mul8s_YkV6GcqcrPH7qZh1XlpVCSmrDkfSw/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-zdstFpWqHZ7AF3jFDcn-E23PBYCHZ9zRmRZ5BB1R12J4YN8pI6qUTcJwLODcWhK8DQ/exec'; 
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
 
     let selectedVolunteer = null; 
@@ -326,31 +346,47 @@
         } catch (e) { console.error("Ошибка загрузки друзей", e); }
     }
 
-    // Поиск друга в локальном кеше
-    document.getElementById('friend_vk_search').addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
+    // Поиск друга: заменяем обработчик на более мощный
+    document.getElementById('friend_vk_search').addEventListener('input', function(e) {
+        const query = this.value.toLowerCase().trim();
         const results = document.getElementById('friend_vk_results');
-        if (query.length < 2) { results.style.display = 'none'; return; }
         
-        const filtered = friendsCache.filter(f => 
-            (f.first_name + " " + f.last_name).toLowerCase().includes(query)
-        ).slice(0, 10);
+        if (query.length < 2) { 
+            results.style.display = 'none'; 
+            return; 
+        }
+        
+        // Фильтруем локальный кеш друзей
+        const filtered = friendsCache.filter(f => {
+            const fullName = (f.first_name + " " + f.last_name).toLowerCase();
+            return fullName.includes(query);
+        }).slice(0, 10);
 
-        results.innerHTML = '';
-        filtered.forEach(f => {
-            const div = document.createElement('div');
-            div.style = "padding:10px; border-bottom:1px solid #eee; cursor:pointer; display:flex; align-items:center; gap:10px;";
-            div.innerHTML = `<img src="${f.photo_100}" style="width:30px; border-radius:50%"> <span>${f.first_name} ${f.last_name}</span>`;
-            div.onclick = () => {
-                document.getElementById('selected_vk_id').value = f.id;
-                document.getElementById('selected_vk_name').value = f.first_name + " " + f.last_name;
-                document.getElementById('friend_vk_search').value = f.first_name + " " + f.last_name;
-                results.style.display = 'none';
-                validateForm();
-            };
-            results.appendChild(div);
-        });
-        results.style.display = filtered.length ? 'block' : 'none';
+        if (filtered.length > 0) {
+            results.innerHTML = '';
+            filtered.forEach(f => {
+                const div = document.createElement('div');
+                div.style = "padding:12px; border-bottom:1px solid #f0f2f5; cursor:pointer; display:flex; align-items:center; gap:12px; background:white;";
+                div.innerHTML = `<img src="${f.photo_100}" style="width:35px; height:35px; border-radius:50%"> 
+                                 <span style="font-size:14px; color:#000;">${f.first_name} ${f.last_name}</span>`;
+                
+                // Используем touchend для мобилок и click для ПК
+                const selectFriend = (event) => {
+                    event.preventDefault();
+                    document.getElementById('selected_vk_id').value = f.id;
+                    document.getElementById('selected_vk_name').value = f.first_name + " " + f.last_name;
+                    document.getElementById('friend_vk_search').value = f.first_name + " " + f.last_name;
+                    results.style.display = 'none';
+                    validateForm();
+                };
+                
+                div.addEventListener('click', selectFriend);
+                results.appendChild(div);
+            });
+            results.style.display = 'block';
+        } else {
+            results.style.display = 'none';
+        }
     });
 
     // Логика появления поля уточнения
