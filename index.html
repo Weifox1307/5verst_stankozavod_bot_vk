@@ -17,9 +17,8 @@
         .welcome-msg { background: #f0f2ff; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 15px; color: var(--primary); display: none; border: 1px solid #dce1e6; line-height: 1.6; }
         .btn-qr { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
         label { font-size: 11px; color: #999; margin-left: 4px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
        
-        /* Стили для комментария и опций */
         .comment-box { display: none; margin-bottom: 15px; padding: 10px; background: #fff9f9; border-radius: 10px; border: 1px dashed var(--accent); }
         .silent-box {
             display: flex;
@@ -71,32 +70,9 @@
         .qr-code-img { width: 220px; height: 220px; margin: 10px auto; display: block; background: #fff; }
         .fab-help { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; border: 2px solid white; }
         #search_results, #rate_results { background: white; border: 1px solid #dce1e6; border-radius: 12px; max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); top: 52px; }
-        
-        /* Новый стиль для выбранного друга */
-        .selected-friend {
-            background: #f0f2ff;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border: 1px solid #dce1e6;
-        }
-        .selected-friend img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        .change-friend-btn {
-            background: #ebedef;
-            color: #2B326D;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-        }
+        .selected-friend { background: #f0f2ff; padding: 12px; border-radius: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; border: 1px solid #dce1e6; }
+        .selected-friend img { width: 40px; height: 40px; border-radius: 50%; }
+        .change-friend-btn { background: #ebedef; color: #2B326D; border: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -107,8 +83,8 @@
         <button class="btn-qr" onclick="openModal('modal_roles')">📖 Описание ролей</button>
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
-        <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.3</div>
+        <button class="btn-qr" onclick="window.open('https://vk.com/5verstmeshcherskoeozero')">🌐 Наши соцсети</button>
+        <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.4</div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -184,10 +160,15 @@
     <div id="tab_rate" class="tab" onclick="switchTab('rate')">РЕЙТИНГ</div>
 </div>
 <div id="section_rec">
+    <!-- ТЕМАТИКА СТАРТА -->
+    <div class="card" style="border: 2px dashed var(--accent); background: #fffcfc;">
+        <label>Тематика старта (видят все):</label>
+        <textarea id="theme_input" rows="3" placeholder="Например: 21 марта - Всемирный день поэзии..."></textarea>
+        <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
+    </div>
+
     <div class="card">
         <h2>Запись на <span id="event_date" class="date-badge">...</span></h2>
-
-        <!-- === НАЗВАНИЕ ПАРКА === -->
         <div style="background:linear-gradient(90deg, #2B326D, #4f5ca8); color:white; padding:14px 16px; border-radius:12px; margin:12px 0 18px 0; text-align:center; font-weight:700; font-size:16px; box-shadow:0 3px 10px rgba(43,50,109,0.3);">
             📍 <span id="park_name">Парк Станкозавода | Нижний Новгород</span>
         </div>
@@ -225,19 +206,53 @@
                 <option value="2">Секундомер</option>
                 <option value="5">Фотограф</option>
                 <option value="7">Маршал</option>
-                <option value="8">Подготовка мероприятия</option>
                 <option value="11">Сканирование штрих-кодов</option>
                 <option value="13">Раздача карточек позиций</option>
                 <option value="19">Замыкающий</option>
             </optgroup>
+            <optgroup label="Уникальные позиции">
+                <option value="1001">Чай</option>
+                <option value="1002">Вкусняшки</option>
+                <option value="1003">Вода</option>
+                <option value="8">Подготовка мероприятия</option>
+            </optgroup>
             <optgroup label="Дополнительные позиции">
-                <option value="3">Сортировка карточек</option><option value="4">Обработка результатов</option><option value="6">Связи с общественностью</option><option value="9">Хранение и доставка оборудования</option><option value="10">Разное</option><option value="12">Завершение мероприятия</option><option value="14">Проверка карточек позиций</option><option value="15">Инструктаж новых участников</option><option value="16">Организация финиша</option><option value="17">Ведущий велосипед</option><option value="18">Помощь в раздаче карточек позиций</option><option value="20">Координация волонтёров</option><option value="23">Составление отчёта</option><option value="28">Пейсмейкер</option><option value="30">Лидер для слабовидящих</option><option value="31">Проведение разминки</option><option value="32">Сурдопереводчик</option><option value="33">Координатор парковки</option><option value="34">Проверка трассы</option><option value="35">Разметка трассы</option><option value="36">Ведущий мероприятия</option><option value="37">Проведение предстартового брифинга</option><option value="38">Видеограф</option>
+                <option value="3">Сортировка карточек</option><option value="8">Подготовка мероприятия</option><option value="4">Обработка результатов</option><option value="6">Связи с общественностью</option><option value="9">Хранение и доставка оборудования</option><option value="10">Разное</option><option value="12">Завершение мероприятия</option><option value="14">Проверка карточек позиций</option><option value="15">Инструктаж новых участников</option><option value="16">Организация финиша</option><option value="17">Ведущий велосипед</option><option value="18">Помощь в раздаче карточек позиций</option><option value="20">Координация волонтёров</option><option value="23">Составление отчёта</option><option value="28">Пейсмейкер</option><option value="30">Лидер для слабовидящих</option><option value="31">Проведение разминки</option><option value="32">Сурдопереводчик</option><option value="33">Координатор парковки</option><option value="34">Проверка трассы</option><option value="35">Разметка трассы</option><option value="36">Ведущий мероприятия</option><option value="37">Проведение предстартового брифинга</option><option value="38">Видеограф</option>
             </optgroup>
         </select>
+
+        <!-- ВЫБОР ТОЧКИ МАРШАЛА -->
+        <div id="marshal_container" style="display:none;">
+            <label>Где будет стоять Маршал?</label>
+            <select id="marshal_select" onchange="handleMarshalSelect()">
+                <option value="Сзади ФОКа">Сзади ФОКа</option>
+                <option value="Спереди ФОКа">Спереди ФОКа</option>
+                <option value="На перекрестке у детской площадки">На перекрестке</option>
+                <option value="custom">Свой вариант...</option>
+            </select>
+        </div>
+
+        <!-- ВЫБОР ТЕМПА ПЕЙСМЕЙКЕРА -->
+        <div id="pace_container" style="display:none;">
+            <label>Выберите темп:</label>
+            <select id="pace_select" onchange="handlePaceSelect()">
+                <option value="4'30''">4'30''</option>
+                <option value="5'00''">5'00''</option>
+                <option value="5'30''">5'30''</option>
+                <option value="6'00''">6'00''</option>
+                <option value="6'30''">6'30''</option>
+                <option value="7'00''">7'00''</option>
+                <option value="7'30''">7'30''</option>
+                <option value="8'00''">8'00''</option>
+                <option value="custom">Ввести вручную...</option>
+            </select>
+        </div>
+
         <div id="comment_container" class="comment-box">
             <label id="comment_label">Уточнение (необязательно):</label>
-            <input type="text" id="role_comment" placeholder="Напр: точка 2 или что принесете">
+            <input type="text" id="role_comment" placeholder="...">
         </div>
+
         <label class="silent-box">
             <input type="checkbox" id="silent_mode"> Не пинговать чат (тихая запись)
         </label>
@@ -262,7 +277,7 @@
 </div>
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxA5Hkh2QIVYRxzmUjwyC3sukNRzjVXDZ96erbs5nM7D9T-WxIpKQHeZC1r4o7KtVC3aA/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMKZXYOSyRHQL-oRrp-p0nPjNUqzUAE-n7CmcrVai2DoMhQ6SNgBsZ8zCCofiogiiHnw/exec';
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
     let selectedVolunteer = null;
     let vkUser = null;
@@ -307,6 +322,12 @@
     async function init() {
         try {
             vkUser = await vkBridge.send("VKWebAppGetUserInfo");
+
+            // Загрузка темы
+            const themeRes = await fetch(`${SCRIPT_URL}?get_theme=1`);
+            const themeData = await themeRes.json();
+            document.getElementById('theme_input').value = themeData.theme || "";
+
             const res = await fetch(`${SCRIPT_URL}?check_vk_id=${vkUser.id}`);
             const data = await res.json();
             if (data.found) {
@@ -330,6 +351,12 @@
         } catch (e) { console.error(e); }
     }
     init();
+
+    async function saveTheme() {
+        const text = document.getElementById('theme_input').value;
+        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "set_theme", theme: text }) });
+        alert("Тема сохранена!");
+    }
 
     function toggleFriendVk() {
         const mode = document.getElementById('vk_id_mode').value;
@@ -385,17 +412,52 @@
         const roleId = document.getElementById('role_id').value;
         const commentBox = document.getElementById('comment_container');
         const label = document.getElementById('comment_label');
+        const marshalCont = document.getElementById('marshal_container');
+        const paceCont = document.getElementById('pace_container');
        
-        if (["7", "8", "9"].includes(roleId)) {
+        // Сбрасываем видимость спец-контейнеров
+        marshalCont.style.display = 'none';
+        paceCont.style.display = 'none';
+        commentBox.style.display = 'none';
+
+        if (roleId == "7") {
+            marshalCont.style.display = 'block';
+            handleMarshalSelect();
+        } else if (roleId == "28") {
+            paceCont.style.display = 'block';
+            handlePaceSelect();
+        } else if (["8", "9", "1001", "1002"].includes(roleId)) {
             commentBox.style.display = 'block';
-            if (roleId == "7") label.innerText = "Какая точка (напр: точка 2)?";
-            if (roleId == "8") label.innerText = "Что принесете (напр: печенье)?";
+            if (roleId == "8") label.innerText = "Что будете делать?";
             if (roleId == "9") label.innerText = "Что везете (напр: колонка)?";
-        } else {
-            commentBox.style.display = 'none';
-            document.getElementById('role_comment').value = "";
+            if (roleId == "1001") label.innerText = "Какой чай?";
+            if (roleId == "1002") label.innerText = "Какие вкусняшки?";
         }
         validateForm();
+    }
+
+    function handleMarshalSelect() {
+        const val = document.getElementById('marshal_select').value;
+        const commentBox = document.getElementById('comment_container');
+        const label = document.getElementById('comment_label');
+        if (val === 'custom') {
+            commentBox.style.display = 'block';
+            label.innerText = "Укажите точку:";
+        } else {
+            commentBox.style.display = 'none';
+        }
+    }
+
+    function handlePaceSelect() {
+        const val = document.getElementById('pace_select').value;
+        const commentBox = document.getElementById('comment_container');
+        const label = document.getElementById('comment_label');
+        if (val === 'custom') {
+            commentBox.style.display = 'block';
+            label.innerText = "Укажите темп (мин/сек):";
+        } else {
+            commentBox.style.display = 'none';
+        }
     }
 
     async function searchHandler(query, resultBox, isRecord) {
@@ -462,10 +524,22 @@
         const mode = document.getElementById('vk_id_mode').value;
         const targetVkId = mode === 'me' ? vkUser.id : document.getElementById('selected_vk_id').value;
         const targetVkName = mode === 'me' ? (vkUser.first_name + " " + vkUser.last_name) : document.getElementById('selected_vk_name').value;
+        const roleId = document.getElementById('role_id').value;
+        
+        let finalComment = document.getElementById('role_comment').value;
+
+        // Логика комментариев для спец-полей
+        if (roleId == "7") {
+            const mVal = document.getElementById('marshal_select').value;
+            finalComment = (mVal === 'custom') ? finalComment : mVal;
+        } else if (roleId == "28") {
+            const pVal = document.getElementById('pace_select').value;
+            finalComment = (pVal === 'custom') ? finalComment : pVal;
+        }
 
         const payload = {
             verst_id: selectedVolunteer.id,
-            role_id: document.getElementById('role_id').value,
+            role_id: roleId,
             role_name: document.getElementById('role_id').options[document.getElementById('role_id').selectedIndex].text,
             full_name: selectedVolunteer.full_name,
            
@@ -473,7 +547,7 @@
             target_vk_id: targetVkId,
             target_vk_name: targetVkName,
            
-            comment: document.getElementById('role_comment').value,
+            comment: finalComment,
             silent: document.getElementById('silent_mode').checked
         };
 
