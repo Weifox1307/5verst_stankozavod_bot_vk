@@ -61,12 +61,14 @@ def check_birthdays():
     try:
         now = get_moscow_now()
         today = now.strftime("%d.%m")
+        current_month = ".05" # Ищем всех майских для теста
         print(f"DEBUG: Ищем именинников на дату: {today}")
         
         celebrants = []
+        may_birthdays = [] # Список всех именинников мая для логов
         offset = 0
         count = 1000
-        total_with_bdate = 0 # Счётчик тех, у кого дата вообще открыта
+        total_with_bdate = 0
         
         while True:
             params = {
@@ -90,25 +92,33 @@ def check_birthdays():
             for m in items:
                 bd = m.get('bdate', '')
                 if bd:
-                    total_with_bdate += 1 # Нашли человека с открытой датой
+                    total_with_bdate += 1
                     parts = bd.split('.')
                     if len(parts) >= 2:
                         try:
-                            day_month = f"{int(parts[0]):02d}.{int(parts[1]):02d}"
-                            if day_month == today:
-                                name = f"{m.get('first_name', '')} {m.get('last_name', '')}".strip()
-                                celebrants.append(f"[id{m['id']}|{name}]")
+                            # Приводим к формату ДД.ММ
+                            day = int(parts[0])
+                            month = int(parts[1])
+                            formatted_bd = f"{day:02d}.{month:02d}"
+                            
+                            # Логируем всех, у кого ДР в мае (для диагностики)
+                            if f".{month:02d}" == current_month:
+                                name = f"{m.get('first_name', '')} {m.get('last_name', '')}"
+                                may_birthdays.append(f"{name} ({formatted_bd})")
+                            
+                            # Проверяем, совпадает ли с сегодня
+                            if formatted_bd == today:
+                                celebrants.append(f"[id{m['id']}|{m.get('first_name', '')} {m.get('last_name', '')}]")
                         except:
                             continue
             
-            offset += len(items) # Увеличиваем на реальное количество полученных людей
+            offset += len(items)
             if len(items) < count:
                 break
-            time.sleep(0.3)
+            time.sleep(0.2)
         
-        print(f"DEBUG: Всего участников в группе: {offset}")
-        print(f"DEBUG: Участников с открытой датой рождения: {total_with_bdate}")
-        print(f"DEBUG: Найдено именинников на сегодня: {len(celebrants)}")
+        print(f"DEBUG: Всего в группе: {offset}, с датами: {total_with_bdate}")
+        print(f"DEBUG: Именинники мая в группе: {', '.join(may_birthdays) if may_birthdays else 'Никого не нашли'}")
         
         if celebrants:
             return f"🥳 С ДНЁМ РОЖДЕНИЯ! 🎂\n\nСегодня праздник у: {', '.join(celebrants)}! 🎉🧡\nЖелаем лёгких ног, ярких стартов и отличного настроения!"
