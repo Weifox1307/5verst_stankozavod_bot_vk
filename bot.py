@@ -8,7 +8,11 @@ from datetime import datetime, timedelta, timezone
 # --- НАСТРОЙКИ ---
 VK_TOKEN = os.getenv('VK_TOKEN')
 CHAT_IDS_RAW = os.getenv('VK_CHAT_IDS', '')
-VK_GROUP_ID = os.getenv('VK_GROUP_ID', '213964402') 
+
+# Берем из секретов, а если там пусто или ничего нет — берем ID Станкозавода
+VK_GROUP_ID = os.getenv('VK_GROUP_ID')
+if not VK_GROUP_ID:
+    VK_GROUP_ID = '228375526'
 
 print(f"DEBUG: Начало работы. Целевая группа: {VK_GROUP_ID}")
 
