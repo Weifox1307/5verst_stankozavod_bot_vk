@@ -133,19 +133,30 @@ if __name__ == "__main__":
     if not VK_TOKEN:
         print("Ошибка: VK_TOKEN не найден!")
         sys.exit(1)
+    if not CHAT_IDS:
+        print("Ошибка: Список чатов пуст!")
+        sys.exit(1)
+
+    now_msk = get_moscow_now()
     
-    # 1. Сначала погода
-    weather_text = get_weather()
-    if weather_text:
-        for chat in CHAT_IDS:
-            send_vk_message(chat, weather_text)
-    
-    # 2. Потом дни рождения
+    # 1. Проверяем погоду (ТОЛЬКО ПО СУББОТАМ)
+    # weekday() == 5 — это суббота
+    if now_msk.weekday() == 5:
+        print("Сегодня суббота, получаем прогноз погоды...")
+        weather_text = get_weather()
+        if weather_text:
+            for chat in CHAT_IDS:
+                send_vk_message(chat, weather_text)
+    else:
+        print(f"Сегодня не суббота (день №{now_msk.weekday()}), погоду пропускаем.")
+
+    # 2. Проверяем дни рождения (КАЖДЫЙ ДЕНЬ)
+    print("Проверяем дни рождения...")
     birthday_text = check_birthdays()
     if birthday_text:
         for chat in CHAT_IDS:
             send_vk_message(chat, birthday_text)
     else:
-        print("Именинников сегодня нет или у них скрыты даты рождения.")
+        print("Именинников сегодня не найдено.")
 
     sys.exit(0)
