@@ -58,7 +58,6 @@ def get_weather():
         return None
 
 def check_birthdays():
-    """Проверяет дни рождения ВСЕХ участников группы (с учетом пагинации)"""
     try:
         now = get_moscow_now()
         today = now.strftime("%d.%m")
@@ -66,7 +65,8 @@ def check_birthdays():
         
         celebrants = []
         offset = 0
-        count = 1000  # Максимальное количество за один запрос
+        count = 1000
+        total_with_bdate = 0 # Счётчик тех, у кого дата вообще открыта
         
         while True:
             params = {
@@ -89,26 +89,29 @@ def check_birthdays():
                 
             for m in items:
                 bd = m.get('bdate', '')
-                # Формат может быть D.M или D.M.YYYY
-                if bd and bd.count('.') >= 1:
+                if bd:
+                    total_with_bdate += 1 # Нашли человека с открытой датой
                     parts = bd.split('.')
-                    try:
-                        day_month = f"{int(parts[0]):02d}.{int(parts[1]):02d}"
-                        if day_month == today:
-                            name = f"{m.get('first_name', '')} {m.get('last_name', '')}".strip()
-                            celebrants.append(f"[id{m['id']}|{name}]")
-                    except:
-                        continue
+                    if len(parts) >= 2:
+                        try:
+                            day_month = f"{int(parts[0]):02d}.{int(parts[1]):02d}"
+                            if day_month == today:
+                                name = f"{m.get('first_name', '')} {m.get('last_name', '')}".strip()
+                                celebrants.append(f"[id{m['id']}|{name}]")
+                        except:
+                            continue
             
-            offset += count
+            offset += len(items) # Увеличиваем на реальное количество полученных людей
             if len(items) < count:
                 break
-            time.sleep(0.3) # Небольшая пауза, чтобы не словить лимит запросов
+            time.sleep(0.3)
         
-        print(f"DEBUG: Проверено участников: {offset}. Найдено именинников: {len(celebrants)}")
+        print(f"DEBUG: Всего участников в группе: {offset}")
+        print(f"DEBUG: Участников с открытой датой рождения: {total_with_bdate}")
+        print(f"DEBUG: Найдено именинников на сегодня: {len(celebrants)}")
         
         if celebrants:
-            return f"🥳 С ДНЁМ РОЖДЕНИЯ! 🎂\n\nСегодня праздник у: {', '.join(celebrants)}! 🎉🧡\nЖелаем легких ног, ярких стартов и отличного настроения!"
+            return f"🥳 С ДНЁМ РОЖДЕНИЯ! 🎂\n\nСегодня праздник у: {', '.join(celebrants)}! 🎉🧡\nЖелаем лёгких ног, ярких стартов и отличного настроения!"
         return None
     except Exception as e:
         print(f"Ошибка при проверке именинников: {e}")
