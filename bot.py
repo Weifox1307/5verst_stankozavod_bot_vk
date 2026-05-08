@@ -2,30 +2,27 @@ import os
 import requests
 import random
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 
-# --- НАСТРОЙКИ (берем из Secrets) ---
+# --- НАСТРОЙКИ ---
 VK_TOKEN = os.getenv('VK_TOKEN')
 CHAT_IDS_RAW = os.getenv('VK_CHAT_IDS', '')
-# ID группы Станкозавода (нужен для получения списка участников)
-# Если ID группы отличается, замените здесь или добавьте в Secrets
 VK_GROUP_ID = os.getenv('VK_GROUP_ID', '213964402') 
 
-print(f"DEBUG: Получена строка чатов длиной {len(CHAT_IDS_RAW)} символов")
+print(f"DEBUG: Начало работы. Целевая группа: {VK_GROUP_ID}")
 
-# Парсим строку с ID в список чисел
 try:
     CHAT_IDS = [int(i.strip()) for i in CHAT_IDS_RAW.split(',') if i.strip()]
-    print(f"DEBUG: Распознано чатов: {len(CHAT_IDS)}")
+    print(f"DEBUG: Распознано чатов для рассылки: {len(CHAT_IDS)}")
 except ValueError as e:
-    print(f"Ошибка парсинга ID: {e}")
+    print(f"Ошибка парсинга ID чатов: {e}")
     sys.exit(1)
 
 LAT = 56.2874
 LON = 43.9160
 
 def get_moscow_now():
-    """Возвращает текущее время по Москве"""
     return datetime.now(timezone(timedelta(hours=3)))
 
 def get_weather():
@@ -33,6 +30,7 @@ def get_weather():
     try:
         response = requests.get(url, timeout=10)
         data = response.json()
+        # Берем прогноз на 9 утра
         temp = data['hourly']['temperature_2m'][9]
         prob = data['hourly']['precipitation_probability'][9]
         code = data['hourly']['weathercode'][9]
@@ -56,33 +54,57 @@ def get_weather():
         return None
 
 def check_birthdays():
-    """Проверяет дни рождения участников группы и возвращает текст поздравления"""
+    """Проверяет дни рождения ВСЕХ участников группы (с учетом пагинации)"""
     try:
         now = get_moscow_now()
         today = now.strftime("%d.%m")
-        
-        params = {
-            "group_id": VK_GROUP_ID,
-            "fields": "bdate",
-            "access_token": VK_TOKEN,
-            "v": "5.131"
-        }
-        res = requests.get("https://api.vk.com/method/groups.getMembers", params=params, timeout=15).json()
+        print(f"DEBUG: Ищем именинников на дату: {today}")
         
         celebrants = []
-        items = res.get('response', {}).get('items', [])
+        offset = 0
+        count = 1000  # Максимальное количество за один запрос
         
-        for m in items:
-            bd = m.get('bdate', '')
-            # Проверяем формат даты (может быть D.M или D.M.YYYY)
-            if bd and bd.count('.') >= 1:
-                parts = bd.split('.')
-                day_month = f"{int(parts[0]):02d}.{int(parts[1]):02d}"
-                if day_month == today:
-                    celebrants.append(f"[id{m['id']}|{m['first_name']} {m['last_name']}]")
+        while True:
+            params = {
+                "group_id": VK_GROUP_ID,
+                "fields": "bdate",
+                "offset": offset,
+                "count": count,
+                "access_token": VK_TOKEN,
+                "v": "5.131"
+            }
+            res = requests.get("https://api.vk.com/method/groups.getMembers", params=params, timeout=15).json()
+            
+            if "error" in res:
+                print(f"Ошибка API ВК: {res['error']['error_msg']}")
+                break
+                
+            items = res.get('response', {}).get('items', [])
+            if not items:
+                break
+                
+            for m in items:
+                bd = m.get('bdate', '')
+                # Формат может быть D.M или D.M.YYYY
+                if bd and bd.count('.') >= 1:
+                    parts = bd.split('.')
+                    try:
+                        day_month = f"{int(parts[0]):02d}.{int(parts[1]):02d}"
+                        if day_month == today:
+                            name = f"{m.get('first_name', '')} {m.get('last_name', '')}".strip()
+                            celebrants.append(f"[id{m['id']}|{name}]")
+                    except:
+                        continue
+            
+            offset += count
+            if len(items) < count:
+                break
+            time.sleep(0.3) # Небольшая пауза, чтобы не словить лимит запросов
+        
+        print(f"DEBUG: Проверено участников: {offset}. Найдено именинников: {len(celebrants)}")
         
         if celebrants:
-            return f"🥳 С ДНЁМ РОЖДЕНИЯ! 🎂\n\nСегодня праздник у: {', '.join(celebrants)}! 🎉🧡\nЖелаем легких ног и отличного настроения!"
+            return f"🥳 С ДНЁМ РОЖДЕНИЯ! 🎂\n\nСегодня праздник у: {', '.join(celebrants)}! 🎉🧡\nЖелаем легких ног, ярких стартов и отличного настроения!"
         return None
     except Exception as e:
         print(f"Ошибка при проверке именинников: {e}")
@@ -101,31 +123,29 @@ def send_vk_message(peer_id, text):
     try:
         res = requests.post(url, data=params, timeout=10).json()
         if "error" in res:
-            print(f"Ошибка ВК (ID {peer_id}): {res['error']['error_msg']}")
+            print(f"Ошибка отправки (ID {peer_id}): {res['error']['error_msg']}")
         else:
             print(f"Успешно отправлено в чат {peer_id}")
     except Exception as e:
-        print(f"Ошибка сети: {e}")
+        print(f"Ошибка сети при отправке: {e}")
 
 if __name__ == "__main__":
     if not VK_TOKEN:
         print("Ошибка: VK_TOKEN не найден!")
         sys.exit(1)
-    if not CHAT_IDS:
-        print("Ошибка: Список чатов пуст!")
-        sys.exit(1)
-
-    # 1. Проверяем погоду
+    
+    # 1. Сначала погода
     weather_text = get_weather()
     if weather_text:
         for chat in CHAT_IDS:
             send_vk_message(chat, weather_text)
     
-    # 2. Проверяем дни рождения
+    # 2. Потом дни рождения
     birthday_text = check_birthdays()
     if birthday_text:
         for chat in CHAT_IDS:
             send_vk_message(chat, birthday_text)
+    else:
+        print("Именинников сегодня нет или у них скрыты даты рождения.")
 
-    # Выход для GitHub Actions
     sys.exit(0)
