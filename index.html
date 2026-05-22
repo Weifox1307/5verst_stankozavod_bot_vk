@@ -178,25 +178,36 @@
         <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
     </div>
 
-    <!-- === (IoT Monitoring System) === -->
-    <div class="card" style="background: #f0f7ff; border: 1px solid #0077ff; padding: 12px;">
-        <h2 style="font-size: 14px; margin-bottom: 5px; border: none; color: #0077ff;">🛰 IoT Park Control Hub</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div style="background: white; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #dce1e6;">
-                <label style="margin:0; font-size: 9px;">Контроллер</label>
-                <div style="font-size: 12px; font-weight: bold; color: green;">● ONLINE</div>
+    <!-- === (IoT Smart Event Hub) === -->
+    <div class="card" style="background: #f0f7ff; border: 2px solid #0077ff; padding: 15px;">
+        <h2 style="font-size: 16px; margin-bottom: 10px; border: none; color: #0077ff; display: flex; align-items: center; gap: 8px;">
+            🛰 Smart Event Management Hub
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+            <div style="background: white; padding: 10px; border-radius: 10px; border: 1px solid #dce1e6; text-align: center;">
+                <label style="margin:0; font-size: 10px; color: #777;">ЯВКА ВОЛОНТЕРОВ</label>
+                <div id="iot_checkin_count" style="font-size: 18px; font-weight: 900; color: #2B326D;">0 / 0</div>
+                <div style="width: 100%; background: #eee; height: 4px; border-radius: 2px; margin-top: 5px;">
+                    <div id="iot_progress" style="width: 0%; background: #4caf50; height: 100%; border-radius: 2px; transition: 0.5s;"></div>
+                </div>
             </div>
-            <div style="background: white; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #dce1e6;">
-                <label style="margin:0; font-size: 9px;">Влажность (Sens 01)</label>
-                <div id="iot_hum" style="font-size: 12px; font-weight: bold; color: #2B326D;">45%</div>
+            <div style="background: white; padding: 10px; border-radius: 10px; border: 1px solid #dce1e6; text-align: center;">
+                <label style="margin:0; font-size: 10px; color: #777;">RFID GATE STATUS</label>
+                <div id="iot_gate_status" style="font-size: 14px; font-weight: bold; color: green; margin-top: 5px;">READY</div>
             </div>
         </div>
-        <div style="font-size: 10px; color: #777; margin-top: 8px; text-align: center;">
-            ID Устройства: <span style="font-family: monospace;">STANKO-UNIT-2026</span> | 
-            Узел: <span style="font-family: monospace;">GitHub-Cloud</span>
+
+        <div style="background: #2B326D; color: #00ff00; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; min-height: 40px; border: 2px solid #1a1f4d;">
+            <div style="color: #888; font-size: 9px; margin-bottom: 4px;">>>> LIVE FINISH LINE (RFID STREAM):</div>
+            <div id="iot_finish_log">Waiting for athletes...</div>
         </div>
+
+        <button id="checkin_btn" onclick="iotCheckIn()" style="margin-top: 12px; background: #4caf50; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 12px;">
+            📍 ПОДТВЕРДИТЬ ЯВКУ (IoT CHECK-IN)
+        </button>
     </div>
-    <!-- ============================================== -->
+    <!-- ======================================================== -->
 
     <div class="card">
         <h2>Запись на <span id="event_date" class="date-badge">...</span></h2>
@@ -331,7 +342,7 @@
 </div>
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza6_uCSNfKNKbFx4vDmvZc7pV8JDFz2uTC-_aum8Ts3_b9YJSZ_46Fs714ps0gU9LWiQ/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0pHmvpQf8btDgihMnJMZFofoUeov_-upZgI5cmH0j1fGZgOy01z1Yv1NLgSDgXTx5/exec';
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
     let selectedVolunteer = null;
     let vkUser = null;
@@ -611,22 +622,66 @@
         });
     }
 
-    // обращение к "Облачному IoT шлюзу" (Apps Script)
+    // Имитация RFID-ворот: каждые 15 секунд "пробегает" случайный атлет
+    setInterval(() => {
+        const log = document.getElementById('iot_finish_log');
+        const gate = document.getElementById('iot_gate_status');
+        if (log) {
+            const athletes = ["A7823", "A1029", "A9921", "A4432", "A0012"];
+            const athlete = athletes[Math.floor(Math.random() * athletes.length)];
+            const time = new Date().toLocaleTimeString();
+            
+            gate.style.color = 'red'; gate.innerText = 'READING...';
+            
+            setTimeout(() => {
+                log.innerHTML = `<span style="color:white;">[${time}]</span> Athlete ${athlete} crossed the line!`;
+                gate.style.color = 'green'; gate.innerText = 'READY';
+            }, 1000);
+        }
+    }, 15000);
+
+    // Обновленный опрос IoT данных
     setInterval(async () => {
         try {
             const res = await fetch(`${SCRIPT_URL}?get_iot_data=1`);
             const data = await res.json();
-            const humElement = document.getElementById('iot_hum');
-            if (humElement) {
-                humElement.innerText = data.sensors.humidity;
-                // Если влажность > 55%, красим в красный (сигнал тревоги IoT)
-                humElement.style.color = parseInt(data.sensors.humidity) > 55 ? '#E6564C' : '#2B326D';
-            }
-        } catch (e) {
-            console.log("IoT Sync Error");
+            
+            // Обновляем счетчик явки
+            const countEl = document.getElementById('iot_checkin_count');
+            const progressEl = document.getElementById('iot_progress');
+            if (countEl) countEl.innerText = data.sensors.attendance;
+            if (progressEl) progressEl.style.width = data.sensors.progress + '%';
+            
+        } catch (e) { console.log("IoT Sync Error"); }
+    }, 10000);
+
+    // Функция регистрации явки
+    async function iotCheckIn() {
+        if (!selectedVolunteer) { 
+            vkBridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"});
+            alert("Сначала выберите себя в поиске!"); 
+            return; 
         }
-    }, 10000); // Опрашиваем "датчик" каждые 10 секунд
-    // =======================================
+        
+        const btn = document.getElementById('checkin_btn');
+        btn.disabled = true; btn.innerText = "SENSING...";
+
+        try {
+            const res = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: "iot_control",
+                    command: "CHECK_IN",
+                    verst_id: selectedVolunteer.id
+                })
+            });
+            alert("IoT Контроллер: Явка подтверждена! Сигнал передан в облако.");
+            btn.innerText = "ПОДТВЕРЖДЕНО";
+            btn.style.background = "#888";
+        } catch(e) {
+            btn.disabled = false; btn.innerText = "ОШИБКА";
+        }
+    }
 
     async function deleteMyRole(rid, rname, fname) {
         if (confirm(`Отменить запись ${fname}?`)) {
