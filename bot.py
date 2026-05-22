@@ -113,3 +113,18 @@ if __name__ == "__main__":
         for chat in CHAT_IDS: send_vk_message(chat, text_bd)
     else:
         print("Именинников сегодня нет.")
+
+# === (IoT Эмуляция) ===
+    # Эмулируем получение данных с "Умного контроллера парка"
+    park_device_status = random.choice(["ONLINE", "STANDBY"])
+    sensor_humidity = random.randint(30, 80) # Эмуляция датчика влажности
+    
+    print(f"--- IoT System Status ---")
+    print(f"Device ID: STANKO-PARK-01")
+    print(f"Status: {park_device_status}")
+    print(f"Sensor Data (Humidity): {sensor_humidity}%")
+    
+    # Если влажность слишком высокая (эмуляция дождя), шлем уведомление админу или в чат
+    if sensor_humidity > 75:
+        iot_msg = f"⚠️ [IoT-Sensor] В парке зафиксирована высокая влажность ({sensor_humidity}%). Рекомендуем проверить состояние трассы!"
+        # for chat in CHAT_IDS: send_vk_message(chat, iot_msg)
