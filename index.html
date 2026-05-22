@@ -178,6 +178,26 @@
         <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
     </div>
 
+    <!-- === (IoT Monitoring System) === -->
+    <div class="card" style="background: #f0f7ff; border: 1px solid #0077ff; padding: 12px;">
+        <h2 style="font-size: 14px; margin-bottom: 5px; border: none; color: #0077ff;">🛰 IoT Park Control Hub</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="background: white; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #dce1e6;">
+                <label style="margin:0; font-size: 9px;">Контроллер</label>
+                <div style="font-size: 12px; font-weight: bold; color: green;">● ONLINE</div>
+            </div>
+            <div style="background: white; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #dce1e6;">
+                <label style="margin:0; font-size: 9px;">Влажность (Sens 01)</label>
+                <div id="iot_hum" style="font-size: 12px; font-weight: bold; color: #2B326D;">45%</div>
+            </div>
+        </div>
+        <div style="font-size: 10px; color: #777; margin-top: 8px; text-align: center;">
+            ID Устройства: <span style="font-family: monospace;">STANKO-UNIT-2026</span> | 
+            Узел: <span style="font-family: monospace;">GitHub-Cloud</span>
+        </div>
+    </div>
+    <!-- ============================================== -->
+
     <div class="card">
         <h2>Запись на <span id="event_date" class="date-badge">...</span></h2>
         <div style="background:linear-gradient(90deg, #2B326D, #4f5ca8); color:white; padding:14px 16px; border-radius:12px; margin:12px 0 18px 0; text-align:center; font-weight:700; font-size:16px; box-shadow:0 3px 10px rgba(43,50,109,0.3);">
