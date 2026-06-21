@@ -199,15 +199,15 @@
 
 <div class="tabs">
     <div id="tab_rec" class="tab active" onclick="switchTab('rec')">ЗАПИСЬ</div>
-    <div id="tab_rate" class="tab" onclick="switchTab('rate')">РЕЙТИНГ</div>
-    <div id="tab_reg" class="tab" onclick="switchTab('reg')">РЕГИСТРАЦИЯ</div>
-    <div id="tab_feed" class="tab" onclick="switchTab('feed')">ОТЗЫВ</div>
+    <div id="tab_rate" class="tab" onclick="switchTab('rate')">КЛУБНЫЙ РЕЙТИНГ</div>
+    <div id="tab_reg" class="tab" onclick="switchTab('reg')">ПОРТАЛ</div>
+    <div id="tab_feed" class="tab" onclick="switchTab('feed')">ОБРАТНАЯ СВЯЗЬ</div>
 </div>
 
 <div id="section_rec">
     <!-- ТЕМАТИКА СТАРТА -->
     <div class="card" style="border: 2px dashed var(--accent); background: #fffcfc;">
-        <label>Тематика старта (видят все):</label>
+        <label>Тема старта:</label>
         <textarea id="theme_input" rows="3" placeholder="Например: 21 марта - Всемирный день поэзии..."></textarea>
         <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
         <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Синхронизировать с сайтом</button>
@@ -224,7 +224,7 @@
         </div>
         
         <div id="welcome_back" class="welcome-msg"></div>
-        <label>1. Кто пойдет волонтерить (5 вёрст):</label>
+        <label>1. Кто пойдет волонтёрить (5 вёрст):</label>
         <div style="position:relative">
             <input type="text" id="verst_search" placeholder="Фамилия или ID 5 вёрст..." autocomplete="off">
             <div id="search_results"></div>
@@ -254,10 +254,11 @@
             <div class="group-label">Основные позиции</div>
             <div class="role-option" data-id="1" data-name="Организатор"><input type="checkbox"> <span>Организатор</span></div>
             <div class="role-option" data-id="2" data-name="Секундомер"><input type="checkbox"> <span>Секундомер</span></div>
-            <div class="role-option" data-id="5" data-name="Фотограф"><input type="checkbox"> <span>Фотограф</span></div>
-            <div class="role-option" data-id="7" data-name="Маршал"><input type="checkbox"> <span>Маршал</span></div>
             <div class="role-option" data-id="11" data-name="Сканирование штрих-кодов"><input type="checkbox"> <span>Сканирование штрих-кодов</span></div>
+            <div class="role-option" data-id="7" data-name="Маршал"><input type="checkbox"> <span>Маршал</span></div>
+            <div class="role-option" data-id="35" data-name="Разметка трассы"><input type="checkbox"> <span>Разметка трассы</span></div>
             <div class="role-option" data-id="13" data-name="Раздача карточек позиций"><input type="checkbox"> <span>Раздача карточек позиций</span></div>
+            <div class="role-option" data-id="15" data-name="Инструктаж новых участников"><input type="checkbox"> <span>Инструктаж новых участников</span></div>
             <div class="role-option" data-id="19" data-name="Замыкающий"><input type="checkbox"> <span>Замыкающий</span></div>
             
             <div class="group-label">Уникальные позиции</div>
@@ -266,9 +267,9 @@
             <div class="role-option" data-id="1003" data-name="Вода"><input type="checkbox"> <span>Вода</span></div>
             <div class="role-option" data-id="1004" data-name="Оратор"><input type="checkbox"> <span>Оратор</span></div>
             <div class="role-option" data-id="1005" data-name="Поддержка на трассе"><input type="checkbox"> <span>Поддержка на трассе</span></div>
-            <div class="role-option" data-id="8" data-name="Подготовка мероприятия"><input type="checkbox"> <span>Подготовка мероприятия</span></div>
             
             <div class="group-label">Дополнительные позиции</div>
+            <div class="role-option" data-id="8" data-name="Подготовка мероприятия"><input type="checkbox"> <span>Подготовка мероприятия</span></div>
             <div class="role-option" data-id="3" data-name="Сортировка карточек"><input type="checkbox"> <span>Сортировка карточек</span></div>
             <div class="role-option" data-id="4" data-name="Обработка результатов"><input type="checkbox"> <span>Обработка результатов</span></div>
             <div class="role-option" data-id="6" data-name="Связи с общественностью"><input type="checkbox"> <span>Связи с общественностью</span></div>
@@ -276,7 +277,6 @@
             <div class="role-option" data-id="10" data-name="Разное"><input type="checkbox"> <span>Разное</span></div>
             <div class="role-option" data-id="12" data-name="Завершение мероприятия"><input type="checkbox"> <span>Завершение мероприятия</span></div>
             <div class="role-option" data-id="14" data-name="Проверка карточек позиций"><input type="checkbox"> <span>Проверка карточек позиций</span></div>
-            <div class="role-option" data-id="15" data-name="Инструктаж новых участников"><input type="checkbox"> <span>Инструктаж новых участников</span></div>
             <div class="role-option" data-id="16" data-name="Организация финиша"><input type="checkbox"> <span>Организация финиша</span></div>
             <div class="role-option" data-id="17" data-name="Ведущий велосипед"><input type="checkbox"> <span>Ведущий велосипед</span></div>
             <div class="role-option" data-id="18" data-name="Помощь в раздаче карточек позиций"><input type="checkbox"> <span>Помощь в раздаче карточек позиций</span></div>
@@ -288,9 +288,9 @@
             <div class="role-option" data-id="32" data-name="Сурдопереводчик"><input type="checkbox"> <span>Сурдопереводчик</span></div>
             <div class="role-option" data-id="33" data-name="Координатор парковки"><input type="checkbox"> <span>Координатор парковки</span></div>
             <div class="role-option" data-id="34" data-name="Проверка трассы"><input type="checkbox"> <span>Проверка трассы</span></div>
-            <div class="role-option" data-id="35" data-name="Разметка трассы"><input type="checkbox"> <span>Разметка трассы</span></div>
             <div class="role-option" data-id="36" data-name="Ведущий мероприятия"><input type="checkbox"> <span>Ведущий мероприятия</span></div>
             <div class="role-option" data-id="37" data-name="Проведение предстартового брифинга"><input type="checkbox"> <span>Проведение предстартового брифинга</span></div>
+            <div class="role-option" data-id="5" data-name="Фотограф"><input type="checkbox"> <span>Фотограф</span></div>
             <div class="role-option" data-id="38" data-name="Видеограф"><input type="checkbox"> <span>Видеограф</span></div>
         </div>
 
@@ -353,8 +353,8 @@
 <!-- НОВАЯ СЕКЦИЯ: РЕГИСТРАЦИЯ -->
 <div id="section_reg" style="display:none">
     <div class="card">
-        <h2>Регистрация в 5 вёрст</h2>
-        <p style="font-size: 13px; color: #666; margin-bottom:15px;">Если у вас еще нет ID участника, зарегистрируйтесь. Это бесплатно и навсегда!</p>
+        <h2>Портал 5 вёрст</h2>
+        <p style="font-size: 13px; color: #666; margin-bottom:15px;">Регистрация, вход, карта локаций и многое другое теперь всегда под рукой!</p>
         <div class="reg-frame-container">
             <iframe src="https://5verst.ru/register/"></iframe>
         </div>
@@ -534,12 +534,12 @@
                     text: "[ОТЗЫВ] " + text 
                 }) 
             });
-            alert("Спасибо за отзыв! Ваше сообщение передано организаторам.");
+            alert("Спасибо за отзыв! Ваше сообщение отправлено.");
             document.getElementById('feedback_input').value = "";
         } catch(e) { alert("Ошибка при отправке."); }
         
         btn.disabled = false;
-        btn.innerText = "Отправить организаторам";
+        btn.innerText = "Отправить";
     }
 
     function toggleFriendVk() {
