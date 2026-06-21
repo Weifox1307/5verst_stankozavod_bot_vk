@@ -89,6 +89,19 @@
         /* Новые стили для фрейма регистрации */
         .reg-frame-container { border-radius: 12px; overflow: hidden; border: 1px solid #dce1e6; margin-top: 15px; height: 600px; position: relative; }
         .reg-frame-container iframe { width: 100%; height: 100%; border: none; }
+
+        .timer-banner {
+        background: linear-gradient(45deg, #2B326D, #E6564C);
+        color: white;
+        padding: 8px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 15px;
+        font-weight: bold;
+        font-size: 13px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #timer_clock { font-size: 16px; letter-spacing: 1px; margin-left: 5px; }
     </style>
 </head>
 <body>
@@ -186,6 +199,10 @@
         <textarea id="theme_input" rows="3" placeholder="Например: 21 марта - Всемирный день поэзии..."></textarea>
         <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
         <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Синхронизировать с сайтом</button>
+    </div>
+
+    <div class="timer-banner" id="countdown_timer" style="display:none;">
+    ⏳ До старта осталось: <span id="timer_clock">00:00:00:00</span>
     </div>
 
     <div class="card">
@@ -686,6 +703,50 @@
             location.reload();
         }
     }
+
+    function updateTimer() {
+    const timerBox = document.getElementById('countdown_timer');
+    const clock = document.getElementById('timer_clock');
+    
+    function tick() {
+        const now = new Date();
+        // Ищем ближайшую субботу 09:00 МСК
+        let target = new Date();
+        target.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
+        target.setHours(9, 0, 0, 0);
+
+        // Если сегодня суббота и уже больше 10:00 утра, переключаем на следующую неделю
+        if (now > target && now.getHours() >= 10) {
+            target.setDate(target.getDate() + 7);
+        }
+
+        const diff = target - now;
+
+        if (diff <= 0) {
+            if (now.getHours() < 10) {
+                timerBox.style.display = 'block';
+                timerBox.innerHTML = "🏃‍♂️ Старт уже начался! Удачного забега!";
+            } else {
+                timerBox.style.display = 'none';
+            }
+            return;
+        }
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        timerBox.style.display = 'block';
+        clock.innerText = `${d}д ${h}ч ${m}м ${s}с`;
+        }
+    
+        tick();
+        setInterval(tick, 1000);
+        }
+        
+        // Запускаем таймер сразу
+        updateTimer();
 </script>
 </body>
 </html>
