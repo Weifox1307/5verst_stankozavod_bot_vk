@@ -6,16 +6,17 @@
     <title>5 вёрст в парке Станкозавода | Нижний Новгород</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
-        :root { --primary: #2B326D; --accent: #E6564C; --bg: #f5f5f5; }
+        :root { --primary: #2B326D; --accent: #E6564C; --bg: #f5f5f5; --success: #4caf50; }
         body { font-family: -apple-system, system-ui, Helvetica Neue, Roboto, sans-serif; padding: 0; background: var(--bg); color: #333; margin: 0; padding-bottom: 80px; }
-        .tabs { display: flex; background: var(--primary); position: sticky; top: 0; z-index: 1000; padding: 5px; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .tab { flex: 1; text-align: center; padding: 12px; font-weight: bold; color: #fff; opacity: 0.6; cursor: pointer; border-radius: 8px; font-size: 14px; }
+        .tabs { display: flex; background: var(--primary); position: sticky; top: 0; z-index: 1000; padding: 5px; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow-x: auto; }
+        .tab { flex: 1; text-align: center; padding: 12px; font-weight: bold; color: #fff; opacity: 0.6; cursor: pointer; border-radius: 8px; font-size: 13px; white-space: nowrap; min-width: 90px; }
         .tab.active { opacity: 1; background: rgba(255,255,255,0.15); }
         .card { background: white; padding: 16px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 15px; border: 1px solid #eef0f2; }
         h2 { color: var(--primary); font-size: 18px; margin: 0 0 12px 0; border-bottom: 2px solid #f0f2ff; padding-bottom: 8px; }
         .date-badge { color: var(--accent); }
         .welcome-msg { background: #f0f2ff; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 15px; color: var(--primary); display: none; border: 1px solid #dce1e6; line-height: 1.6; }
         .btn-qr { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
+        .btn-sync { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-top: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; }
         label { font-size: 11px; color: #999; margin-left: 4px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dce1e6; border-radius: 10px; box-sizing: border-box; font-size: 15px; outline: none; background: #f9fafb; -webkit-appearance: none; }
        
@@ -84,6 +85,10 @@
         .role-option span { font-size: 14px; color: #333; flex: 1; }
         .role-option.selected { background: #f0f2ff; }
         .group-label { background: #eee; font-size: 10px; font-weight: 800; padding: 4px 10px; color: #666; text-transform: uppercase; }
+
+        /* Новые стили для фрейма регистрации */
+        .reg-frame-container { border-radius: 12px; overflow: hidden; border: 1px solid #dce1e6; margin-top: 15px; height: 600px; position: relative; }
+        .reg-frame-container iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -95,7 +100,7 @@
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
         <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.5</div>
+        <div style="text-align:center; margin-top:20px; font-size:11px; color:#999;">Версия 1.6</div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -166,16 +171,21 @@
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
+
 <div class="tabs">
     <div id="tab_rec" class="tab active" onclick="switchTab('rec')">ЗАПИСЬ</div>
     <div id="tab_rate" class="tab" onclick="switchTab('rate')">РЕЙТИНГ</div>
+    <div id="tab_reg" class="tab" onclick="switchTab('reg')">РЕГИСТРАЦИЯ</div>
+    <div id="tab_feed" class="tab" onclick="switchTab('feed')">ОТЗЫВ</div>
 </div>
+
 <div id="section_rec">
     <!-- ТЕМАТИКА СТАРТА -->
     <div class="card" style="border: 2px dashed var(--accent); background: #fffcfc;">
         <label>Тематика старта (видят все):</label>
         <textarea id="theme_input" rows="3" placeholder="Например: 21 марта - Всемирный день поэзии..."></textarea>
         <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
+        <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Синхронизировать с сайтом</button>
     </div>
 
     <div class="card">
@@ -295,6 +305,7 @@
     <div style="margin-left:20px; font-weight:bold; color:var(--primary); font-size:13px; text-transform:uppercase;">Уже в списке:</div>
     <div id="queue_container" style="padding:10px 15px;"></div>
 </div>
+
 <div id="section_rate" style="display:none">
     <div class="card">
         <h2>Поиск участника</h2>
@@ -309,6 +320,31 @@
         <div id="rating_list">Загрузка рейтинга...</div>
     </div>
 </div>
+
+<!-- НОВАЯ СЕКЦИЯ: РЕГИСТРАЦИЯ -->
+<div id="section_reg" style="display:none">
+    <div class="card">
+        <h2>Регистрация в 5 вёрст</h2>
+        <p style="font-size: 13px; color: #666; margin-bottom:15px;">Если у вас еще нет ID участника, зарегистрируйтесь. Это бесплатно и навсегда!</p>
+        <button class="btn-qr" onclick="vkBridge.send('VKWebAppOpenExternalLink', {url: 'https://5verst.ru/register/'});" style="background:var(--accent); margin-bottom: 15px;">Открыть в браузере</button>
+        <div class="reg-frame-container">
+            <iframe src="https://5verst.ru/register/"></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- НОВАЯ СЕКЦИЯ: ОБРАТНАЯ СВЯЗЬ -->
+<div id="section_feed" style="display:none">
+    <div class="card">
+        <h2>Обратная связь</h2>
+        <p style="font-size: 13px; color: #666; margin-bottom:15px;">Есть идеи по улучшению приложения?</p>
+        <label>Ваше сообщение:</label>
+        <textarea id="feedback_input" rows="6" placeholder="Напишите здесь всё, что считаете нужным..."></textarea>
+        <button id="feedback_btn" class="btn-qr" onclick="sendFeedback()">Отправить</button>
+        <div id="feedback_status" style="margin-top:10px; font-size:12px; text-align:center; display:none;"></div>
+    </div>
+</div>
+
 <script>
     vkBridge.send("VKWebAppInit");
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4n9gG-OAm6HPAn5ZXsf7AeLG3AYAVqLMeP11_KltNbyENDIQSAnjHQAjcEKixMhQEYg/exec';
@@ -321,10 +357,11 @@
     const volIcon = "🧡 ";
 
     function switchTab(t) {
-        document.getElementById('section_rec').style.display = t === 'rec' ? 'block' : 'none';
-        document.getElementById('section_rate').style.display = t === 'rate' ? 'block' : 'none';
-        document.getElementById('tab_rec').classList.toggle('active', t === 'rec');
-        document.getElementById('tab_rate').classList.toggle('active', t === 'rate');
+        const sections = ['rec', 'rate', 'reg', 'feed'];
+        sections.forEach(s => {
+            document.getElementById('section_' + s).style.display = t === s ? 'block' : 'none';
+            document.getElementById('tab_' + s).classList.toggle('active', t === s);
+        });
         if (t === 'rate') loadRating();
     }
 
@@ -433,6 +470,48 @@
         const text = document.getElementById('theme_input').value;
         await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "set_theme", theme: text }) });
         alert("Тема сохранена!");
+    }
+
+    async function manualSync() {
+        const btn = document.getElementById('sync_btn');
+        btn.disabled = true;
+        btn.innerText = "⌛ Синхронизируем...";
+        try {
+            const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "manual_sync" }) });
+            const data = await res.json();
+            if (data.success) {
+                alert("Синхронизация завершена!");
+                location.reload();
+            }
+        } catch(e) { alert("Ошибка синхронизации"); }
+        btn.disabled = false;
+        btn.innerText = "🔄 Синхронизировать с сайтом";
+    }
+
+    async function sendFeedback() {
+        const text = document.getElementById('feedback_input').value.trim();
+        if (!text) return alert("Пожалуйста, введите текст сообщения.");
+        const btn = document.getElementById('feedback_btn');
+        btn.disabled = true;
+        btn.innerText = "Отправка...";
+        
+        try {
+            // Используем action: "add_admin_note" для обратной связи
+            await fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: "add_admin_note", 
+                    vk_id: vkUser.id, 
+                    name: vkUser.first_name + " " + vkUser.last_name, 
+                    text: "[ОТЗЫВ] " + text 
+                }) 
+            });
+            alert("Спасибо за отзыв! Ваше сообщение передано организаторам.");
+            document.getElementById('feedback_input').value = "";
+        } catch(e) { alert("Ошибка при отправке."); }
+        
+        btn.disabled = false;
+        btn.innerText = "Отправить организаторам";
     }
 
     function toggleFriendVk() {
@@ -585,15 +664,26 @@
                     <span class="vol-name-txt">${item.full_name} ${item.comment ? '('+item.comment+')' : ''}</span>
                     <span class="vol-role-badge">${item.role_name}</span>
                 </div>
-                ${isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}')">Отмена</button>` : ''}
+                ${isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}', '${item.verst_id}')">Отмена</button>` : ''}
             `;
             container.appendChild(div);
         });
     }
 
-    async function deleteMyRole(rid, rname, fname) {
+    async function deleteMyRole(rid, rname, fname, verst_id) {
         if (confirm(`Отменить запись ${fname}?`)) {
-            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "delete", vk_id: vkUser.id, role_id: rid, role_name: rname, person_name: fname }) });
+            // Передаем и vk_id и verst_id для надежного удаления
+            await fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: "delete", 
+                    vk_id: vkUser.id, 
+                    verst_id: verst_id,
+                    role_id: rid, 
+                    role_name: rname, 
+                    person_name: fname 
+                }) 
+            });
             location.reload();
         }
     }
