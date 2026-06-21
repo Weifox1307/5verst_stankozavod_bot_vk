@@ -90,24 +90,30 @@
         .reg-frame-container { border-radius: 12px; overflow: hidden; border: 1px solid #dce1e6; margin-top: 15px; height: 600px; position: relative; }
         .reg-frame-container iframe { width: 100%; height: 100%; border: none; }
 
-        .compact-settings { background: #fffcfc; border: 2px dashed var(--accent); padding: 12px; border-radius: 16px; margin: 15px; }
-        .btn-row { display: flex; gap: 8px; margin-bottom: 10px; }
-        .btn-small { flex: 1; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; color: white; display: flex; align-items: center; justify-content: center; gap: 4px; }
-        .btn-save { background: var(--primary); }
-        .btn-sync { background: var(--success); }
-
-        .timer-slim { 
-            background: var(--primary); 
-            color: white; 
-            padding: 6px 12px; 
-            border-radius: 8px; 
-            font-size: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(43, 50, 109, 0.2);
+        .timer-banner {
+        background: var(--primary); /* Тот самый синий 5 вёрст */
+        color: white;
+        padding: 10px;
+        border-radius: 12px;
+        text-align: center;
+        margin: 15px; /* Сделал отступы как у карточек */
+        font-weight: bold;
+        font-size: 13px;
+        box-shadow: 0 4px 15px rgba(43, 50, 109, 0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         }
-        #timer_clock { font-family: monospace; font-size: 13px; font-weight: 900; background: rgba(255,255,255,0.15); padding: 1px 5px; border-radius: 4px; }
+        #timer_clock { 
+        font-family: 'Courier New', monospace; /* Моноширинный шрифт, чтобы цифры не "прыгали" */
+        font-size: 16px; 
+        color: #fff;
+        background: rgba(255,255,255,0.1);
+        padding: 2px 8px;
+        border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -194,23 +200,21 @@
 <div class="tabs">
     <div id="tab_rec" class="tab active" onclick="switchTab('rec')">ЗАПИСЬ</div>
     <div id="tab_rate" class="tab" onclick="switchTab('rate')">РЕЙТИНГ</div>
-    <div id="tab_reg" class="tab" onclick="switchTab('reg')">ПОРТАЛ</div>
+    <div id="tab_reg" class="tab" onclick="switchTab('reg')">РЕГИСТРАЦИЯ</div>
     <div id="tab_feed" class="tab" onclick="switchTab('feed')">ОТЗЫВ</div>
 </div>
 
 <div id="section_rec">
     <!-- ТЕМАТИКА СТАРТА -->
     <div class="card" style="border: 2px dashed var(--accent); background: #fffcfc;">
-        <label>Тематика старта:</label>
+        <label>Тематика старта (видят все):</label>
         <textarea id="theme_input" rows="3" placeholder="Например: 21 марта - Всемирный день поэзии..."></textarea>
-        <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">💾 Сохранить тему</button>
-        <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Обновить список волонтёров</button>
+        <button class="btn-qr" style="margin-top:0; height:36px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
+        <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Синхронизировать с сайтом</button>
     </div>
 
-    <div class="timer-slim" id="countdown_timer" style="display:none;">
-            <span>⏳ До старта:</span>
-            <span id="timer_clock">00:00:00:00</span>
-        </div>
+    <div class="timer-banner" id="countdown_timer" style="display:none;">
+    ⏳ До старта осталось: <span id="timer_clock">00:00:00:00</span>
     </div>
 
     <div class="card">
@@ -245,7 +249,7 @@
             <input type="hidden" id="selected_vk_name">
         </div>
         
-        <label>3. Позиции волонтёра (выберите одну или несколько):</label>
+        <label>3. Позиции волонтера (выберите одну или несколько):</label>
         <div class="roles-container" id="roles_checkbox_list">
             <div class="group-label">Основные позиции</div>
             <div class="role-option" data-id="1" data-name="Организатор"><input type="checkbox"> <span>Организатор</span></div>
@@ -498,9 +502,8 @@
 
     async function manualSync() {
         const btn = document.getElementById('sync_btn');
-        const oldText = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = "⌛..."; // Совсем коротко для компактной кнопки
+        btn.innerText = "⌛ Синхронизируем...";
         try {
             const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "manual_sync" }) });
             const data = await res.json();
@@ -510,7 +513,7 @@
             }
         } catch(e) { alert("Ошибка синхронизации"); }
         btn.disabled = false;
-        btn.innerHTML = oldText;
+        btn.innerText = "🔄 Синхронизировать с сайтом";
     }
 
     async function sendFeedback() {
