@@ -91,17 +91,29 @@
         .reg-frame-container iframe { width: 100%; height: 100%; border: none; }
 
         .timer-banner {
-        background: linear-gradient(45deg, #2B326D, #E6564C);
+        background: var(--primary); /* Тот самый синий 5 вёрст */
         color: white;
-        padding: 8px;
-        border-radius: 10px;
+        padding: 10px;
+        border-radius: 12px;
         text-align: center;
-        margin-bottom: 15px;
+        margin: 15px; /* Сделал отступы как у карточек */
         font-weight: bold;
         font-size: 13px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(43, 50, 109, 0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         }
-        #timer_clock { font-size: 16px; letter-spacing: 1px; margin-left: 5px; }
+        #timer_clock { 
+        font-family: 'Courier New', monospace; /* Моноширинный шрифт, чтобы цифры не "прыгали" */
+        font-size: 16px; 
+        color: #fff;
+        background: rgba(255,255,255,0.1);
+        padding: 2px 8px;
+        border-radius: 6px;
+        }
     </style>
 </head>
 <body>
