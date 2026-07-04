@@ -90,29 +90,40 @@
         .reg-frame-container { border-radius: 12px; overflow: hidden; border: 1px solid #dce1e6; margin-top: 15px; height: 600px; position: relative; }
         .reg-frame-container iframe { width: 100%; height: 100%; border: none; }
 
-        .timer-banner {
-        background: var(--primary); /* Тот самый синий 5 вёрст */
-        color: white;
-        padding: 10px;
-        border-radius: 12px;
-        text-align: center;
-        margin: 15px; /* Сделал отступы как у карточек */
-        font-weight: bold;
-        font-size: 13px;
-        box-shadow: 0 4px 15px rgba(43, 50, 109, 0.2);
-        border: 1px solid rgba(255,255,255,0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
+        /* Контейнер таймера внутри карточки */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0 20px 0;
+            background: #f0f2ff;
+            padding: 10px;
+            border-radius: 12px;
         }
-        #timer_clock { 
-        font-family: 'Courier New', monospace; /* Моноширинный шрифт, чтобы цифры не "прыгали" */
-        font-size: 16px; 
-        color: #fff;
-        background: rgba(255,255,255,0.1);
-        padding: 2px 8px;
-        border-radius: 6px;
+        
+        /* Каждый блок (день, час, мин) */
+        .timer-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 45px;
+        }
+        
+        /* Сами цифры */
+        .timer-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+        
+        /* Подписи под цифрами */
+        .timer-label {
+            font-size: 9px;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 4px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -213,12 +224,17 @@
         <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Синхронизировать с сайтом</button>
     </div>
 
-    <div class="timer-banner" id="countdown_timer" style="display:none;">
-    ⏳ До старта осталось: <span id="timer_clock">00:00:00:00</span>
-    </div>
-
     <div class="card">
         <h2>Запись на <span id="event_date" class="date-badge">...</span></h2>
+
+        <!-- АДЕКВАТНЫЙ ТАЙМЕР -->
+        <div class="timer-container" id="countdown_timer" style="display:none;">
+            <div class="timer-unit"><span class="timer-val" id="t_d">00</span><span class="timer-label">дн</span></div>
+            <div class="timer-unit"><span class="timer-val" id="t_h">00</span><span class="timer-label">час</span></div>
+            <div class="timer-unit"><span class="timer-val" id="t_m">00</span><span class="timer-label">мин</span></div>
+            <div class="timer-unit"><span class="timer-val" id="t_s">00</span><span class="timer-label">сек</span></div>
+        </div>
+        
         <div style="background:linear-gradient(90deg, #2B326D, #4f5ca8); color:white; padding:14px 16px; border-radius:12px; margin:12px 0 18px 0; text-align:center; font-weight:700; font-size:16px; box-shadow:0 3px 10px rgba(43,50,109,0.3);">
             📍 <span id="park_name">Парк Станкозавода | Нижний Новгород</span>
         </div>
@@ -718,47 +734,45 @@
 
     function updateTimer() {
     const timerBox = document.getElementById('countdown_timer');
-    const clock = document.getElementById('timer_clock');
+    const td = document.getElementById('t_d');
+    const th = document.getElementById('t_h');
+    const tm = document.getElementById('t_m');
+    const ts = document.getElementById('t_s');
     
     function tick() {
         const now = new Date();
-        // Ищем ближайшую субботу 09:00 МСК
         let target = new Date();
         target.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
         target.setHours(9, 0, 0, 0);
 
-        // Если сегодня суббота и уже больше 10:00 утра, переключаем на следующую неделю
-        if (now > target && now.getHours() >= 10) {
+        // Время старта (9:00 - 10:30 субботы)
+        if (now.getDay() === 6 && now.getHours() >= 9 && (now.getHours() < 10 || (now.getHours() === 10 && now.getMinutes() < 30))) {
+            timerBox.style.display = 'flex';
+            timerBox.innerHTML = "<div style='color:var(--accent); font-weight:800; font-size:14px;'>🏃‍♂️ СТАРТ ИДЕТ ПРЯМО СЕЙЧАС!</div>";
+            return;
+        }
+
+        if (now > target || (now.getDay() === 6 && now.getHours() >= 10)) {
             target.setDate(target.getDate() + 7);
         }
 
         const diff = target - now;
-
-        if (diff <= 0) {
-            if (now.getHours() < 10) {
-                timerBox.style.display = 'block';
-                timerBox.innerHTML = "🏃‍♂️ Старт уже начался! Удачного забега!";
-            } else {
-                timerBox.style.display = 'none';
-            }
-            return;
-        }
-
         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
         const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const m = Math.floor((diff / (1000 * 60)) % 60);
         const s = Math.floor((diff / 1000) % 60);
 
-        timerBox.style.display = 'block';
-        clock.innerText = `${d}д ${h}ч ${m}м ${s}с`;
-        }
-    
-        tick();
-        setInterval(tick, 1000);
-        }
-        
-        // Запускаем таймер сразу
-        updateTimer();
+        timerBox.style.display = 'flex';
+        td.innerText = d.toString().padStart(2, '0');
+        th.innerText = h.toString().padStart(2, '0');
+        tm.innerText = m.toString().padStart(2, '0');
+        ts.innerText = s.toString().padStart(2, '0');
+    }
+
+    tick();
+    setInterval(tick, 1000);
+    }
+    updateTimer();
 </script>
 </body>
 </html>
