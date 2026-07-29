@@ -752,25 +752,31 @@
         const data = await response.json();
 
         if (data && data.href) {
-            // Вариант А: Переход через VK Bridge во внешний браузер (для мобильного ВК)
+            // Главный фикс: принудительно открываем прямую ссылку во внешнем браузере устройства
             if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
                 vkBridge.send("VKWebAppOpenUrl", { "url": data.href });
             } else {
-                // Вариант Б: Открытие в новой вкладке (для ПК / обычного браузера)
-                const a = document.createElement('a');
-                a.href = data.href;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+                // Фоллбэк для ПК / обычного браузера
+                window.open(data.href, '_blank');
             }
         } else {
-            showToast('Не удалось получить ссылку на скачивание');
+            // Если API Яндекса отдало ошибку, кидаем прямо на публичную страницу диска во внешнем браузере
+            const fallbackUrl = 'https://disk.yandex.ru/d/JIxTrhFizYwmjw';
+            if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
+                vkBridge.send("VKWebAppOpenUrl", { "url": fallbackUrl });
+            } else {
+                window.open(fallbackUrl, '_blank');
+            }
         }
     } catch (error) {
         console.error('Ошибка скачивания:', error);
-        showToast('Произошла ошибка при скачивании файла');
+        // При любом сбое API — просто открываем папку на Яндекс Диске в Хроме/Браузере
+        const fallbackUrl = 'https://disk.yandex.ru/d/JIxTrhFizYwmjw';
+        if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
+            vkBridge.send("VKWebAppOpenUrl", { "url": fallbackUrl });
+        } else {
+            window.open(fallbackUrl, '_blank');
+        }
     } finally {
         btn.innerHTML = originalText;
         btn.style.opacity = '1';
