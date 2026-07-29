@@ -1,0 +1,19 @@
+name: Bot Maintenance Alert
+
+on:
+  workflow_dispatch: # Запуск вручную по кнопке в GitHub
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send VK Maintenance Message
+        run: |
+          MSG="Ув. пользователи! 🛠️%0AЯ ненадолго ушел на техническое обслуживание, но обещаю скоро вернуться! :)%0A%0AЗапись на волонтёрские позиции в Mini App РАБОТАЕТ в обычном режиме. 🧡"
+          
+          curl -X POST "https://api.vk.com/method/messages.send" \
+            -d "peer_id=${{ secrets.VK_CHAT_IDS }}" \
+            -d "message=$MSG" \
+            -d "random_id=0" \
+            -d "access_token=${{ secrets.VK_TOKEN }}" \
+            -d "v=5.131"
