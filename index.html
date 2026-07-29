@@ -39,7 +39,6 @@
             position: relative;
         }
 
-        /* Анимированный Mesh-фон */
         .mesh-bg {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -50,7 +49,6 @@
                 radial-gradient(circle at 50% 50%, rgba(242, 244, 248, 1) 0%, rgba(242, 244, 248, 1) 100%);
         }
 
-        /* Шум (Noise Overlay) */
         .noise-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -60,7 +58,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Вкладки с эффектом «Живого Пузыря» */
         .tabs-wrapper {
             position: sticky;
             top: 0;
@@ -112,7 +109,6 @@
 
         .tab.active { color: var(--primary); font-weight: 700; }
 
-        /* Карточки (Glassmorphism) */
         .card {
             background: var(--bg-glass);
             backdrop-filter: blur(16px);
@@ -267,7 +263,6 @@
             touch-action: manipulation;
         }
 
-        /* Скелетоны (Skeleton Loader) */
         .skeleton {
             background: linear-gradient(90deg, rgba(220, 220, 220, 0.4) 25%, rgba(240, 240, 240, 0.8) 50%, rgba(220, 220, 220, 0.4) 75%);
             background-size: 200% 100%;
@@ -282,7 +277,6 @@
 
         .skeleton-card { height: 50px; margin-bottom: 8px; width: 100%; border-radius: 12px; }
 
-        /* Toast-уведомления */
         #toast_container {
             position: fixed;
             bottom: 30px;
@@ -312,7 +306,6 @@
             opacity: 1;
         }
 
-        /* Модалки */
         .modal {
             display: none;
             position: fixed;
@@ -424,7 +417,6 @@
         .timer-val { font-size: 17px; font-weight: 800; color: var(--primary); line-height: 1; }
         .timer-label { font-size: 8px; color: var(--text-muted); text-transform: uppercase; margin-top: 3px; font-weight: 700; }
 
-        /* Опции сторис */
         .story-options { margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 10px; }
         .story-mode-toggle { display: flex; gap: 8px; margin-bottom: 8px; justify-content: center; }
         .story-mode-btn { font-size: 11px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: #f0f0f0; cursor: pointer; font-weight: 600; }
@@ -447,7 +439,7 @@
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
         <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.1 (2026 UI)</div>
+        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.2 (2026 UI)</div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -544,7 +536,6 @@
 </div>
 
 <div id="section_rec">
-    <!-- ТЕМАТИКА СТАРТА -->
     <div class="card" style="border: 1px dashed var(--accent); background: rgba(230, 86, 76, 0.02);">
         <label>Тема старта:</label>
         <textarea id="theme_input" rows="2" placeholder="Например: Всемирный день поэзии..."></textarea>
@@ -558,11 +549,9 @@
             <span id="event_date" class="date-badge">...</span>
         </h2>
 
-        <!-- ВЫБОР ДАТЫ СТАРТА ЧЕРЕЗ ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ -->
         <label>Выберите дату старта:</label>
         <input type="date" id="event_date_picker" onchange="onDateChange()">
 
-        <!-- ТАЙМЕР -->
         <div class="timer-container" id="countdown_timer" style="display:none;">
             <div class="timer-unit"><span class="timer-val" id="t_d">00</span><span class="timer-label">дн</span></div>
             <div class="timer-unit"><span class="timer-val" id="t_h">00</span><span class="timer-label">час</span></div>
@@ -571,7 +560,7 @@
         </div>
         
         <div style="background: linear-gradient(135deg, #2B326D, #4f5ca8); color:white; padding:12px 14px; border-radius:12px; margin:10px 0 16px 0; text-align:center; font-weight:700; font-size:14px; box-shadow:0 4px 12px rgba(43,50,109,0.2);">
-            📍 <span id="park_name">Парк Станкозавода | Нижний Новгород</span>
+            📍 <span id="park_name">Пар克 Станкозавода | Нижний Новгород</span>
         </div>
         
         <div id="welcome_back" class="welcome-msg"></div>
@@ -724,7 +713,7 @@
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAcxK292cItTfyf8NDxfDmvYH9-yaLByMNbOB5Wvs_kZLgfxqaFYApXrCYwB45X51VqQ/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzofN-iFOUAc15j9ji2F99Q0paCvGTtP04ih2uCXh1A5TNwRQWr0swPMS7iZIFHrTuM6Q/exec';
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
     let selectedVolunteer = null;
     let vkUser = null;
@@ -804,7 +793,6 @@
         }
     }
 
-    // Вспомогательная функция для загрузки изображений в Canvas
     function loadImage(url) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -815,29 +803,29 @@
         });
     }
 
-    // Обновлённая функция шеринга в Сторис VK с логотипом и кастомными шрифтами
     async function shareToStory() {
         showToast("Подготовка сторис...");
         try {
+            await document.fonts.ready; // Ждем прогрузки Panton / 5verstFont
             const canvas = document.createElement('canvas');
             canvas.width = 1080; canvas.height = 1920;
             const ctx = canvas.getContext('2d');
 
             if (storyMode === 'custom' && customStoryImage) {
-                // Рисуем кастомное изображение пользователя (Aspect Fill)
                 const scale = Math.max(1080 / customStoryImage.width, 1920 / customStoryImage.height);
                 const x = (1080 - customStoryImage.width * scale) / 2;
                 const y = (1920 - customStoryImage.height * scale) / 2;
                 ctx.drawImage(customStoryImage, x, y, customStoryImage.width * scale, customStoryImage.height * scale);
                 
-                // Тёмное перекрытие для читаемости текста
+                // Легкое затемнение только снизу и сверху, чтобы не перекрывать лицо по центру
                 const overlay = ctx.createLinearGradient(0, 0, 0, 1920);
-                overlay.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
-                overlay.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
+                overlay.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+                overlay.addColorStop(0.4, 'rgba(0, 0, 0, 0.1)');
+                overlay.addColorStop(0.75, 'rgba(0, 0, 0, 0.2)');
+                overlay.addColorStop(1, 'rgba(0, 0, 0, 0.85)');
                 ctx.fillStyle = overlay;
                 ctx.fillRect(0, 0, 1080, 1920);
             } else {
-                // Стандартный градиентный фон
                 const grad = ctx.createLinearGradient(0, 0, 0, 1920);
                 grad.addColorStop(0, '#2B326D');
                 grad.addColorStop(1, '#111536');
@@ -845,34 +833,38 @@
                 ctx.fillRect(0, 0, 1080, 1920);
             }
 
-            // Загружаем логотип из GitHub репозитория
+            // РЕНДЕР КРУГЛОГО ЛОГОТИПА ИЗ logo.png
             const logoImg = await loadImage(`${GITHUB_IMG_BASE}logo.png`);
             if (logoImg) {
-                ctx.drawImage(logoImg, 540 - 100, 180, 200, 200);
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(540, 240, 90, 0, Math.PI * 2, true); // Круглая маска
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(logoImg, 450, 150, 180, 180);
+                ctx.restore();
             }
 
-            // Используем кастомный шрифт 5 вёрст из CSS
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 54px "5verstFont", -apple-system, sans-serif';
+            ctx.font = 'bold 52px "5verstFont", -apple-system, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('5 вёрст Станкозавод', 540, 430);
+            ctx.fillText('5 вёрст Станкозавод', 540, 390);
 
+            // ОПУСКАЕМ ТЕКСТ ВНИЗ ЭКРАНА (чтобы лицо на фото было открыто)
             ctx.fillStyle = '#E6564C';
-            ctx.font = 'bold 42px "5verstFont", -apple-system, sans-serif';
-            ctx.fillText('Я в команде волонтёров! 🧡', 540, 520);
+            ctx.font = 'bold 44px "5verstFont", -apple-system, sans-serif';
+            ctx.fillText('Я в команде волонтёров! 🧡', 540, 1220);
 
             if (selectedVolunteer) {
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 64px "5verstFont", -apple-system, sans-serif';
-                ctx.fillText(selectedVolunteer.full_name, 540, 960);
-                ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                ctx.font = '36px "5verstFont", -apple-system, sans-serif';
-                ctx.fillText(`ID: A${selectedVolunteer.id}`, 540, 1030);
+                ctx.font = 'bold 62px "5verstFont", -apple-system, sans-serif';
+                ctx.fillText(selectedVolunteer.full_name, 540, 1310);
+                // ID полностью убран из сторис для конфиденциальности
             }
 
             ctx.fillStyle = '#ffffff';
             ctx.font = '32px "5verstFont", -apple-system, sans-serif';
-            ctx.fillText('Присоединяйся к нам в эту субботу в 09:00!', 540, 1600);
+            ctx.fillText('Присоединяйся к нам в субботу в 09:00!', 540, 1680);
 
             const dataUrl = canvas.toDataURL('image/png');
 
@@ -901,7 +893,15 @@
     }
 
     async function init() {
-        showSkeletons();
+        // Мгновенная инициализация даты на фронте
+        const nextSat = getNextSaturday();
+        const datePicker = document.getElementById('event_date_picker');
+        datePicker.value = nextSat;
+        document.getElementById('event_date').innerText = formatDateDisplay(nextSat);
+
+        // Сразу запускаем прогрузку волонтеров
+        loadQueue();
+
         try {
             vkUser = await vkBridge.send("VKWebAppGetUserInfo");
 
@@ -924,14 +924,6 @@
                 }
                 welcome.innerHTML = `👋 <b>${vkUser.first_name}</b>, профиль привязан!<br>${badgesHtml}<button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
             }
-
-            // Подставляем ближайшую субботу в календарь
-            const nextSat = getNextSaturday();
-            const datePicker = document.getElementById('event_date_picker');
-            datePicker.value = nextSat;
-            document.getElementById('event_date').innerText = formatDateDisplay(nextSat);
-
-            await loadQueue();
             validateForm();
         } catch (e) { console.error(e); }
     }
@@ -1186,27 +1178,31 @@
     async function loadQueue() {
         showSkeletons();
         const selectedDate = document.getElementById('event_date_picker').value;
-        const res = await fetch(`${SCRIPT_URL}?date=${selectedDate}`);
-        const data = await res.json();
-        const container = document.getElementById('queue_container');
-        container.innerHTML = '';
-        if(!data || data.length === 0) {
-            container.innerHTML = '<div style="text-align:center; color:#999; padding:20px; font-size:13px;">На эту дату пока никто не записался</div>';
-            return;
+        try {
+            const res = await fetch(`${SCRIPT_URL}?date=${selectedDate}`);
+            const data = await res.json();
+            const container = document.getElementById('queue_container');
+            container.innerHTML = '';
+            if(!data || data.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#999; padding:20px; font-size:13px;">На эту дату пока никто не записался</div>';
+                return;
+            }
+            data.reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'vol-card';
+                const isMine = vkUser && (item.author_vk_id == vkUser.id || item.vk_id == vkUser.id);
+                div.innerHTML = `
+                    <div class="vol-info-group">
+                        <span class="vol-name-txt">${item.full_name} ${item.comment ? '('+item.comment+')' : ''}</span>
+                        <span class="vol-role-badge">${item.role_name}</span>
+                    </div>
+                    ${isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}', '${item.verst_id}', this)">Отмена</button>` : ''}
+                `;
+                container.appendChild(div);
+            });
+        } catch(e) {
+            document.getElementById('queue_container').innerHTML = '<div style="text-align:center; color:#e6564c; padding:20px; font-size:13px;">Ошибка прогрузки списка</div>';
         }
-        data.reverse().forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'vol-card';
-            const isMine = vkUser && (item.author_vk_id == vkUser.id || item.vk_id == vkUser.id);
-            div.innerHTML = `
-                <div class="vol-info-group">
-                    <span class="vol-name-txt">${item.full_name} ${item.comment ? '('+item.comment+')' : ''}</span>
-                    <span class="vol-role-badge">${item.role_name}</span>
-                </div>
-                ${isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}', '${item.verst_id}', this)">Отмена</button>` : ''}
-            `;
-            container.appendChild(div);
-        });
     }
 
     async function deleteMyRole(rid, rname, fname, verst_id, btnElement) {
