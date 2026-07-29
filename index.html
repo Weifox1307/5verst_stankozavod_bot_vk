@@ -701,13 +701,9 @@
                 <span style="font-size: 11px; color: var(--text-muted);">Приложение «5 вёрст»</span>
             </div>
         </div>
-        <!-- Замени ссылку на актуальный релиз APK -->
-        <!-- Атрибут download подсказывает браузеру, что это скачивание файла -->
-        <a href="https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=https://disk.yandex.ru/d/JIxTrhFizYwmjw" style="text-decoration: none;">
-    <button class="btn-qr" style="margin-top: 5px; background: var(--accent); box-shadow: 0 4px 12px rgba(230, 86, 76, 0.25);">
-        📥 Скачать APK (Android)
-    </button>
-</a>
+        <button type="button" id="downloadApkBtn" class="btn-qr" style="margin-top: 5px; background: var(--accent); box-shadow: 0 4px 12px rgba(230, 86, 76, 0.25); cursor: pointer;">
+            📥 Скачать APK (Android)
+        </button>
     </div>
 
     <div class="card">
@@ -740,6 +736,35 @@
 
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
     const volIcon = "🧡 ";
+
+    // Динамическое скачивание APK через Яндекс Диск API
+    document.getElementById('downloadApkBtn').addEventListener('click', async function() {
+        const btn = this;
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = '⌛ Загрузка...';
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
+
+        try {
+            const publicKey = encodeURIComponent('https://disk.yandex.ru/d/JIxTrhFizYwmjw');
+            const response = await fetch(`https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${publicKey}`);
+            const data = await response.json();
+
+            if (data && data.href) {
+                window.location.href = data.href;
+            } else {
+                showToast('Не удалось получить ссылку на скачивание');
+            }
+        } catch (error) {
+            console.error('Ошибка скачивания:', error);
+            showToast('Произошла ошибка при скачивании файла');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+        }
+    });
 
     function showToast(text) {
         const toast = document.getElementById('toast_container');
