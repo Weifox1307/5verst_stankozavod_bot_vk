@@ -6,6 +6,13 @@
     <title>5 вёрст в парке Станкозавода | Нижний Новгород</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
+        @font-face {
+            font-family: '5verstFont';
+            src: url('https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/font.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
             --primary: #2B326D;
             --primary-light: #4f5ca8;
@@ -74,7 +81,6 @@
             gap: 2px;
         }
 
-        /* Тот самый плавающий пузырь-индикатор */
         .tab-pill {
             position: absolute;
             top: 3px;
@@ -417,6 +423,12 @@
         .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 42px; }
         .timer-val { font-size: 17px; font-weight: 800; color: var(--primary); line-height: 1; }
         .timer-label { font-size: 8px; color: var(--text-muted); text-transform: uppercase; margin-top: 3px; font-weight: 700; }
+
+        /* Опции сторис */
+        .story-options { margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 10px; }
+        .story-mode-toggle { display: flex; gap: 8px; margin-bottom: 8px; justify-content: center; }
+        .story-mode-btn { font-size: 11px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: #f0f0f0; cursor: pointer; font-weight: 600; }
+        .story-mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
     </style>
 </head>
 <body>
@@ -435,7 +447,7 @@
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
         <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.0 (2026 UI)</div>
+        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.1 (2026 UI)</div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -445,22 +457,22 @@
         <h2>Ключевые роли</h2>
         <div class="role-grid">
             <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Главный человек на старте. Координирует волонтеров, проводит брифинг и следит за безопасностью.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_1.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Организатор</span>
+                <img src="https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/role_1.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Организатор</span>
             </div>
             <div class="role-item-btn" onclick="showRoleDetail(2, 'Секундомер', 'Нажимает кнопку СТАРТ и фиксирует время каждого финишера. Самая ответственная роль!')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_2.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Секундомер</span>
+                <img src="https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/role_2.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Секундомер</span>
             </div>
             <div class="role-item-btn" onclick="showRoleDetail(11, 'Сканер', 'Сканирует личный штрих-код участника и карточку позиции после финиша.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_11.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Сканер</span>
+                <img src="https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/role_11.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Сканер</span>
             </div>
             <div class="role-item-btn" onclick="showRoleDetail(13, 'Карточки', 'Выдает карточку с номером позиции каждому, кто пересек финишную черту.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_13.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Карточки</span>
+                <img src="https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/role_13.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Карточки</span>
             </div>
             <div class="role-item-btn" onclick="showRoleDetail(7, 'Маршал', 'Стоит на ключевых поворотах, указывает путь и подбадривает участников.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_7.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Маршал</span>
+                <img src="https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/role_7.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Маршал</span>
             </div>
             <div class="role-item-btn" onclick="showRoleDetail(19, 'Замыкающий', 'Идет последним, чтобы никто не остался на трассе один. Финиширует в самом конце.')">
-                <img src="https://raw.githubusercontent.com/Weifox1307/5-verst-kstovo-bot-VK/main/role_19.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Замыкающий</span>
+                <img src="https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/role_19.jpg" onerror="this.src='https://via.placeholder.com/100?text=Role'"><span>Замыкающий</span>
             </div>
         </div>
     </div>
@@ -508,7 +520,15 @@
         </div>
         <p id="qr_id_text" style="color:var(--accent); margin:10px 0 0 0; font-weight:900; font-size:24px;"></p>
         <span id="qr_name_text" style="color:#666; font-size:13px; display:block; margin-top:4px; font-weight:500;"></span>
-        <button class="btn-story" onclick="shareToStory()" style="margin-top:15px;">📸 Поделиться в Сторис</button>
+        
+        <div class="story-options">
+            <div class="story-mode-toggle">
+                <button id="story_mode_default" class="story-mode-btn active" onclick="setStoryMode('default')">Стандартный фон</button>
+                <button id="story_mode_custom" class="story-mode-btn" onclick="setStoryMode('custom')">Своё фото</button>
+            </div>
+            <input type="file" id="story_photo_input" accept="image/*" style="display:none;" onchange="handleStoryPhotoSelect(event)">
+            <button class="btn-story" onclick="shareToStory()">📸 Поделиться в Сторис</button>
+        </div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -538,12 +558,9 @@
             <span id="event_date" class="date-badge">...</span>
         </h2>
 
-        <!-- ВЫБОР ДАТЫ СТАРТА (БУДУЩИЕ СТАРТЫ) -->
-        <label>Дата проведения:</label>
-        <select id="event_date_select" onchange="onDateChange()">
-            <option value="nearest">Ближайшая суббота</option>
-            <option value="next">Следующая суббота (+7 дней)</option>
-        </select>
+        <!-- ВЫБОР ДАТЫ СТАРТА ЧЕРЕЗ ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ -->
+        <label>Выберите дату старта:</label>
+        <input type="date" id="event_date_picker" onchange="onDateChange()">
 
         <!-- ТАЙМЕР -->
         <div class="timer-container" id="countdown_timer" style="display:none;">
@@ -711,12 +728,12 @@
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
     let selectedVolunteer = null;
     let vkUser = null;
-    let baseEventDate = "";
+    let customStoryImage = null;
+    let storyMode = 'default';
 
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
     const volIcon = "🧡 ";
 
-    // Всплывающие Toast-уведомления
     function showToast(text) {
         const toast = document.getElementById('toast_container');
         document.getElementById('toast_text').innerText = text;
@@ -724,7 +741,6 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Переключение вкладок с плавающим пузырем
     function switchTab(t, index) {
         const sections = ['rec', 'rate', 'reg', 'feed'];
         const pill = document.getElementById('tab_pill');
@@ -762,7 +778,44 @@
 
     function closeQR() { closeModal('qr_modal'); }
 
-    // Шеринг в Сторис VK
+    function setStoryMode(mode) {
+        storyMode = mode;
+        document.getElementById('story_mode_default').classList.toggle('active', mode === 'default');
+        document.getElementById('story_mode_custom').classList.toggle('active', mode === 'custom');
+        
+        if (mode === 'custom') {
+            document.getElementById('story_photo_input').click();
+        }
+    }
+
+    function handleStoryPhotoSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    customStoryImage = img;
+                    showToast("Фотка загружена для сторис!");
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Вспомогательная функция для загрузки изображений в Canvas
+    function loadImage(url) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = url;
+        });
+    }
+
+    // Обновлённая функция шеринга в Сторис VK с логотипом и кастомными шрифтами
     async function shareToStory() {
         showToast("Подготовка сторис...");
         try {
@@ -770,32 +823,55 @@
             canvas.width = 1080; canvas.height = 1920;
             const ctx = canvas.getContext('2d');
 
-            const grad = ctx.createLinearGradient(0, 0, 0, 1920);
-            grad.addColorStop(0, '#2B326D');
-            grad.addColorStop(1, '#111536');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 1080, 1920);
+            if (storyMode === 'custom' && customStoryImage) {
+                // Рисуем кастомное изображение пользователя (Aspect Fill)
+                const scale = Math.max(1080 / customStoryImage.width, 1920 / customStoryImage.height);
+                const x = (1080 - customStoryImage.width * scale) / 2;
+                const y = (1920 - customStoryImage.height * scale) / 2;
+                ctx.drawImage(customStoryImage, x, y, customStoryImage.width * scale, customStoryImage.height * scale);
+                
+                // Тёмное перекрытие для читаемости текста
+                const overlay = ctx.createLinearGradient(0, 0, 0, 1920);
+                overlay.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
+                overlay.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
+                ctx.fillStyle = overlay;
+                ctx.fillRect(0, 0, 1080, 1920);
+            } else {
+                // Стандартный градиентный фон
+                const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+                grad.addColorStop(0, '#2B326D');
+                grad.addColorStop(1, '#111536');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 1080, 1920);
+            }
 
+            // Загружаем логотип из GitHub репозитория
+            const logoImg = await loadImage(`${GITHUB_IMG_BASE}logo.png`);
+            if (logoImg) {
+                ctx.drawImage(logoImg, 540 - 100, 180, 200, 200);
+            }
+
+            // Используем кастомный шрифт 5 вёрст из CSS
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 54px -apple-system, sans-serif';
+            ctx.font = 'bold 54px "5verstFont", -apple-system, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('5 вёрст Станкозавод', 540, 350);
+            ctx.fillText('5 вёрст Станкозавод', 540, 430);
 
             ctx.fillStyle = '#E6564C';
-            ctx.font = 'bold 42px -apple-system, sans-serif';
-            ctx.fillText('Я в команде волонтёров! 🧡', 540, 440);
+            ctx.font = 'bold 42px "5verstFont", -apple-system, sans-serif';
+            ctx.fillText('Я в команде волонтёров! 🧡', 540, 520);
 
             if (selectedVolunteer) {
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 64px -apple-system, sans-serif';
+                ctx.font = 'bold 64px "5verstFont", -apple-system, sans-serif';
                 ctx.fillText(selectedVolunteer.full_name, 540, 960);
-                ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.font = '36px -apple-system, sans-serif';
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                ctx.font = '36px "5verstFont", -apple-system, sans-serif';
                 ctx.fillText(`ID: A${selectedVolunteer.id}`, 540, 1030);
             }
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = '32px -apple-system, sans-serif';
+            ctx.font = '32px "5verstFont", -apple-system, sans-serif';
             ctx.fillText('Присоединяйся к нам в эту субботу в 09:00!', 540, 1600);
 
             const dataUrl = canvas.toDataURL('image/png');
@@ -808,6 +884,20 @@
         } catch(e) {
             showToast("Не удалось открыть сторис");
         }
+    }
+
+    function getNextSaturday() {
+        const d = new Date();
+        const day = d.getDay();
+        const diff = (day === 6) ? 0 : (6 - day);
+        d.setDate(d.getDate() + diff);
+        return d.toISOString().split('T')[0];
+    }
+
+    function formatDateDisplay(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('-');
+        return `${parts[2]}.${parts[1]}.${parts[0]}`;
     }
 
     async function init() {
@@ -835,10 +925,11 @@
                 welcome.innerHTML = `👋 <b>${vkUser.first_name}</b>, профиль привязан!<br>${badgesHtml}<button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
             }
 
-            const dRes = await fetch(SCRIPT_URL + "?get_date=1");
-            const dData = await dRes.json();
-            baseEventDate = dData.date;
-            document.getElementById('event_date').innerText = baseEventDate;
+            // Подставляем ближайшую субботу в календарь
+            const nextSat = getNextSaturday();
+            const datePicker = document.getElementById('event_date_picker');
+            datePicker.value = nextSat;
+            document.getElementById('event_date').innerText = formatDateDisplay(nextSat);
 
             await loadQueue();
             validateForm();
@@ -852,12 +943,9 @@
     }
 
     function onDateChange() {
-        const mode = document.getElementById('event_date_select').value;
-        if (mode === 'next') {
-            document.getElementById('event_date').innerText = "(Сл. неделя)";
-        } else {
-            document.getElementById('event_date').innerText = baseEventDate;
-        }
+        const selectedDate = document.getElementById('event_date_picker').value;
+        document.getElementById('event_date').innerText = formatDateDisplay(selectedDate);
+        loadQueue();
     }
 
     document.querySelectorAll('.role-option').forEach(item => {
@@ -1048,7 +1136,7 @@
             return { id: rid, name: item.dataset.name, comment: comment };
         });
 
-        const targetDate = document.getElementById('event_date_select').value;
+        const targetDate = document.getElementById('event_date_picker').value;
 
         const payload = {
             verst_id: selectedVolunteer.id,
@@ -1096,12 +1184,14 @@
     }
 
     async function loadQueue() {
-        const res = await fetch(SCRIPT_URL);
+        showSkeletons();
+        const selectedDate = document.getElementById('event_date_picker').value;
+        const res = await fetch(`${SCRIPT_URL}?date=${selectedDate}`);
         const data = await res.json();
         const container = document.getElementById('queue_container');
         container.innerHTML = '';
         if(!data || data.length === 0) {
-            container.innerHTML = '<div style="text-align:center; color:#999; padding:20px; font-size:13px;">Пока никто не записался</div>';
+            container.innerHTML = '<div style="text-align:center; color:#999; padding:20px; font-size:13px;">На эту дату пока никто не записался</div>';
             return;
         }
         data.reverse().forEach(item => {
@@ -1119,7 +1209,6 @@
         });
     }
 
-    // ИСПРАВЛЕННОЕ ДВУХЭТАПНОЕ УДАЛЕНИЕ ДЛЯ iOS (БЕЗ confirm)
     async function deleteMyRole(rid, rname, fname, verst_id, btnElement) {
         if (btnElement && !btnElement.dataset.confirming) {
             btnElement.dataset.confirming = "true";
