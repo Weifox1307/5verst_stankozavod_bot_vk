@@ -692,6 +692,23 @@
 </div>
 
 <div id="section_reg" style="display:none">
+    <!-- Плашка скачивания Android приложения -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(43, 50, 109, 0.08) 0%, rgba(230, 86, 76, 0.08) 100%); border: 1px solid rgba(43, 50, 109, 0.15);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="font-size: 28px;">📱</div>
+            <div>
+                <h3 style="margin: 0; font-size: 15px; color: var(--primary); font-weight: 800;">Мобильное приложение Android</h3>
+                <span style="font-size: 11px; color: var(--text-muted);">Приложение «5 вёрст»</span>
+            </div>
+        </div>
+        <!-- Замени ссылку на актуальный релиз APK -->
+        <a href="https://github.com/Weifox1307/5verst_stankozavod_bot_vk/releases/latest/download/app-release.apk" target="_blank" style="text-decoration: none;">
+            <button class="btn-qr" style="margin-top: 5px; background: var(--accent); box-shadow: 0 4px 12px rgba(230, 86, 76, 0.25);">
+                📥 Скачать APK (Android)
+            </button>
+        </a>
+    </div>
+
     <div class="card">
         <h2>Портал 5 вёрст</h2>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom:12px;">Регистрация, вход и карта локаций всегда под рукой.</p>
@@ -756,7 +773,7 @@
     function showQR(id, name) {
         const qrBox = document.getElementById('qr_img_box');
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=A${id}`;
-        qrBox.innerHTML = '<div style="padding:30px; color:#999;">Генерация QR...</div>';
+        qrBox.innerHTML = '<div style="padding:30px; color:#999;">Загрузка кода...</div>';
         document.getElementById('qr_id_text').innerText = `A${id}`;
         document.getElementById('qr_name_text').innerText = name.toUpperCase();
         openModal('qr_modal');
@@ -806,7 +823,7 @@
     async function shareToStory() {
         showToast("Подготовка сторис...");
         try {
-            await document.fonts.ready; // Ждем прогрузки Panton / 5verstFont
+            await document.fonts.ready;
             const canvas = document.createElement('canvas');
             canvas.width = 1080; canvas.height = 1920;
             const ctx = canvas.getContext('2d');
@@ -817,7 +834,6 @@
                 const y = (1920 - customStoryImage.height * scale) / 2;
                 ctx.drawImage(customStoryImage, x, y, customStoryImage.width * scale, customStoryImage.height * scale);
                 
-                // Легкое затемнение только снизу и сверху, чтобы не перекрывать лицо по центру
                 const overlay = ctx.createLinearGradient(0, 0, 0, 1920);
                 overlay.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
                 overlay.addColorStop(0.4, 'rgba(0, 0, 0, 0.1)');
@@ -833,12 +849,11 @@
                 ctx.fillRect(0, 0, 1080, 1920);
             }
 
-            // РЕНДЕР КРУГЛОГО ЛОГОТИПА ИЗ logo.png
             const logoImg = await loadImage(`${GITHUB_IMG_BASE}logo.png`);
             if (logoImg) {
                 ctx.save();
                 ctx.beginPath();
-                ctx.arc(540, 240, 90, 0, Math.PI * 2, true); // Круглая маска
+                ctx.arc(540, 240, 90, 0, Math.PI * 2, true);
                 ctx.closePath();
                 ctx.clip();
                 ctx.drawImage(logoImg, 450, 150, 180, 180);
@@ -850,7 +865,6 @@
             ctx.textAlign = 'center';
             ctx.fillText('5 вёрст Станкозавод', 540, 390);
 
-            // ОПУСКАЕМ ТЕКСТ ВНИЗ ЭКРАНА (чтобы лицо на фото было открыто)
             ctx.fillStyle = '#E6564C';
             ctx.font = 'bold 44px "5verstFont", -apple-system, sans-serif';
             ctx.fillText('Я в команде волонтёров! 🧡', 540, 1220);
@@ -859,7 +873,6 @@
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 62px "5verstFont", -apple-system, sans-serif';
                 ctx.fillText(selectedVolunteer.full_name, 540, 1310);
-                // ID полностью убран из сторис для конфиденциальности
             }
 
             ctx.fillStyle = '#ffffff';
@@ -893,13 +906,11 @@
     }
 
     async function init() {
-        // Мгновенная инициализация даты на фронте
         const nextSat = getNextSaturday();
         const datePicker = document.getElementById('event_date_picker');
         datePicker.value = nextSat;
         document.getElementById('event_date').innerText = formatDateDisplay(nextSat);
 
-        // Сразу запускаем прогрузку волонтеров
         loadQueue();
 
         try {
