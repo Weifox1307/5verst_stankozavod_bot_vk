@@ -738,49 +738,18 @@
     const volIcon = "🧡 ";
 
     // Динамическое скачивание APK через Яндекс Диск API
-    document.getElementById('downloadApkBtn').addEventListener('click', async function() {
-    const btn = this;
-    const originalText = btn.innerHTML;
-    
-    btn.innerHTML = '⌛ Загрузка...';
-    btn.style.opacity = '0.7';
-    btn.style.pointerEvents = 'none';
+    document.getElementById('downloadApkBtn').addEventListener('click', function() {
+    // Твоя прямая ссылка на APK в GitHub Releases
+    const apkUrl = 'https://github.com/Weifox1307/5verst_stankozavod_bot_vk/releases/latest/download/5verst.apk';
 
-    try {
-        const publicKey = encodeURIComponent('https://disk.yandex.ru/d/JIxTrhFizYwmjw');
-        const response = await fetch(`https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${publicKey}`);
-        const data = await response.json();
-
-        if (data && data.href) {
-            // Главный фикс: принудительно открываем прямую ссылку во внешнем браузере устройства
-            if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
-                vkBridge.send("VKWebAppOpenUrl", { "url": data.href });
-            } else {
-                // Фоллбэк для ПК / обычного браузера
-                window.open(data.href, '_blank');
-            }
-        } else {
-            // Если API Яндекса отдало ошибку, кидаем прямо на публичную страницу диска во внешнем браузере
-            const fallbackUrl = 'https://disk.yandex.ru/d/JIxTrhFizYwmjw';
-            if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
-                vkBridge.send("VKWebAppOpenUrl", { "url": fallbackUrl });
-            } else {
-                window.open(fallbackUrl, '_blank');
-            }
-        }
-    } catch (error) {
-        console.error('Ошибка скачивания:', error);
-        // При любом сбое API — просто открываем папку на Яндекс Диске в Хроме/Браузере
-        const fallbackUrl = 'https://disk.yandex.ru/d/JIxTrhFizYwmjw';
-        if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
-            vkBridge.send("VKWebAppOpenUrl", { "url": fallbackUrl });
-        } else {
-            window.open(fallbackUrl, '_blank');
-        }
-    } finally {
-        btn.innerHTML = originalText;
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
+    // 1. Проверяем, запущены ли мы внутри VK Mini App
+    if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
+        // Вызываем системный браузер устройства! 
+        // Chrome/Яндекс подхватят эту ссылку и файл установится нормально.
+        vkBridge.send("VKWebAppOpenUrl", { "url": apkUrl });
+    } else {
+        // 2. Фоллбэк для ПК и обычного браузера
+        window.open(apkUrl, '_blank');
     }
 });
 
