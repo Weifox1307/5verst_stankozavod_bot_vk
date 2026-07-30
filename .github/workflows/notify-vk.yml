@@ -12,7 +12,7 @@ jobs:
       - name: Send message to VK
         env:
           VK_TOKEN: ${{ secrets.VK_TOKEN }}
-          PEER_ID: ${{ secrets.VK_CHAT_IDS }}
+          PEER_ID: ${{ secrets.VK_CHAT_IDS }}   # или secrets.PEER_ID — смотри какой у тебя правильный
         run: |
           VERSION="${{ github.event.release.tag_name }}"
           RELEASE_URL="${{ github.event.release.html_url }}"
@@ -22,23 +22,28 @@ jobs:
             BODY="Обновление приложения"
           fi
 
+          # === СЮДА ВСТАВЬ ССЫЛКУ НА СВОЮ СТАТЬЮ ===
+          ARTICLE_URL="https://vk.ru/@weifox-vk-mini-app-5-verst"
+
           MESSAGE="🚀 Я обновился до версии ${VERSION}!
 
           📦 Загружаю информацию о нашем парке и новые улучшения.
-
+          
           📝 Подробности обновления:
           ${BODY}
-
-          🔗 Релиз: ${RELEASE_URL}
-
+          
           📲 Скачать APK можно в мини-приложении → вкладка «Портал»"
 
           # Кодируем переносы строк
           MESSAGE=$(echo -e "$MESSAGE" | sed ':a;N;$!ba;s/\n/%0A/g')
 
+          # Красивая кнопка-ссылка
+          KEYBOARD='{"inline":true,"buttons":[[{"action":{"type":"open_link","link":"'"${ARTICLE_URL}"'","label":"📖 Читать об обновлении"}}]]}'
+
           curl -s -X POST "https://api.vk.com/method/messages.send" \
-            -d "peer_id=${VK_CHAT_IDS}" \
+            -d "peer_id=${PEER_ID}" \
             -d "message=${MESSAGE}" \
+            -d "keyboard=${KEYBOARD}" \
             -d "random_id=0" \
             -d "access_token=${VK_TOKEN}" \
             -d "v=5.131"
