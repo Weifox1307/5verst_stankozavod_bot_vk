@@ -1,0 +1,44 @@
+name: Notify VK about new release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to VK
+        env:
+          VK_TOKEN: ${{ secrets.VK_TOKEN }}
+          PEER_ID: ${{ secrets.VK_CHAT_IDS }}
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          RELEASE_URL="${{ github.event.release.html_url }}"
+          BODY="${{ github.event.release.body }}"
+
+          if [ -z "$BODY" ]; then
+            BODY="Обновление приложения"
+          fi
+
+          MESSAGE="🚀 Я обновился до версии ${VERSION}!
+
+          📦 Загружаю информацию о нашем парке и новые улучшения.
+
+          📝 Подробности обновления:
+          ${BODY}
+
+          🔗 Релиз: ${RELEASE_URL}
+
+          📲 Скачать APK можно в мини-приложении → вкладка «Портал»"
+
+          # Кодируем переносы строк
+          MESSAGE=$(echo -e "$MESSAGE" | sed ':a;N;$!ba;s/\n/%0A/g')
+
+          curl -s -X POST "https://api.vk.com/method/messages.send" \
+            -d "peer_id=${VK_CHAT_IDS}" \
+            -d "message=${MESSAGE}" \
+            -d "random_id=0" \
+            -d "access_token=${VK_TOKEN}" \
+            -d "v=5.131"
