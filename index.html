@@ -739,7 +739,7 @@
 
     // Динамическое скачивание APK через Яндекс Диск API
     document.getElementById('downloadApkBtn').addEventListener('click', function() {
-    const apkUrl = 'https://github.com/Weifox1307/5verst_stankozavod_bot_vk/releases/download/1.0.9/5verst.apk';
+    const apkUrl = 'https://apk-downloader.bekovroman0.workers.dev/';
 
     if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
         vkBridge.send("VKWebAppOpenUrl", { "url": apkUrl });
