@@ -739,19 +739,14 @@
 
     // Динамическое скачивание APK через Яндекс Диск API
     document.getElementById('downloadApkBtn').addEventListener('click', function() {
-    // Твоя прямая ссылка на APK в GitHub Releases
-    const apkUrl = 'https://github.com/Weifox1307/5verst_stankozavod_bot_vk/releases/latest/download/5verst.apk';
+    const apkUrl = 'https://github.com/Weifox1307/5verst_stankozavod_bot_vk/releases/download/1.0.9/5verst.apk';
 
-    // 1. Проверяем, запущены ли мы внутри VK Mini App
     if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
-        // Вызываем системный браузер устройства! 
-        // Chrome/Яндекс подхватят эту ссылку и файл установится нормально.
         vkBridge.send("VKWebAppOpenUrl", { "url": apkUrl });
     } else {
-        // 2. Фоллбэк для ПК и обычного браузера
         window.open(apkUrl, '_blank');
     }
-});
+    });
 
     function showToast(text) {
         const toast = document.getElementById('toast_container');
