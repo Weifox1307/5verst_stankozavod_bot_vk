@@ -18,12 +18,14 @@
             --primary-light: #4f5ca8;
             --accent: #E6564C;
             --accent-hover: #d44339;
-            --bg-glass: rgba(255, 255, 255, 0.72);
-            --border-glass: rgba(255, 255, 255, 0.5);
-            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
             --success: #34c759;
-            --text-dark: #1c1c1e;
-            --text-muted: #8e8e93;
+            --text-dark: #111;
+            --text-muted: #555;
+            
+            /* Glassmorphism Variables */
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -32,61 +34,69 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Roboto, sans-serif;
             padding: 0;
             margin: 0;
-            background: #f2f4f8;
+            background: #E8EDF2;
             color: var(--text-dark);
             padding-bottom: 90px;
             overflow-x: hidden;
             position: relative;
         }
 
+        /* Обновленный красивый анимированный фон */
         .mesh-bg {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -2;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(43, 50, 109, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(230, 86, 76, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(242, 244, 248, 1) 0%, rgba(242, 244, 248, 1) 100%);
+            background-color: #E8EDF2;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(43, 50, 109, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(230, 86, 76, 0.2) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(79, 92, 168, 0.15) 0px, transparent 50%);
+            animation: bgShift 15s ease-in-out infinite alternate;
+        }
+        
+        @keyframes bgShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
 
         .noise-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            opacity: 0.035;
+            opacity: 0.4;
+            mix-blend-mode: overlay;
             pointer-events: none;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
+        /* Tabs - Glass Pill */
         .tabs-wrapper {
             position: sticky;
-            top: 0;
+            top: 10px;
             z-index: 1000;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 0 12px;
+            margin-bottom: 20px;
         }
 
         .tabs {
             display: flex;
             position: relative;
-            background: rgba(118, 118, 128, 0.12);
-            padding: 3px;
-            border-radius: 14px;
-            gap: 2px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 4px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .tab-pill {
             position: absolute;
-            top: 3px;
-            bottom: 3px;
-            left: 3px;
-            width: calc(25% - 4.5px);
-            background: #ffffff;
-            border-radius: 11px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
+            top: 4px; bottom: 4px; left: 4px;
+            width: calc(25% - 6px);
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.1, 1), width 0.35s ease;
             z-index: 1;
         }
@@ -94,65 +104,72 @@
         .tab {
             flex: 1;
             text-align: center;
-            padding: 8px 4px;
+            padding: 10px 4px;
             font-weight: 600;
-            color: var(--text-muted);
+            color: #666;
             cursor: pointer;
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             z-index: 2;
             position: relative;
             transition: color 0.25s ease;
             user-select: none;
         }
 
-        .tab.active { color: var(--primary); font-weight: 700; }
+        .tab.active { color: var(--primary); font-weight: 800; }
 
+        /* Глассморфизм карточки */
         .card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 18px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-glass);
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
             margin: 14px;
-            border: 1px solid var(--border-glass);
+            border: 1px solid rgba(255,255,255,0.7);
+            border-top: 1px solid rgba(255,255,255,0.9);
+            border-left: 1px solid rgba(255,255,255,0.9);
             transition: transform 0.2s ease;
         }
 
         h2 {
             color: var(--primary);
-            font-size: 17px;
-            font-weight: 700;
-            margin: 0 0 14px 0;
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0 0 16px 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.5);
         }
 
-        .date-badge { color: var(--accent); }
+        .date-badge { color: var(--accent); background: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 12px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
         .welcome-msg {
-            background: rgba(43, 50, 109, 0.06);
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 13px;
-            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            margin-bottom: 16px;
             color: var(--primary);
             display: none;
-            border: 1px solid rgba(43, 50, 109, 0.1);
+            border: 1px solid rgba(255,255,255,0.8);
             line-height: 1.5;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.6);
         }
 
         .btn-qr, .btn-sync, .btn-story {
-            background: var(--primary);
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 100%);
+            background-color: var(--primary);
             color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 14px 16px;
+            border-radius: 16px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             margin-top: 10px;
             cursor: pointer;
             display: flex;
@@ -160,267 +177,212 @@
             justify-content: center;
             gap: 8px;
             width: 100%;
-            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 15px rgba(43, 50, 109, 0.25);
+            transition: all 0.2s ease;
         }
 
-        .btn-sync { background: var(--success); }
-        .btn-story { background: linear-gradient(135deg, #FF1A75 0%, #FF7A00 100%); color: white; }
+        .btn-sync { background-color: var(--success); box-shadow: 0 4px 15px rgba(52, 199, 89, 0.25); }
+        .btn-story { background: linear-gradient(135deg, #FF1A75 0%, #FF7A00 100%); color: white; border:none; box-shadow: 0 4px 15px rgba(255, 26, 117, 0.3); }
 
-        .btn-qr:active, .btn-sync:active, .btn-story:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-qr:active, .btn-sync:active, .btn-story:active { transform: scale(0.97); }
 
         label {
             font-size: 11px;
             color: var(--text-muted);
-            margin-left: 2px;
-            font-weight: 700;
+            margin-left: 4px;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px 14px;
-            margin-bottom: 14px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
             font-size: 14px;
             outline: none;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.5);
             color: var(--text-dark);
             -webkit-appearance: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            backdrop-filter: blur(10px);
         }
 
         input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(43, 50, 109, 0.15);
+            background: rgba(255, 255, 255, 0.8);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(43, 50, 109, 0.1);
         }
 
-        .comment-box { display: none; margin-bottom: 14px; padding: 10px; background: rgba(230, 86, 76, 0.05); border-radius: 12px; border: 1px dashed var(--accent); }
+        .comment-box { display: none; margin-bottom: 16px; padding: 12px; background: rgba(255,255,255,0.4); border-radius: 16px; border: 1px dashed var(--accent); }
 
         .silent-box {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 14px 0;
+            gap: 12px;
+            margin: 16px 0;
             font-size: 13px;
-            color: #444;
+            color: #333;
             cursor: pointer;
-            padding: 10px 12px;
-            background: rgba(0,0,0,0.02);
-            border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .silent-box input[type="checkbox"] { width: 20px; height: 20px; margin: 0; cursor: pointer; flex-shrink: 0; -webkit-appearance: checkbox; }
-        .silent-box.disabled { opacity: 0.5; color: #999; cursor: not-allowed; }
-
-        button#submit_btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 15px;
-            box-shadow: 0 4px 14px rgba(230, 86, 76, 0.3);
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        button#submit_btn:active { transform: scale(0.98); }
-        button:disabled { background: #c7c7cc !important; box-shadow: none !important; opacity: 0.7; }
-
-        .vol-card {
-            background: var(--bg-glass);
             padding: 12px 14px;
-            border-radius: 14px;
-            border: 1px solid var(--border-glass);
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: rgba(255,255,255,0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.8);
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
-        .vol-info-group { display: flex; flex-direction: column; gap: 3px; }
-        .vol-role-badge { background: rgba(43, 50, 109, 0.08); color: var(--primary); padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; width: fit-content; }
-        .vol-name-txt { font-weight: 600; font-size: 13px; color: var(--text-dark); }
+        .silent-box input[type="checkbox"] { width: 22px; height: 22px; margin: 0; cursor: pointer; flex-shrink: 0; }
+        .silent-box.disabled { opacity: 0.5; cursor: not-allowed; }
+
+        button#submit_btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            background-color: var(--accent);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 6px 20px rgba(230, 86, 76, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        button#submit_btn:active { transform: scale(0.97); }
+        button:disabled { background: #b0b5be !important; box-shadow: none !important; color:#fff; border-color:transparent;}
+
+        /* Списки */
+        .vol-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .vol-info-group { display: flex; flex-direction: column; gap: 4px; }
+        .vol-role-badge { background: rgba(43, 50, 109, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; width: fit-content; }
+        .vol-name-txt { font-weight: 700; font-size: 14px; color: var(--text-dark); }
         
         .btn-delete {
-            background: #feebeb;
+            background: rgba(255,255,255,0.7);
             color: #E6564C;
-            border: 1px solid #ffdada;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
+            border: 1px solid rgba(230, 86, 76, 0.3);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 800;
             cursor: pointer;
-            user-select: none;
-            touch-action: manipulation;
+            box-shadow: 0 2px 6px rgba(230,86,76,0.1);
         }
 
-        .skeleton {
-            background: linear-gradient(90deg, rgba(220, 220, 220, 0.4) 25%, rgba(240, 240, 240, 0.8) 50%, rgba(220, 220, 220, 0.4) 75%);
-            background-size: 200% 100%;
-            animation: skeleton-loading 1.5s infinite;
-            border-radius: 8px;
-        }
+        /* Выбор ролей */
+        .roles-container { border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; padding: 6px; max-height: 280px; overflow-y: auto; background: rgba(255,255,255,0.4); margin-bottom: 16px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);}
+        .role-option { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.5); cursor: pointer; transition: background 0.2s; border-radius:12px; }
+        .role-option:last-child { border-bottom: none; }
+        .role-option input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; }
+        .role-option span { font-size: 14px; color: var(--text-dark); flex: 1; font-weight:500;}
+        .role-option.selected { background: rgba(255,255,255,0.8); font-weight:700; box-shadow: 0 2px 8px rgba(0,0,0,0.04);}
+        .group-label { background: rgba(0,0,0,0.03); font-size: 11px; font-weight: 800; padding: 6px 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; border-radius:8px; margin: 4px 0;}
 
-        @keyframes skeleton-loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .skeleton-card { height: 50px; margin-bottom: 8px; width: 100%; border-radius: 12px; }
-
-        #toast_container {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(28, 28, 30, 0.9);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 3000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        #toast_container.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.95) !important;
-            padding: 22px;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 320px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            color: var(--text-dark);
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .close-modal { margin-top: 16px; color: white; font-weight: 600; cursor: pointer; font-size: 14px; opacity: 0.9; }
-
-        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .role-item-btn { background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); padding: 12px 8px; border-radius: 14px; text-align: center; cursor: pointer; }
-        .role-item-btn img { width: 44px; height: 44px; margin-bottom: 6px; border-radius: 10px; object-fit: cover; }
-        .role-item-btn span { font-size: 11px; font-weight: 700; color: var(--primary); display: block; line-height: 1.2; }
-
-        .rating-item { display: flex; align-items: center; padding: 10px 4px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .rank { width: 32px; font-weight: 800; color: var(--primary); font-size: 15px; opacity: 0.5; }
-        .user-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-        .user-name { font-weight: 600; font-size: 14px; color: var(--text-dark); }
-
+        /* Прочие стили остаются как есть, добавляя им небольшие закругления */
+        .rating-item { display: flex; align-items: center; padding: 12px 8px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .rank { width: 36px; font-weight: 800; color: var(--primary); font-size: 16px; opacity: 0.6; }
+        .user-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .user-name { font-weight: 700; font-size: 15px; color: var(--text-dark); }
         .stats-row { display: flex; gap: 6px; flex-wrap: wrap; }
-        .badge { font-size: 9px; padding: 3px 7px; border-radius: 5px; font-weight: 800; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 3px; }
+        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .run10 { background: #fecc3f; color: #333; } .run25 { background: #f29104; } .run50 { background: #e6464c; } .run100, .run250, .run500 { background: #8c1f28; }
         .vol10 { background: #c9b4d8; color: #333; } .vol25 { background: #9d82aa; } .vol50 { background: #6c5391; } .vol100, .vol250, .vol500 { background: #422d58; }
         .badge img { width: 10px; height: 10px; filter: brightness(0) saturate(100%) invert(100%); }
         .run10 img, .vol10 img { filter: brightness(0) saturate(100%); }
 
-        .role-detail-img { width: 100%; height: auto; border-radius: 12px; margin-bottom: 12px; object-fit: cover; }
-        .qr-code-img { width: 200px; height: 200px; margin: 10px auto; display: block; }
+        /* Модалки и тосты */
+        #toast_container {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: rgba(28, 28, 30, 0.85); backdrop-filter: blur(15px); color: white;
+            padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 700;
+            z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.25); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 10px; max-width: 90%; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+        }
+        #toast_container.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 2000; align-items: center; justify-content: center; flex-direction: column; padding: 20px;
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.85) !important; padding: 24px; border-radius: 28px;
+            width: 100%; max-width: 340px; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            color: var(--text-dark); text-align: center; border: 1px solid rgba(255,255,255,0.9);
+            backdrop-filter: blur(20px);
+        }
+
+        .close-modal { margin-top: 20px; color: white; font-weight: 700; cursor: pointer; font-size: 15px; opacity: 0.9; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius:20px; backdrop-filter: blur(5px); }
+
+        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .role-item-btn { background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.9); padding: 14px 10px; border-radius: 18px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03);}
+        .role-item-btn img { width: 50px; height: 50px; margin-bottom: 8px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
+        .role-item-btn span { font-size: 12px; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; }
+
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 25%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.4) 75%);
+            background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; border-radius: 12px;
+        }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { height: 60px; margin-bottom: 10px; width: 100%; border-radius: 16px; border: 1px solid rgba(255,255,255,0.5); }
 
         .fab-help {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
-            box-shadow: 0 8px 20px rgba(43, 50, 109, 0.3);
-            z-index: 1500;
-            cursor: pointer;
-            border: 2px solid white;
+            position: fixed; bottom: 24px; right: 24px; width: 54px; height: 54px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            background-color: var(--primary); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;
+            box-shadow: 0 8px 25px rgba(43, 50, 109, 0.4); z-index: 1500; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px);
         }
 
         #search_results, #rate_results {
-            background: white;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-            position: absolute;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            top: 48px;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 16px; max-height: 220px; overflow-y: auto; display: none;
+            position: absolute; width: 100%; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); top: 52px;
         }
 
-        .selected-friend { background: rgba(43, 50, 109, 0.05); padding: 10px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(43, 50, 109, 0.1); }
-        .selected-friend img { width: 36px; height: 36px; border-radius: 50%; }
-        .change-friend-btn { background: #e5e5ea; color: var(--primary); border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-
-        .roles-container { border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 4px; max-height: 260px; overflow-y: auto; background: rgba(255,255,255,0.5); margin-bottom: 14px; }
-        .role-option { display: flex; align-items: center; padding: 9px; border-bottom: 1px solid rgba(0,0,0,0.04); cursor: pointer; }
-        .role-option:last-child { border-bottom: none; }
-        .role-option input[type="checkbox"] { width: 20px; height: 20px; margin-right: 10px; -webkit-appearance: checkbox; cursor: pointer; }
-        .role-option span { font-size: 13px; color: var(--text-dark); flex: 1; }
-        .role-option.selected { background: rgba(43, 50, 109, 0.06); }
-        .group-label { background: rgba(0,0,0,0.04); font-size: 10px; font-weight: 800; padding: 4px 8px; color: #777; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .reg-frame-container { border-radius: 14px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); margin-top: 10px; height: 550px; }
+        .reg-frame-container { border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.9); margin-top: 12px; height: 550px; background:#fff;}
         .reg-frame-container iframe { width: 100%; height: 100%; border: none; }
 
         .timer-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0 16px 0;
-            background: rgba(43, 50, 109, 0.05);
-            padding: 10px;
-            border-radius: 12px;
+            display: flex; justify-content: center; gap: 12px; margin: 12px 0 20px 0;
+            background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.8);
+            padding: 14px; border-radius: 18px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
         }
+        .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 48px; }
+        .timer-val { font-size: 20px; font-weight: 800; color: var(--primary); line-height: 1; text-shadow: 0 2px 4px rgba(255,255,255,0.8);}
+        .timer-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; font-weight: 800; }
         
-        .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 42px; }
-        .timer-val { font-size: 17px; font-weight: 800; color: var(--primary); line-height: 1; }
-        .timer-label { font-size: 8px; color: var(--text-muted); text-transform: uppercase; margin-top: 3px; font-weight: 700; }
+        .role-detail-img { width: 100%; height: auto; border-radius: 16px; margin-bottom: 16px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .qr-code-img { width: 200px; height: 200px; margin: 10px auto; display: block; border-radius: 16px; }
+        .story-options { margin-top: 16px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 16px; }
+        .story-mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
+        .story-mode-btn { font-size: 12px; padding: 8px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.6); cursor: pointer; font-weight: 700; transition: all 0.2s; }
+        .story-mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(43,50,109,0.3); }
 
-        .story-options { margin-top: 10px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 10px; }
-        .story-mode-toggle { display: flex; gap: 8px; margin-bottom: 8px; justify-content: center; }
-        .story-mode-btn { font-size: 11px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); background: #f0f0f0; cursor: pointer; font-weight: 600; }
-        .story-mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .admin-badge {
+            display: inline-block; background: linear-gradient(135deg, #FFD700, #FDB931);
+            color: #4a3600; font-size: 10px; padding: 2px 6px; border-radius: 6px;
+            font-weight: 900; margin-left: 8px; vertical-align: middle; box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -432,6 +394,7 @@
 
 <div class="fab-help" onclick="openModal('modal_help')">?</div>
 
+<!-- Модалки (Справка, Роли и т.д. без изменений логики, только стилистика применилась через CSS) -->
 <div id="modal_help" class="modal" onclick="closeModal('modal_help')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 style="justify-content:center; margin-bottom: 15px;">Глоссарий</h2>
@@ -439,13 +402,13 @@
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
         <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.0 (2026)</div>
+        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.1</div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
 
 <div id="modal_roles" class="modal" onclick="closeModal('modal_roles')">
-    <div class="modal-content" onclick="event.stopPropagation()" style="max-width:340px;">
+    <div class="modal-content" onclick="event.stopPropagation()" style="max-width:360px;">
         <h2>Ключевые роли</h2>
         <div class="role-grid">
             <div class="role-item-btn" onclick="showRoleDetail(1, 'Организатор', 'Главный человек на старте. Координирует волонтеров, проводит брифинг и следит за безопасностью.')">
@@ -475,7 +438,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <img id="role_img" class="role-detail-img" src="">
         <h2 id="role_title" style="color:var(--primary); margin:0 0 8px 0; justify-content:center;"></h2>
-        <div id="role_desc" style="font-size:13px; line-height:1.5; color:#555;"></div>
+        <div id="role_desc" style="font-size:14px; line-height:1.5; color:#444;"></div>
     </div>
     <div class="close-modal">Назад</div>
 </div>
@@ -483,7 +446,7 @@
 <div id="modal_guide" class="modal" onclick="closeModal('modal_guide')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2>Как пользоваться?</h2>
-        <div style="font-size:13px; line-height:1.5; color:#555; text-align:left;">
+        <div style="font-size:14px; line-height:1.6; color:#444; text-align:left;">
             1. 🔍 <b>Поиск</b>: Введи фамилию или ID 5 вёрст в окне записи.<br><br>
             2. ✅ <b>Выбор</b>: Выбери одну или несколько ролей из списка.<br><br>
             3. 🧡 <b>Рейтинг</b>: Записывайся чаще, чтобы получать бейджи клубов!<br><br>
@@ -496,7 +459,7 @@
 <div id="modal_about" class="modal" onclick="closeModal('modal_about')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2>5 вёрст Станкозавод</h2>
-        <div style="font-size:13px; line-height:1.5; color:#555;">
+        <div style="font-size:14px; line-height:1.6; color:#444;">
             Бесплатные еженедельные старты в парке Станкозавода каждую субботу в 09:00.<br><br>
             Разработано для сообщества "5 вёрст в парке Станкозавода | Нижний Новгород".
         </div>
@@ -506,12 +469,12 @@
 
 <div id="qr_modal" class="modal" onclick="closeQR()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 style="color:var(--primary); margin:0 0 10px 0;">Личная карточка</h3>
+        <h3 style="color:var(--primary); margin:0 0 12px 0;">Личная карточка</h3>
         <div id="qr_img_box">
              <div style="padding:30px; color:#999;">Загрузка кода...</div>
         </div>
-        <p id="qr_id_text" style="color:var(--accent); margin:10px 0 0 0; font-weight:900; font-size:24px;"></p>
-        <span id="qr_name_text" style="color:#666; font-size:13px; display:block; margin-top:4px; font-weight:500;"></span>
+        <p id="qr_id_text" style="color:var(--accent); margin:12px 0 0 0; font-weight:900; font-size:26px;"></p>
+        <span id="qr_name_text" style="color:#555; font-size:14px; display:block; margin-top:6px; font-weight:600;"></span>
         
         <div class="story-options">
             <div class="story-mode-toggle">
@@ -536,10 +499,10 @@
 </div>
 
 <div id="section_rec">
-    <div class="card" style="border: 1px dashed var(--accent); background: rgba(230, 86, 76, 0.02);">
+    <div class="card" style="border: 1px dashed rgba(230,86,76,0.5); background: rgba(230, 86, 76, 0.05);">
         <label>Тема старта:</label>
         <textarea id="theme_input" rows="2" placeholder="Например: Всемирный день поэзии..."></textarea>
-        <button class="btn-qr" style="margin-top:0; height:34px; font-size:12px; background:var(--primary);" onclick="saveTheme()">Сохранить тему</button>
+        <button class="btn-qr" style="margin-top:0; height:40px; font-size:13px;" onclick="saveTheme()">Сохранить тему</button>
         <button id="sync_btn" class="btn-sync" onclick="manualSync()">🔄 Синхронизировать с сайтом</button>
     </div>
 
@@ -549,7 +512,7 @@
             <span id="event_date" class="date-badge">...</span>
         </h2>
 
-        <label>Выберите дату старта:</label>
+        <label>Выберите дату:</label>
         <input type="date" id="event_date_picker" onchange="onDateChange()">
 
         <div class="timer-container" id="countdown_timer" style="display:none;">
@@ -559,7 +522,7 @@
             <div class="timer-unit"><span class="timer-val" id="t_s">00</span><span class="timer-label">сек</span></div>
         </div>
         
-        <div style="background: linear-gradient(135deg, #2B326D, #4f5ca8); color:white; padding:12px 14px; border-radius:12px; margin:10px 0 16px 0; text-align:center; font-weight:700; font-size:14px; box-shadow:0 4px 12px rgba(43,50,109,0.2);">
+        <div style="background: linear-gradient(135deg, rgba(43,50,109,0.8), rgba(79,92,168,0.9)); backdrop-filter: blur(10px); color:white; padding:14px; border-radius:16px; margin:10px 0 20px 0; text-align:center; font-weight:800; font-size:15px; box-shadow:0 6px 15px rgba(43,50,109,0.3); border:1px solid rgba(255,255,255,0.2);">
             📍 <span id="park_name">Парк Станкозавода | Нижний Новгород</span>
         </div>
         
@@ -578,13 +541,13 @@
         </select>
        
         <div id="friend_vk_container" style="display:none;">
-            <div id="selected_friend_display" style="display:none;" class="selected-friend">
-                <img id="selected_friend_photo" src="">
+            <div id="selected_friend_display" style="display:none; background:rgba(255,255,255,0.6); padding:10px; border-radius:16px; margin-bottom:12px; display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.9);">
+                <img id="selected_friend_photo" src="" style="width:40px; height:40px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
                 <div style="flex:1;">
-                    <div id="selected_friend_name" style="font-weight:600;"></div>
-                    <div id="selected_friend_id" style="font-size:11px; color:#666;"></div>
+                    <div id="selected_friend_name" style="font-weight:700; font-size:14px;"></div>
+                    <div id="selected_friend_id" style="font-size:12px; color:#666;"></div>
                 </div>
-                <button class="change-friend-btn" onclick="selectAnotherFriend()">Выбрать другого</button>
+                <button onclick="selectAnotherFriend()" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;">Сменить</button>
             </div>
             <button id="choose_friend_btn" class="btn-qr" onclick="selectFriendFromVK()" style="margin-top:6px;">Выбрать друга из ВК</button>
             <input type="hidden" id="selected_vk_id">
@@ -593,6 +556,7 @@
         
         <label>3. Позиции волонтера (одна или несколько):</label>
         <div class="roles-container" id="roles_checkbox_list">
+            <!-- Список ролей остался прежним -->
             <div class="group-label">Основные позиции</div>
             <div class="role-option" data-id="1" data-name="Организатор"><input type="checkbox"> <span>Организатор</span></div>
             <div class="role-option" data-id="2" data-name="Секундомер"><input type="checkbox"> <span>Секундомер</span></div>
@@ -610,6 +574,7 @@
             <div class="role-option" data-id="1004" data-name="Оратор"><input type="checkbox"> <span>Оратор</span></div>
             <div class="role-option" data-id="1005" data-name="Поддержка на трассе"><input type="checkbox"> <span>Поддержка на трассе</span></div>
             <div class="role-option" data-id="1006" data-name="Человек Оркестр"><input type="checkbox"> <span>Человек Оркестр</span></div>
+            <div class="role-option" data-id="1007" data-name="Диджей"><input type="checkbox"> <span>Диджей</span></div>
             
             <div class="group-label">Дополнительные позиции</div>
             <div class="role-option" data-id="8" data-name="Подготовка мероприятия"><input type="checkbox"> <span>Подготовка мероприятия</span></div>
@@ -673,8 +638,8 @@
         <button id="submit_btn" onclick="sendData()" disabled>Записаться</button>
     </div>
 
-    <div style="margin-left:18px; font-weight:700; color:var(--primary); font-size:12px; text-transform:uppercase; letter-spacing:0.5px;">Уже в списке:</div>
-    <div id="queue_container" style="padding:10px 14px;"></div>
+    <div style="margin-left:24px; font-weight:800; color:var(--primary); font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">Уже в списке:</div>
+    <div id="queue_container" style="padding:10px 18px;"></div>
 </div>
 
 <div id="section_rate" style="display:none">
@@ -693,23 +658,22 @@
 </div>
 
 <div id="section_reg" style="display:none">
-    <!-- Плашка скачивания Android приложения -->
-    <div class="card" style="background: linear-gradient(135deg, rgba(43, 50, 109, 0.08) 0%, rgba(230, 86, 76, 0.08) 100%); border: 1px solid rgba(43, 50, 109, 0.15);">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-            <div style="font-size: 28px;">📱</div>
+    <div class="card" style="background: linear-gradient(135deg, rgba(43,50,109,0.1), rgba(230,86,76,0.1)); border: 1px solid rgba(255,255,255,0.9);">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+            <div style="font-size: 30px;">📱</div>
             <div>
-                <h3 style="margin: 0; font-size: 15px; color: var(--primary); font-weight: 800;">Мобильное приложение Android</h3>
-                <span style="font-size: 11px; color: var(--text-muted);">Приложение «5 вёрст»</span>
+                <h3 style="margin: 0; font-size: 16px; color: var(--primary); font-weight: 900;">Приложение Android</h3>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight:600;">Скачай и будь в курсе всех стартов</span>
             </div>
         </div>
-        <button type="button" id="downloadApkBtn" class="btn-qr" style="margin-top: 5px; background: var(--accent); box-shadow: 0 4px 12px rgba(230, 86, 76, 0.25); cursor: pointer;">
+        <button type="button" id="downloadApkBtn" class="btn-qr" style="background: var(--accent); cursor: pointer;">
             📥 Скачать APK (Android)
         </button>
     </div>
 
     <div class="card">
         <h2>Портал 5 вёрст</h2>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom:12px;">Регистрация, вход и карта локаций всегда под рукой.</p>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom:14px; font-weight:500;">Регистрация, вход и карта локаций всегда под рукой.</p>
         <div class="reg-frame-container">
             <iframe src="https://5verst.ru/register/"></iframe>
         </div>
@@ -719,7 +683,7 @@
 <div id="section_feed" style="display:none">
     <div class="card">
         <h2>Обратная связь</h2>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom:12px;">Есть идеи по улучшению приложения?</p>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom:14px; font-weight:500;">Есть идеи по улучшению приложения?</p>
         <label>Ваше сообщение:</label>
         <textarea id="feedback_input" rows="5" placeholder="Напишите здесь всё, что считаете нужным..."></textarea>
         <button id="feedback_btn" class="btn-qr" onclick="sendFeedback()">Отправить</button>
@@ -728,25 +692,28 @@
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwMknSIWpAIowUbtF2mZ8zJ84IQ7cwdmh00Y5hl_xbhm95R5ffBU7jhvf_C97sJhKSEBA/exec';
+    // ВСТАВЬ СВОЮ ССЫЛКУ GAS СЮДА!
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8hAf0aLnNw6N4Yergkwh2ohai1_YOwY_62Q0AagNyawqCn-ku4PzHeqU4IGI3Ee2Qow/exec';
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
+    
     let selectedVolunteer = null;
     let vkUser = null;
     let customStoryImage = null;
     let storyMode = 'default';
+    
+    // ПЕРЕМЕННАЯ ДЛЯ ПРАВ АДМИНА
+    let isAdmin = false;
 
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
     const volIcon = "🧡 ";
 
-    // Динамическое скачивание APK через Яндекс Диск API
     document.getElementById('downloadApkBtn').addEventListener('click', function() {
-    const apkUrl = 'https://apk-downloader.bekovroman0.workers.dev/';
-
-    if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
-        vkBridge.send("VKWebAppOpenUrl", { "url": apkUrl });
-    } else {
-        window.open(apkUrl, '_blank');
-    }
+        const apkUrl = 'https://apk-downloader.bekovroman0.workers.dev/';
+        if (typeof vkBridge !== 'undefined' && vkBridge.supports("VKWebAppOpenUrl")) {
+            vkBridge.send("VKWebAppOpenUrl", { "url": apkUrl });
+        } else {
+            window.open(apkUrl, '_blank');
+        }
     });
 
     function showToast(text) {
@@ -798,9 +765,7 @@
         document.getElementById('story_mode_default').classList.toggle('active', mode === 'default');
         document.getElementById('story_mode_custom').classList.toggle('active', mode === 'custom');
         
-        if (mode === 'custom') {
-            document.getElementById('story_photo_input').click();
-        }
+        if (mode === 'custom') document.getElementById('story_photo_input').click();
     }
 
     function handleStoryPhotoSelect(e) {
@@ -809,10 +774,7 @@
             const reader = new FileReader();
             reader.onload = function(evt) {
                 const img = new Image();
-                img.onload = function() {
-                    customStoryImage = img;
-                    showToast("Фотка загружена для сторис!");
-                };
+                img.onload = function() { customStoryImage = img; showToast("Фотка загружена для сторис!"); };
                 img.src = evt.target.result;
             };
             reader.readAsDataURL(file);
@@ -821,11 +783,8 @@
 
     function loadImage(url) {
         return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "Anonymous";
-            img.onload = () => resolve(img);
-            img.onerror = () => resolve(null);
-            img.src = url;
+            const img = new Image(); img.crossOrigin = "Anonymous";
+            img.onload = () => resolve(img); img.onerror = () => resolve(null); img.src = url;
         });
     }
 
@@ -848,56 +807,40 @@
                 overlay.addColorStop(0.4, 'rgba(0, 0, 0, 0.1)');
                 overlay.addColorStop(0.75, 'rgba(0, 0, 0, 0.2)');
                 overlay.addColorStop(1, 'rgba(0, 0, 0, 0.85)');
-                ctx.fillStyle = overlay;
-                ctx.fillRect(0, 0, 1080, 1920);
+                ctx.fillStyle = overlay; ctx.fillRect(0, 0, 1080, 1920);
             } else {
                 const grad = ctx.createLinearGradient(0, 0, 0, 1920);
-                grad.addColorStop(0, '#2B326D');
-                grad.addColorStop(1, '#111536');
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, 1080, 1920);
+                grad.addColorStop(0, '#2B326D'); grad.addColorStop(1, '#111536');
+                ctx.fillStyle = grad; ctx.fillRect(0, 0, 1080, 1920);
             }
 
             const logoImg = await loadImage(`${GITHUB_IMG_BASE}logo.png`);
             if (logoImg) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(540, 240, 90, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(logoImg, 450, 150, 180, 180);
-                ctx.restore();
+                ctx.save(); ctx.beginPath(); ctx.arc(540, 240, 90, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip();
+                ctx.drawImage(logoImg, 450, 150, 180, 180); ctx.restore();
             }
 
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 52px "5verstFont", -apple-system, sans-serif';
-            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 52px "5verstFont", -apple-system, sans-serif'; ctx.textAlign = 'center';
             ctx.fillText('5 вёрст Станкозавод', 540, 390);
 
-            ctx.fillStyle = '#E6564C';
-            ctx.font = 'bold 44px "5verstFont", -apple-system, sans-serif';
+            ctx.fillStyle = '#E6564C'; ctx.font = 'bold 44px "5verstFont", -apple-system, sans-serif';
             ctx.fillText('Я в команде волонтёров! 🧡', 540, 1220);
 
             if (selectedVolunteer) {
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 62px "5verstFont", -apple-system, sans-serif';
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 62px "5verstFont", -apple-system, sans-serif';
                 ctx.fillText(selectedVolunteer.full_name, 540, 1310);
             }
 
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '32px "5verstFont", -apple-system, sans-serif';
+            ctx.fillStyle = '#ffffff'; ctx.font = '32px "5verstFont", -apple-system, sans-serif';
             ctx.fillText('Присоединяйся к нам в субботу в 09:00!', 540, 1680);
 
             const dataUrl = canvas.toDataURL('image/png');
 
             await vkBridge.send("VKWebAppShowStoryBox", {
-                background_type: "image",
-                blob: dataUrl,
+                background_type: "image", blob: dataUrl,
                 attachment: { text: "open", type: "url", url: "https://vk.com/app51786190" }
             });
-        } catch(e) {
-            showToast("Не удалось открыть сторис");
-        }
+        } catch(e) { showToast("Не удалось открыть сторис"); }
     }
 
     function getNextSaturday() {
@@ -916,36 +859,38 @@
 
     async function init() {
         const nextSat = getNextSaturday();
-        const datePicker = document.getElementById('event_date_picker');
-        datePicker.value = nextSat;
+        document.getElementById('event_date_picker').value = nextSat;
         document.getElementById('event_date').innerText = formatDateDisplay(nextSat);
-
-        loadQueue();
 
         try {
             vkUser = await vkBridge.send("VKWebAppGetUserInfo");
+            
+            // Запрашиваем инфу (в том числе права админа)
+            const res = await fetch(`${SCRIPT_URL}?check_vk_id=${vkUser.id}`);
+            const data = await res.json();
+            
+            isAdmin = data.is_admin || false; // СОХРАНЯЕМ СТАТУС АДМИНА
+            
+            if (isAdmin) {
+                document.getElementById('park_name').innerHTML += ' <span class="admin-badge">ORG</span>';
+            }
 
             const themeRes = await fetch(`${SCRIPT_URL}?get_theme=1`);
             const themeData = await themeRes.json();
             document.getElementById('theme_input').value = themeData.theme || "";
 
-            const res = await fetch(`${SCRIPT_URL}?check_vk_id=${vkUser.id}`);
-            const data = await res.json();
             if (data.found) {
                 selectedVolunteer = { id: data.verst_id, full_name: data.full_name };
                 document.getElementById('verst_search').value = data.full_name;
                 const welcome = document.getElementById('welcome_back');
                 welcome.style.display = 'block';
-                let badgesHtml = "";
-                if (data.stats) {
-                    const rB = data.stats.run_club ? `<span class="badge ${data.stats.run_club}">${runIcon} ${data.stats.run_club.replace('run','')}</span>` : '';
-                    const vB = data.stats.vol_club ? `<span class="badge ${data.stats.vol_club}">${volIcon} ${data.stats.vol_club.replace('vol','')}</span>` : '';
-                    if (rB || vB) badgesHtml = `<div class="stats-row" style="margin-top:6px;">${rB} ${vB}</div>`;
-                }
-                welcome.innerHTML = `👋 <b>${vkUser.first_name}</b>, профиль привязан!<br>${badgesHtml}<button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
+                welcome.innerHTML = `👋 <b>${vkUser.first_name}</b>, профиль привязан!<br><button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')" style="margin-top:10px;">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
             }
+            
             validateForm();
         } catch (e) { console.error(e); }
+        
+        loadQueue(); // Загружаем список после получения статуса админа
     }
     init();
 
@@ -981,12 +926,9 @@
         const hasKeyRole = checked.some(id => keyRoles.includes(id));
 
         if (hasKeyRole) {
-            silentBox.checked = false;
-            silentBox.disabled = true;
-            silentLabel.classList.add('disabled');
+            silentBox.checked = false; silentBox.disabled = true; silentLabel.classList.add('disabled');
         } else {
-            silentBox.disabled = false;
-            silentLabel.classList.remove('disabled');
+            silentBox.disabled = false; silentLabel.classList.remove('disabled');
         }
 
         marshalCont.style.display = checked.includes("7") ? 'block' : 'none';
@@ -1009,55 +951,38 @@
 
     async function manualSync() {
         const btn = document.getElementById('sync_btn');
-        btn.disabled = true;
-        btn.innerText = "⌛ Синхронизируем...";
+        btn.disabled = true; btn.innerText = "⌛ Синхронизируем...";
         try {
             const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "manual_sync" }) });
             const data = await res.json();
-            if (data.success) {
-                showToast("Синхронизация завершена!");
-                location.reload();
-            }
+            if (data.success) { showToast("Синхронизация завершена!"); location.reload(); }
         } catch(e) { showToast("Ошибка синхронизации"); }
-        btn.disabled = false;
-        btn.innerText = "🔄 Синхронизировать с сайтом";
+        btn.disabled = false; btn.innerText = "🔄 Синхронизировать с сайтом";
     }
 
     async function sendFeedback() {
         const text = document.getElementById('feedback_input').value.trim();
         if (!text) return showToast("Введите текст сообщения");
         const btn = document.getElementById('feedback_btn');
-        btn.disabled = true;
-        btn.innerText = "Отправка...";
+        btn.disabled = true; btn.innerText = "Отправка...";
         
         try {
             await fetch(SCRIPT_URL, { 
                 method: 'POST', 
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ 
-                    action: "add_admin_note", 
-                    vk_id: vkUser.id, 
-                    name: vkUser.first_name + " " + vkUser.last_name, 
-                    text: "[ОТЗЫВ] " + text 
-                }) 
+                body: JSON.stringify({ action: "add_admin_note", vk_id: vkUser.id, name: vkUser.first_name + " " + vkUser.last_name, text: "[ОТЗЫВ] " + text }) 
             });
             showToast("Спасибо за отзыв!");
             document.getElementById('feedback_input').value = "";
         } catch(e) { showToast("Ошибка при отправке"); }
         
-        btn.disabled = false;
-        btn.innerText = "Отправить";
+        btn.disabled = false; btn.innerText = "Отправить";
     }
 
     function toggleFriendVk() {
         const mode = document.getElementById('vk_id_mode').value;
         const container = document.getElementById('friend_vk_container');
-        if (mode === 'friend') {
-            container.style.display = 'block';
-        } else {
-            container.style.display = 'none';
-            document.getElementById('selected_vk_id').value = "";
-        }
+        if (mode === 'friend') container.style.display = 'block';
+        else { container.style.display = 'none'; document.getElementById('selected_vk_id').value = ""; }
         validateForm();
     }
 
@@ -1090,7 +1015,7 @@
 
     async function searchHandler(query, resultBox, isRecord) {
         if (query.length < 3) { resultBox.style.display = 'none'; return; }
-        resultBox.innerHTML = '<div style="padding:12px; color:#999;">Ищем...</div>';
+        resultBox.innerHTML = '<div style="padding:12px; color:#999; font-weight:600;">Ищем...</div>';
         resultBox.style.display = 'block';
         try {
             const res = await fetch(`${SCRIPT_URL}?search=${encodeURIComponent(query)}`);
@@ -1098,8 +1023,8 @@
             resultBox.innerHTML = '';
             (data.result?.data || []).forEach(v => {
                 const div = document.createElement('div');
-                div.style = "padding:10px 12px; border-bottom:1px solid #f0f0f0; cursor:pointer;";
-                div.innerHTML = `<b>${v.full_name}</b><br><small style="color:#888;">ID: ${v.id}</small>`;
+                div.style = "padding:12px 16px; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer;";
+                div.innerHTML = `<b style="color:var(--primary); font-size:14px;">${v.full_name}</b><br><small style="color:#777; font-weight:600;">ID: ${v.id}</small>`;
                 div.onclick = async () => {
                     if (isRecord) {
                         selectedVolunteer = v;
@@ -1148,8 +1073,6 @@
             return { id: rid, name: item.dataset.name, comment: comment };
         });
 
-        const targetDate = document.getElementById('event_date_picker').value;
-
         const payload = {
             verst_id: selectedVolunteer.id,
             full_name: selectedVolunteer.full_name,
@@ -1158,27 +1081,21 @@
             target_vk_id: document.getElementById('vk_id_mode').value === 'me' ? vkUser.id : document.getElementById('selected_vk_id').value,
             target_vk_name: document.getElementById('vk_id_mode').value === 'me' ? (vkUser.first_name + " " + vkUser.last_name) : document.getElementById('selected_vk_name').value,
             silent: document.getElementById('silent_mode').checked,
-            target_date: targetDate
+            target_date: document.getElementById('event_date_picker').value
         };
 
         try {
-            await fetch(SCRIPT_URL, { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload) 
-            });
+            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
             showToast("Вы успешно записались!");
             setTimeout(() => location.reload(), 1000);
         } catch(e) {
-            showToast("Ошибка при записи");
-            btn.disabled = false;
-            btn.innerText = "Записаться";
+            showToast("Ошибка при записи"); btn.disabled = false; btn.innerText = "Записаться";
         }
     }
 
     async function loadRating() {
         const container = document.getElementById('rating_list');
-        container.innerHTML = '<div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>';
+        container.innerHTML = '<div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>';
         try {
             const res = await fetch(`${SCRIPT_URL}?get_rating=1`);
             const data = await res.json();
@@ -1204,19 +1121,23 @@
             const container = document.getElementById('queue_container');
             container.innerHTML = '';
             if(!data || data.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#999; padding:20px; font-size:13px;">На эту дату пока никто не записался</div>';
+                container.innerHTML = '<div style="text-align:center; color:#777; font-weight:600; padding:20px; font-size:14px; background:rgba(255,255,255,0.4); border-radius:16px;">На эту дату пока никто не записался 😢</div>';
                 return;
             }
             data.reverse().forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'vol-card';
+                
+                // ПРОВЕРКА: Разрешаем удалять СЕБЯ или ЕСЛИ ТЫ АДМИН
                 const isMine = vkUser && (item.author_vk_id == vkUser.id || item.vk_id == vkUser.id);
+                const canDelete = isMine || isAdmin;
+                
                 div.innerHTML = `
                     <div class="vol-info-group">
-                        <span class="vol-name-txt">${item.full_name} ${item.comment ? '('+item.comment+')' : ''}</span>
+                        <span class="vol-name-txt">${item.full_name} ${item.comment ? '<span style="color:#666;font-weight:500;">('+item.comment+')</span>' : ''}</span>
                         <span class="vol-role-badge">${item.role_name}</span>
                     </div>
-                    ${isMine ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}', '${item.verst_id}', this)">Отмена</button>` : ''}
+                    ${canDelete ? `<button class="btn-delete" onclick="deleteMyRole('${item.role_id}', '${item.role_name}', '${item.full_name}', '${item.verst_id}', this)">Отмена</button>` : ''}
                 `;
                 container.appendChild(div);
             });
@@ -1236,25 +1157,21 @@
                 if (btnElement) {
                     delete btnElement.dataset.confirming;
                     btnElement.innerText = "Отмена";
-                    btnElement.style.background = "#feebeb";
+                    btnElement.style.background = "rgba(255,255,255,0.7)";
                     btnElement.style.color = "#E6564C";
                 }
             }, 3000);
             return;
         }
 
-        if (btnElement) {
-            btnElement.disabled = true;
-            btnElement.innerText = "⌛...";
-        }
+        if (btnElement) { btnElement.disabled = true; btnElement.innerText = "⌛..."; }
 
         try {
             await fetch(SCRIPT_URL, { 
                 method: 'POST', 
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({ 
                     action: "delete", 
-                    vk_id: vkUser.id, 
+                    requestor_vk: vkUser.id, // ПЕРЕДАЕМ ID ЗАПРАШИВАЮЩЕГО
                     verst_id: verst_id,
                     role_id: rid, 
                     role_name: rname, 
@@ -1265,51 +1182,35 @@
             setTimeout(() => location.reload(), 800);
         } catch (e) {
             showToast("Ошибка отмены");
-            if (btnElement) {
-                btnElement.disabled = false;
-                btnElement.innerText = "Отмена";
-            }
+            if (btnElement) { btnElement.disabled = false; btnElement.innerText = "Отмена"; }
         }
     }
 
     function updateTimer() {
         const timerBox = document.getElementById('countdown_timer');
-        const td = document.getElementById('t_d');
-        const th = document.getElementById('t_h');
-        const tm = document.getElementById('t_m');
-        const ts = document.getElementById('t_s');
+        const td = document.getElementById('t_d'); const th = document.getElementById('t_h');
+        const tm = document.getElementById('t_m'); const ts = document.getElementById('t_s');
         
         function tick() {
-            const now = new Date();
-            let target = new Date();
-            target.setDate(now.getDate() + (6 - now.getDay() + 7) % 7);
-            target.setHours(9, 0, 0, 0);
+            const now = new Date(); let target = new Date();
+            target.setDate(now.getDate() + (6 - now.getDay() + 7) % 7); target.setHours(9, 0, 0, 0);
 
             if (now.getDay() === 6 && now.getHours() >= 9 && (now.getHours() < 10 || (now.getHours() === 10 && now.getMinutes() < 30))) {
                 timerBox.style.display = 'flex';
-                timerBox.innerHTML = "<div style='color:var(--accent); font-weight:800; font-size:13px;'>🏃‍♂️ СТАРТ ИДЕТ ПРЯМО СЕЙЧАС!</div>";
+                timerBox.innerHTML = "<div style='color:var(--accent); font-weight:900; font-size:15px; text-transform:uppercase;'>🏃‍♂️ СТАРТ ИДЕТ ПРЯМО СЕЙЧАС!</div>";
                 return;
             }
 
-            if (now > target || (now.getDay() === 6 && now.getHours() >= 10)) {
-                target.setDate(target.getDate() + 7);
-            }
+            if (now > target || (now.getDay() === 6 && now.getHours() >= 10)) target.setDate(target.getDate() + 7);
 
             const diff = target - now;
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const m = Math.floor((diff / (1000 * 60)) % 60);
-            const s = Math.floor((diff / 1000) % 60);
-
+            td.innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            th.innerText = Math.floor((diff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+            tm.innerText = Math.floor((diff / (1000 * 60)) % 60).toString().padStart(2, '0');
+            ts.innerText = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
             timerBox.style.display = 'flex';
-            td.innerText = d.toString().padStart(2, '0');
-            th.innerText = h.toString().padStart(2, '0');
-            tm.innerText = m.toString().padStart(2, '0');
-            ts.innerText = s.toString().padStart(2, '0');
         }
-
-        tick();
-        setInterval(tick, 1000);
+        tick(); setInterval(tick, 1000);
     }
     updateTimer();
 </script>
