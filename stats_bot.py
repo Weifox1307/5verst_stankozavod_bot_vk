@@ -1,28 +1,38 @@
 import os
-import requests
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 import vk_api
 from vk_api.upload import VkUpload
 from datetime import datetime
+from playwright.sync_api import sync_playwright
 
 # ================= НАСТРОЙКИ БОТА =================
-# Токен берется из скрытых секретов GitHub Actions
 VK_TOKEN = os.getenv('VK_TOKEN')
-PEER_ID = 2000000001 # ID беседы, куда кидать график (начинается с 2000000000)
+PEER_ID = 2000000001 # ID беседы
 STATS_URL = 'https://stat5verst.ru/parkstankozavoda/starts_all'
 # ==================================================
 
 def fetch_and_parse_data():
-    """Парсит HTML таблицу и возвращает списки X, Y1, Y2"""
-    print(f"[{datetime.now()}] Получаем данные с сайта: {STATS_URL}")
-    response = requests.get(STATS_URL)
-    response.raise_for_status()
+    """Открывает страницу в скрытом браузере, дожидается скриптов и парсит таблицу"""
+    print(f"[{datetime.now()}] Открываем браузер для загрузки {STATS_URL}")
     
-    soup = BeautifulSoup(response.text, 'html.parser')
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        # Открываем сайт
+        page.goto(STATS_URL)
+        # Ждем, пока на странице не появится таблица (максимум 15 секунд)
+        page.wait_for_selector('table', timeout=15000)
+        # Получаем финальный HTML
+        html = page.content()
+        browser.close()
+    
+    print(f"[{datetime.now()}] Страница загружена, ищем данные...")
+    soup = BeautifulSoup(html, 'html.parser')
     table = soup.find('table')
+    
     if not table:
-        raise ValueError("Таблица со статистикой не найдена на странице.")
+        raise ValueError("Таблица со статистикой не найдена даже после загрузки JS.")
 
     rows = table.find_all('tr')
     
@@ -30,12 +40,10 @@ def fetch_and_parse_data():
     finishers = []
     volunteers = []
 
-    # Пропускаем заголовок таблицы (индекс 0)
     for row in rows[1:]:
         cols = row.find_all('td')
         if len(cols) >= 4:
             try:
-                # Столбцы: 0: Номер, 1: Дата, 2: Финишеры, 3: Волонтеры
                 s_num = int(cols[0].text.strip())
                 f_count = int(cols[2].text.strip())
                 v_count = int(cols[3].text.strip())
@@ -44,9 +52,8 @@ def fetch_and_parse_data():
                 finishers.append(f_count)
                 volunteers.append(v_count)
             except ValueError:
-                continue # Пропускаем строки с кривыми данными
+                continue
 
-    # Сортируем списки по возрастанию номеров стартов (для графика слева направо)
     sorted_data = sorted(zip(start_numbers, finishers, volunteers), key=lambda x: x[0])
     
     if not sorted_data:
@@ -59,7 +66,6 @@ def fetch_and_parse_data():
     return x_starts, y_finishers, y_volunteers
 
 def create_chart(x, y_fin, y_vol, filename='parkrun_stats.png'):
-    """Рисует и сохраняет линейный график"""
     print(f"[{datetime.now()}] Отрисовка графика...")
     
     plt.style.use('seaborn-v0_8-whitegrid')
@@ -85,7 +91,6 @@ def create_chart(x, y_fin, y_vol, filename='parkrun_stats.png'):
     return filename
 
 def send_to_vk(filename):
-    """Отправляет фото в беседу ВК"""
     if not VK_TOKEN:
         raise ValueError("Токен ВК не найден в переменных окружения!")
 
