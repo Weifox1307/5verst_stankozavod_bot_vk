@@ -2,12 +2,7 @@ name: Weekly Stats Bot
 
 on:
   schedule:
-    # Важно: время на серверах GitHub указано в UTC (Гринвич).
-    # Московское время = UTC + 3. 
-    # Чтобы запуск был в воскресенье в 09:00 по Москве, тут мы пишем 06:00.
     - cron: '0 6 * * 0'
-  
-  # Позволяет запускать скрипт вручную с сайта GitHub (для проверки)
   workflow_dispatch: 
 
 jobs:
@@ -23,7 +18,9 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
 
       - name: Run Stats Bot
         env:
