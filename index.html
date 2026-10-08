@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>5 вёрст в парке Станкозавода | Нижний Новгород</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <!-- Локальный оффлайн генератор QR без обращений к сторонним серверам -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         @font-face {
             font-family: '5verstFont';
@@ -190,7 +192,6 @@
         .vol-name-txt { font-weight: 700; font-size: 14px; color: var(--text-dark); }
         .btn-delete { background: rgba(255,255,255,0.7); color: #E6564C; border: 1px solid rgba(230, 86, 76, 0.3); padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 6px rgba(230,86,76,0.1); }
 
-        /* ИСПРАВЛЕННЫЕ РОЛИ И КАСТОМНЫЙ ЧЕКБОКС */
         .roles-container { 
             border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; padding: 6px; 
             max-height: 280px; overflow-y: auto; background: rgba(255,255,255,0.4); 
@@ -199,13 +200,12 @@
         
         .role-option { 
             display: flex; align-items: center; padding: 12px; 
-            border: 1px solid transparent; /* Для подсветки */
+            border: 1px solid transparent;
             border-bottom: 1px solid rgba(255,255,255,0.5); 
             cursor: pointer; transition: all 0.2s ease; border-radius: 12px; 
             margin-bottom: 4px;
         }
         
-        /* Скрываем стандартный системный чекбокс, но оставляем его функциональным */
         .role-option input[type="checkbox"] { 
             appearance: none; 
             -webkit-appearance: none; 
@@ -223,7 +223,6 @@
             cursor: pointer;
         }
         
-        /* Кастомная галочка, когда выбрано */
         .role-option input[type="checkbox"]:checked {
             background: var(--primary);
             border-color: var(--primary);
@@ -238,7 +237,6 @@
         
         .role-option span { font-size: 14px; color: var(--text-dark); flex: 1; font-weight:500;}
         
-        /* Подсветка всей строки при выборе */
         .role-option.selected { 
             background: rgba(255,255,255,0.95); 
             border: 1px solid var(--primary-light);
@@ -298,7 +296,7 @@
 
         .fab-help {
             position: fixed; bottom: 24px; right: 24px; width: 54px; height: 54px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 100%);
             background-color: var(--primary); color: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;
             box-shadow: 0 8px 25px rgba(43, 50, 109, 0.4); z-index: 1500; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px);
@@ -324,12 +322,18 @@
         
         .role-detail-img { width: 100%; height: auto; border-radius: 16px; margin-bottom: 16px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .qr-code-img { width: 200px; height: 200px; margin: 10px auto; display: block; border-radius: 16px; }
+        #qr_canvas_holder { display: flex; justify-content: center; margin: 10px auto; }
+        #qr_canvas_holder canvas { border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        
         .story-options { margin-top: 16px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 16px; }
         .story-mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
         .story-mode-btn { font-size: 12px; padding: 8px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.6); cursor: pointer; font-weight: 700; transition: all 0.2s; }
         .story-mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(43,50,109,0.3); }
         .admin-badge {
             display: inline-block; background: linear-gradient(135deg, #FFD700, #FDB931); color: #4a3600; font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 900; margin-left: 8px; vertical-align: middle; box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+        }
+        .backup-badge {
+            display: inline-block; background: #34c759; color: white; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: 800; margin-left: 6px;
         }
     </style>
 </head>
@@ -345,11 +349,24 @@
 <div id="modal_help" class="modal" onclick="closeModal('modal_help')">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 style="justify-content:center; margin-bottom: 15px;">Глоссарий</h2>
+        <button class="btn-qr" onclick="openModal('modal_manual_qr')">⚡ Генератор QR карточки</button>
         <button class="btn-qr" onclick="openModal('modal_roles')">📖 Описание ролей</button>
         <button class="btn-qr" onclick="openModal('modal_guide')">📱 Гайд по приложению</button>
         <button class="btn-qr" onclick="openModal('modal_about')">🌳 О нас</button>
         <button class="btn-qr" onclick="window.open('https://vk.com/5verstparkstankozavoda')">🌐 Наши соцсети</button>
-        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Версия 2.1 (Glass)</div>
+        <div style="text-align:center; margin-top:16px; font-size:11px; color:#999;">Обновление v2.2</div>
+    </div>
+    <div class="close-modal">Закрыть</div>
+</div>
+
+<!-- МОДАЛКА РУЧНОЙ ОФФЛАЙН ГЕНЕРАЦИИ QR-КОДА -->
+<div id="modal_manual_qr" class="modal" onclick="closeModal('modal_manual_qr')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2>Оффлайн QR карточка</h2>
+        <p style="font-size:13px; color:#555; margin-bottom:12px;">Работает без связи и серверов. Введи свой номер ID:</p>
+        <input type="text" id="manual_qr_input" placeholder="Например: 790217375" style="text-align:center; font-weight:bold; font-size:16px;">
+        <button class="btn-qr" onclick="generateManualQR()">Сгенерировать QR</button>
+        <div id="manual_qr_box" style="margin-top:16px;"></div>
     </div>
     <div class="close-modal">Закрыть</div>
 </div>
@@ -394,10 +411,10 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2>Как пользоваться?</h2>
         <div style="font-size:14px; line-height:1.6; color:#444; text-align:left;">
-            1. 🔍 <b>Поиск</b>: Введи фамилию или ID 5 вёрст в окне записи.<br><br>
+            1. 🔍 <b>Поиск / Ввод</b>: Введи фамилию или ID (можно вручную).<br><br>
             2. ✅ <b>Выбор</b>: Выбери одну или несколько ролей из списка.<br><br>
             3. 🧡 <b>Рейтинг</b>: Записывайся чаще, чтобы получать бейджи клубов!<br><br>
-            4. 📲 <b>Карточка</b>: Найди себя в рейтинге, чтобы сохранить личную QR-карту участника.
+            4. 📲 <b>Карточка</b>: Генератор QR работает оффлайн прямо в приложении.
         </div>
     </div>
     <div class="close-modal">Назад</div>
@@ -417,9 +434,7 @@
 <div id="qr_modal" class="modal" onclick="closeQR()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 style="color:var(--primary); margin:0 0 12px 0;">Личная карточка</h3>
-        <div id="qr_img_box">
-             <div style="padding:30px; color:#999;">Загрузка кода...</div>
-        </div>
+        <div id="qr_canvas_holder"></div>
         <p id="qr_id_text" style="color:var(--accent); margin:12px 0 0 0; font-weight:900; font-size:26px;"></p>
         <span id="qr_name_text" style="color:#555; font-size:14px; display:block; margin-top:6px; font-weight:600;"></span>
         
@@ -471,6 +486,7 @@
         
         <div style="background: linear-gradient(135deg, rgba(43,50,109,0.8), rgba(79,92,168,0.9)); backdrop-filter: blur(10px); color:white; padding:14px; border-radius:16px; margin:10px 0 20px 0; text-align:center; font-weight:800; font-size:15px; box-shadow:0 6px 15px rgba(43,50,109,0.3); border:1px solid rgba(255,255,255,0.2);">
             📍 <span id="park_name">Парк Станкозавода | Нижний Новгород</span>
+            <span class="backup-badge">РЕЗЕРВ</span>
         </div>
         
         <div id="welcome_back" class="welcome-msg"></div>
@@ -506,7 +522,7 @@
             <div class="group-label">Основные позиции</div>
             <div class="role-option" data-id="1" data-name="Организатор"><input type="checkbox"> <span>Организатор</span></div>
             <div class="role-option" data-id="2" data-name="Секундомер"><input type="checkbox"> <span>Секундомер</span></div>
-            <div class="role-option" data-id="11" data-name="Сканирование штрих-кодов"><input type="checkbox"> <span>Сканирование штрих-кодов</span></div>
+            <div class="role-option" data-id="11" data-name="Сканирование штрих-кодов"><input type="checkbox"> <span>Сканер</span></div>
             <div class="role-option" data-id="7" data-name="Маршал"><input type="checkbox"> <span>Маршал</span></div>
             <div class="role-option" data-id="35" data-name="Разметка трассы"><input type="checkbox"> <span>Разметка трассы</span></div>
             <div class="role-option" data-id="13" data-name="Раздача карточек позиций"><input type="checkbox"> <span>Раздача карточек позиций</span></div>
@@ -640,14 +656,13 @@
 
 <script>
     vkBridge.send("VKWebAppInit");
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwb9LWBUuBHfZpwr6CVQX5mg-Rgfdvp_TZbRaFnl8Ofbf3Z_yQIto6hCsD3F1ZxFY8PXA/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVWax82z-QyoUT_FLmfv7VzuljyJce9tsz2aB9VUXa2jOe7CXEkjbYvq5a6bYOAFaTYQ/exec';
     const GITHUB_IMG_BASE = 'https://raw.githubusercontent.com/Weifox1307/5verst_stankozavod_bot_vk/main/';
     
     let selectedVolunteer = null;
     let vkUser = null;
     let customStoryImage = null;
     let storyMode = 'default';
-    
     let isAdmin = false;
 
     const runIcon = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M13.49 5.42c1.23 0 2.22-1 2.22-2.22A2.22 2.22 0 0 0 13.5 1a2.22 2.22 0 0 0-2.23 2.22c0 1.22.99 2.2 2.22 2.2M10.34 11l-2.1-1.03c-.34-.17-.55-.52-.55-.91 0-.74.79-1.22 1.45-.91l4.83 2.3c.53.25.87.78.87 1.37V17h-2v-4.43l-1.74-.83V23h-2v-6.95l.45-1.5L7.2 13c-.34-.16-.55-.52-.55-.9 0-.75.8-1.23 1.46-.9l2.23 1.03V11z'/%3E%3C/svg%3E" />`;
@@ -692,16 +707,43 @@
         openModal('modal_role_detail');
     }
 
+    // ОФФЛАЙН ГЕНЕРАТОР ШТРИХКОДОВ И QR (БЕЗ API-СЕРВЕРОВ)
     function showQR(id, name) {
-        const qrBox = document.getElementById('qr_img_box');
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=A${id}`;
-        qrBox.innerHTML = '<div style="padding:30px; color:#999;">Загрузка кода...</div>';
-        document.getElementById('qr_id_text').innerText = `A${id}`;
-        document.getElementById('qr_name_text').innerText = name.toUpperCase();
+        const cleanId = (id || '').toString().replace(/^A/i, '');
+        const fullVerstCode = 'A' + cleanId;
+        const holder = document.getElementById('qr_canvas_holder');
+        holder.innerHTML = '';
+        
+        new QRCode(holder, {
+            text: fullVerstCode,
+            width: 200,
+            height: 200,
+            colorDark: "#2B326D",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        document.getElementById('qr_id_text').innerText = fullVerstCode;
+        document.getElementById('qr_name_text').innerText = (name || '').toUpperCase();
         openModal('qr_modal');
-        const img = new Image();
-        img.onload = () => { qrBox.innerHTML = ''; img.className = 'qr-code-img'; qrBox.appendChild(img); };
-        img.src = qrUrl;
+    }
+
+    function generateManualQR() {
+        const raw = document.getElementById('manual_qr_input').value.trim();
+        if (!raw) return showToast("Введите ID");
+        const clean = raw.replace(/^A/i, '');
+        const targetBox = document.getElementById('manual_qr_box');
+        targetBox.innerHTML = '';
+        
+        new QRCode(targetBox, {
+            text: 'A' + clean,
+            width: 200,
+            height: 200,
+            colorDark: "#2B326D",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        showToast("QR сгенерирован локально!");
     }
 
     function closeQR() { closeModal('qr_modal'); }
@@ -710,7 +752,6 @@
         storyMode = mode;
         document.getElementById('story_mode_default').classList.toggle('active', mode === 'default');
         document.getElementById('story_mode_custom').classList.toggle('active', mode === 'custom');
-        
         if (mode === 'custom') document.getElementById('story_photo_input').click();
     }
 
@@ -815,7 +856,6 @@
             const data = await res.json();
             
             isAdmin = data.is_admin || false; 
-            
             if (isAdmin) {
                 document.getElementById('park_name').innerHTML += ' <span class="admin-badge">ORG</span>';
             }
@@ -831,10 +871,8 @@
                 welcome.style.display = 'block';
                 welcome.innerHTML = `👋 <b>${vkUser.first_name}</b>, профиль привязан!<br><button class="btn-qr" onclick="showQR('${data.verst_id}', '${data.full_name}')" style="margin-top:10px;">МОЯ КАРТОЧКА УЧАСТНИКА</button>`;
             }
-            
             validateForm();
         } catch (e) { console.error(e); }
-        
         loadQueue(); 
     }
     init();
@@ -850,7 +888,6 @@
         loadQueue();
     }
 
-    // ИСПРАВЛЕННАЯ ЛОГИКА НАЖАТИЯ ПОЗИЦИИ (галочки)
     document.querySelectorAll('.role-option').forEach(item => {
         item.onclick = function(e) {
             const cb = this.querySelector('input');
@@ -901,7 +938,11 @@
         try {
             const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "manual_sync" }) });
             const data = await res.json();
-            if (data.success) { showToast("Синхронизация завершена!"); location.reload(); }
+            if (data.offline) {
+                showToast("Сервера 5 вёрст пока лежат. Записи сохранены локально!");
+            } else if (data.success) { 
+                showToast("Синхронизация завершена!"); location.reload(); 
+            }
         } catch(e) { showToast("Ошибка синхронизации"); }
         btn.disabled = false; btn.innerText = "🔄 Синхронизировать с сайтом";
     }
@@ -920,7 +961,6 @@
             showToast("Спасибо за отзыв!");
             document.getElementById('feedback_input').value = "";
         } catch(e) { showToast("Ошибка при отправке"); }
-        
         btn.disabled = false; btn.innerText = "Отправить";
     }
 
@@ -960,14 +1000,31 @@
     function handlePaceSelect() { handleRoleChange(); }
 
     async function searchHandler(query, resultBox, isRecord) {
-        if (query.length < 3) { resultBox.style.display = 'none'; return; }
+        if (query.length < 2) { resultBox.style.display = 'none'; return; }
         resultBox.innerHTML = '<div style="padding:12px; color:#999; font-weight:600;">Ищем...</div>';
         resultBox.style.display = 'block';
         try {
             const res = await fetch(`${SCRIPT_URL}?search=${encodeURIComponent(query)}`);
             const data = await res.json();
             resultBox.innerHTML = '';
-            (data.result?.data || []).forEach(v => {
+            
+            const list = data.result?.data || [];
+            if (list.length === 0) {
+                // Если поиск пуст (сервера упали), предлагаем записать введённое имя напрямую
+                const directDiv = document.createElement('div');
+                directDiv.style = "padding:12px 16px; cursor:pointer; background:rgba(230,86,76,0.1);";
+                directDiv.innerHTML = `<b style="color:var(--accent);">Использовать имя: "${query}"</b><br><small style="color:#666;">(Резервная запись без ID)</small>`;
+                directDiv.onclick = () => {
+                    selectedVolunteer = { id: "0", full_name: query };
+                    document.getElementById('verst_search').value = query;
+                    resultBox.style.display = 'none';
+                    validateForm();
+                };
+                resultBox.appendChild(directDiv);
+                return;
+            }
+
+            list.forEach(v => {
                 const div = document.createElement('div');
                 div.style = "padding:12px 16px; border-bottom:1px solid rgba(0,0,0,0.05); cursor:pointer;";
                 div.innerHTML = `<b style="color:var(--primary); font-size:14px;">${v.full_name}</b><br><small style="color:#777; font-weight:600;">ID: ${v.id}</small>`;
@@ -981,12 +1038,30 @@
                 };
                 resultBox.appendChild(div);
             });
-        } catch (e) { resultBox.innerHTML = '<div style="padding:10px; color:#e6564c;">Ошибка поиска</div>'; }
+        } catch (e) {
+            // Фолбэк при сетевом сбое
+            resultBox.innerHTML = `<div style="padding:12px 16px; cursor:pointer;" onclick="setFallbackName('${query}')">
+                <b style="color:var(--primary);">Записать: "${query}"</b><br><small style="color:#999;">В резервный протокол</small>
+            </div>`;
+        }
+    }
+
+    function setFallbackName(name) {
+        selectedVolunteer = { id: "0", full_name: name };
+        document.getElementById('verst_search').value = name;
+        document.getElementById('search_results').style.display = 'none';
+        validateForm();
     }
 
     document.getElementById('verst_search').addEventListener('input', (e) => {
         clearTimeout(window.searchTimeout);
-        window.searchTimeout = setTimeout(() => searchHandler(e.target.value.trim(), document.getElementById('search_results'), true), 400);
+        const val = e.target.value.trim();
+        // Разрешаем сразу валидировать ввод, если введено имя от 3 символов
+        if (val.length >= 3 && !selectedVolunteer) {
+            selectedVolunteer = { id: "0", full_name: val };
+            validateForm();
+        }
+        window.searchTimeout = setTimeout(() => searchHandler(val, document.getElementById('search_results'), true), 400);
     });
 
     document.getElementById('rate_search').addEventListener('input', (e) => {
@@ -998,12 +1073,17 @@
         const anyChecked = document.querySelectorAll('.role-option input:checked').length > 0;
         const mode = document.getElementById('vk_id_mode').value;
         const vkOk = (mode === 'me' || (mode === 'friend' && document.getElementById('selected_vk_id').value));
-        document.getElementById('submit_btn').disabled = !(selectedVolunteer && anyChecked && vkOk);
+        const hasName = selectedVolunteer || document.getElementById('verst_search').value.trim().length >= 3;
+        document.getElementById('submit_btn').disabled = !(hasName && anyChecked && vkOk);
     }
 
     async function sendData() {
         const btn = document.getElementById('submit_btn');
         btn.innerText = "Записываем..."; btn.disabled = true;
+
+        if (!selectedVolunteer) {
+            selectedVolunteer = { id: "0", full_name: document.getElementById('verst_search').value.trim() };
+        }
 
         const roles = Array.from(document.querySelectorAll('.role-option input:checked')).map(cb => {
             const item = cb.parentElement;
@@ -1020,19 +1100,19 @@
         });
 
         const payload = {
-            verst_id: selectedVolunteer.id,
+            verst_id: selectedVolunteer.id || "0",
             full_name: selectedVolunteer.full_name,
             roles: roles,
-            author_vk_id: vkUser.id,
-            target_vk_id: document.getElementById('vk_id_mode').value === 'me' ? vkUser.id : document.getElementById('selected_vk_id').value,
-            target_vk_name: document.getElementById('vk_id_mode').value === 'me' ? (vkUser.first_name + " " + vkUser.last_name) : document.getElementById('selected_vk_name').value,
+            author_vk_id: vkUser?.id || "0",
+            target_vk_id: document.getElementById('vk_id_mode').value === 'me' ? (vkUser?.id || "0") : document.getElementById('selected_vk_id').value,
+            target_vk_name: document.getElementById('vk_id_mode').value === 'me' ? ((vkUser?.first_name || '') + " " + (vkUser?.last_name || '')) : document.getElementById('selected_vk_name').value,
             silent: document.getElementById('silent_mode').checked,
             target_date: document.getElementById('event_date_picker').value
         };
 
         try {
             await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-            showToast("Вы успешно записались!");
+            showToast("Записано в резервный протокол!");
             setTimeout(() => location.reload(), 1000);
         } catch(e) {
             showToast("Ошибка при записи"); btn.disabled = false; btn.innerText = "Записаться";
@@ -1116,7 +1196,7 @@
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: "delete", 
-                    requestor_vk: vkUser.id, 
+                    requestor_vk: vkUser ? vkUser.id : "0", 
                     verst_id: verst_id,
                     role_id: rid, 
                     role_name: rname, 
